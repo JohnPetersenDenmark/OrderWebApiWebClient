@@ -6,7 +6,7 @@ import { MakeLogEntry } from '../types/MakeLogEntry';
 import { LogEntry } from '../types/LogEntry';
 
 import { OrderItem } from '../types/OrderItem';
-import { Topping } from '../types/Topping';
+
 import { Order } from '../types/Order';
 import { Payment } from "../types/Payment";
 import { TruckLocation } from '../types/TruckLocation';
@@ -24,12 +24,12 @@ interface OrderModalProps {
   isOpen: boolean;
   onClose: () => void;
   pizzas: Pizza[];
-  toppings: Topping[];
+
   locations: TruckLocation[];
   existingOrder: Order | null;
 }
 
-const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose, pizzas: pizzaList, toppings: toppingList, locations }) => {
+const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose, pizzas: pizzaList, locations }) => {
   const [allOrderItems, setAllOrderItems] = useState<OrderItem[]>([]);
 
   const [orderItemsTopping, setOrderItemsTopping] = useState<OrderItem[]>([]);
@@ -106,20 +106,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
 
     setOrderItemsPizza(orderItemsPizza);
 
-    const orderItemsTopping: OrderItem[] = toppingList.map(topping => ({
-      quantity: 1,
-      productid: topping.id,
-      producttype: topping.producttype,
-      pizzanumber: '',
-      productdescription: topping.description,
-      productname: topping.name,
-      unitdiscountpercentage: 0,
-      discountedunitprice: 0,
-      unitprice: topping.price,
-      orderid: 0,
-      selected: false,
-    }));
-
+   
     if (existingOrder !== null) {
       existingOrder.orderlines.forEach(orderLine => {
         if (orderLine.producttype == 1)  // toppings
@@ -188,7 +175,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
       setSubmitting(false);
       setSubscribeToNewsletter(false);
     }
-  }, [isOpen, pizzaList, toppingList]);
+  }, [isOpen, pizzaList]);
 
 
 

@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { Pizza } from '../../types/Pizza';
-import { Topping } from '../../types/Topping';
 import AdminPizzaCreateEdit from './AdminPizzaCreateEdit';
-import AdminToppingCreateEdit from './AdminToppingCreateEdit';
 import config from '../../config';
 import { AxiosClientGet, AxiosClientPost, AxiosClientDelete } from '../../types/AxiosClient';
 
@@ -36,8 +34,7 @@ const Container = styled.div`
 const AdminMenues: React.FC = () => {
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const [pizzaToEdit, setPizzaToEdit] = useState<Pizza | null>(null);
-  const [toppings, setToppings] = useState<Topping[]>([]);
-  const [toppingToEdit, setToppingToEdit] = useState<Topping | null>(null);
+
   const [isCreateEditPizzaModalOpen, setIsCreateEditPizzaModalOpen] = useState(false);
   const [isCreateEditToppingModalOpen, setIsCreateEditToppingModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,17 +51,10 @@ const AdminMenues: React.FC = () => {
       }
     };
 
-    const fetchToppings = async () => {
-      try {
-        const response = await AxiosClientGet('/Home/toppinglist', false);
-        setToppings(response);
-      } catch {
-        setError('Failed to load toppings');
-      }
-    };
+    
 
     fetchPizzas();
-    fetchToppings();
+  
   }, [isCreateEditPizzaModalOpen, isCreateEditToppingModalOpen, submitting, reload]);
 
   const handleDeletePizza = async (pizza: Pizza) => {
@@ -79,16 +69,7 @@ const AdminMenues: React.FC = () => {
     }
   };
 
-  const handleDeleteTopping = async (topping: Topping) => {
-    try {
-      setSubmitting(true);
-      await AxiosClientDelete('/Admin/removetopping/' + topping.id, true);
-    } catch {
-      setError('Failed to delete topping');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+
 
   const handleCloseCreateEditPizzaModal = () => { 
     setIsCreateEditPizzaModalOpen(false);
@@ -109,11 +90,7 @@ const AdminMenues: React.FC = () => {
         pizzaToEdit={pizzaToEdit}
       />
 
-      <AdminToppingCreateEdit
-        isOpen={isCreateEditToppingModalOpen}
-        onClose={() => handleCloseCreateEditToppingModal()}
-        toppingToEdit={toppingToEdit}
-      />
+    
 
       <div style={{ fontSize: '2rem',
       fontWeight: 600,
@@ -191,44 +168,10 @@ const AdminMenues: React.FC = () => {
 
         </GridHeaderTopping>
 
-        {toppings.map((topping, index) => (
-          <GridRowTopping key={index}>
-            <ImageWrapper>
-              <img src={`${config.API_BASE_URL}${topping.imageurl}`} />
-            </ImageWrapper>
-
-            <div>{topping.name}</div>
-            <div>{topping.description}</div>
-            <div>{topping.price.toFixed(2).replace('.', ',')}</div>
-
-            <div>
-              <ActionIcon
-                src="/images/edit-icon.png"
-                alt="Edit"
-                onClick={() => {
-                  setToppingToEdit(topping);
-                  setIsCreateEditToppingModalOpen(true);
-                }}
-              />
-            </div>
-            <div>
-              <ActionIcon
-                src="/images/delete-icon.png"
-                alt="Delete"
-                onClick={() => handleDeleteTopping(topping)}
-              />
-            </div>
-          </GridRowTopping>
-        ))}
+       
 
 
-        <NewIconWrapper>
-          <ActionIcon src="/images/new-icon.png" alt="Ny" onClick={() => {
-            setToppingToEdit(null);
-            setIsCreateEditToppingModalOpen(true);
-          }} />
-        </NewIconWrapper>
-
+        
 
       </SectionWrapper>
     </Container>

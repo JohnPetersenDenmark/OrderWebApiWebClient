@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import OrderModal from './OrderModal';
 import { Pizza } from '../types/Pizza';
-import { Topping } from '../types/Topping';
+
 import axios from 'axios';
 import PizzaList from './PizzaList';
 import Login from './Login';
@@ -30,7 +30,7 @@ export default function Layout() {
 
   const { user, authStatus } = useCurrentUser();
 
-  const [toppings, setToppings] = useState<Topping[]>([]);
+  
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const [order, setOrder] = useState<Order | null>(null);
 
@@ -50,9 +50,9 @@ const location = useLocation();
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [pizzasResult, toppingsResult, locationsResult] = await Promise.allSettled([
+        const [pizzasResult,  locationsResult] = await Promise.allSettled([
           axios.get<Pizza[]>(config.API_BASE_URL + '/Home/pizzalist'),
-          axios.get<Topping[]>(config.API_BASE_URL + '/Home/toppinglist'),
+        
           axios.get<TruckLocation[]>(config.API_BASE_URL + '/Home/truckcalendarlocationlist'),
           // AxiosClientGet( '/Home/truckcalendarlocationlist' , false)
         ]);
@@ -63,12 +63,7 @@ const location = useLocation();
           setError('Failed to load pizzas');
         }
 
-        if (toppingsResult.status === 'fulfilled') {
-          setToppings(toppingsResult.value.data);
-        } else {
-          setError('Failed to load toppings');
-        }
-
+      
         if (locationsResult.status === 'fulfilled') {
           let locationsFromTodayAndForward = filterTruckLocationsByTodaysDate(locationsResult.value.data);
           const sortedTruckcalendarlocations = locationsFromTodayAndForward.sort((a, b) => parseDanishDateTime(a.startdatetime).getTime() - parseDanishDateTime(b.startdatetime).getTime());
@@ -203,7 +198,7 @@ const location = useLocation();
                 existingOrder={order}
                 locations={locations}
                 pizzas={pizzas}
-                toppings={toppings}
+               
                 isOpen={isOrderModalOpen}
                 onClose={handleCloseOrderModal}
               />
@@ -213,7 +208,7 @@ const location = useLocation();
               existingOrder={order}
               locations={locations}
               pizzas={pizzas}
-              toppings={toppings}
+             
               isOpen={isOrderModalOpen}
               onClose={handleCloseOrderModal}
             />
