@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Pizza } from '../../types/Pizza';
-import FileInput from "../../components/FileInput"
+import { Product } from '../../types/Product';
+import FileInput from "../FileInput"
 import config from '../../config';
 import {AxiosClientGet, AxiosClientPost} from '../../types/AxiosClient';
 
 
 interface PizzaModalProps {
     isOpen: boolean;
-    pizzaToEdit: Pizza | null;
+    productToEdit: Product | null;
     onClose: () => void;
 }
 
-const AdminPizzaCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pizzaToEdit }) => {
+const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, productToEdit }) => {
 
 
     const [submitting, setSubmitting] = useState(false);
@@ -58,14 +58,14 @@ const AdminPizzaCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pizz
     useEffect(() => {
         if (!isOpen) return;
 
-        if (pizzaToEdit !== null) {
-            setPizzaName(pizzaToEdit.name);
-            setPizzaNumber(pizzaToEdit.pizzanumber)
-            setPizzaDescription(pizzaToEdit.description)
-            setPizzaPriceBeforeDiscount(pizzaToEdit.discountprice.toFixed(2))
-            setPizzaDiscountPercentage(pizzaToEdit.discountpercentage.toFixed(1))
-            setPizzaPriceAfterDiscount(pizzaToEdit.price.toFixed(2))
-            setPizzaImageurl(pizzaToEdit.imageurl)
+        if (productToEdit !== null) {
+            setPizzaName(productToEdit.name);
+            setPizzaNumber(productToEdit.pizzanumber)
+            setPizzaDescription(productToEdit.description)
+            setPizzaPriceBeforeDiscount(productToEdit.discountprice.toFixed(2))
+            setPizzaDiscountPercentage(productToEdit.discountpercentage.toFixed(1))
+            setPizzaPriceAfterDiscount(productToEdit.price.toFixed(2))
+            setPizzaImageurl(productToEdit.imageurl)
 
         }
         else {
@@ -102,9 +102,9 @@ const AdminPizzaCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pizz
         }
 
         const pizzaData = {
-            id: pizzaToEdit !== null ? pizzaToEdit.id : 0,
+            id: productToEdit !== null ? productToEdit.id : 0,
             name: pizzaName,
-            pizzanumber: pizzaNumber,
+            productnumber: pizzaNumber,
             description: pizzaDescription,
             imageurl: pizzaImageurl,
             price: pizzaPriceAfterDiscount.replaceAll(',', '.'),
@@ -118,7 +118,7 @@ const AdminPizzaCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pizz
         }
       //  const url = config.API_BASE_URL + '/Admin/addorupdatepizza'
         try {           
-            await AxiosClientPost('/Admin/addorupdatepizza', pizzaData, true);
+            await AxiosClientPost('/Admin/addorupdateproduct', pizzaData, true);
             onClose();
         } catch (error) {
             setSubmitError('Fejl');
@@ -572,4 +572,4 @@ const AdminPizzaCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pizz
 
 }
 
-export default AdminPizzaCreateEdit
+export default AdminProductCreateEdit

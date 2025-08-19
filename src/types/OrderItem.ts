@@ -1,4 +1,4 @@
-import { Pizza } from '../types/Pizza';
+import { Product } from '../types/Product';
 
 export interface OrderItem {
   orderid: number,

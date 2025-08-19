@@ -9,10 +9,10 @@ import { useLocation } from "react-router-dom";
 
 import React, { useEffect, useState } from 'react';
 import OrderModal from './OrderModal';
-import { Pizza } from '../types/Pizza';
+import { Product } from '../types/Product';
 
 import axios from 'axios';
-import PizzaList from './PizzaList';
+import ProductList from './ProductList';
 import Login from './Login';
 
 import { TruckLocation } from '../types/TruckLocation';
@@ -31,7 +31,7 @@ export default function Layout() {
   const { user, authStatus } = useCurrentUser();
 
   
-  const [pizzas, setPizzas] = useState<Pizza[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [order, setOrder] = useState<Order | null>(null);
 
   const [locations, setLocations] = useState<TruckLocation[]>([]);
@@ -50,15 +50,15 @@ const location = useLocation();
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [pizzasResult,  locationsResult] = await Promise.allSettled([
-          axios.get<Pizza[]>(config.API_BASE_URL + '/Home/pizzalist'),
+        const [productsResult,  locationsResult] = await Promise.allSettled([
+          axios.get<Product[]>(config.API_BASE_URL + '/Home/productlist'),
         
           axios.get<TruckLocation[]>(config.API_BASE_URL + '/Home/truckcalendarlocationlist'),
           // AxiosClientGet( '/Home/truckcalendarlocationlist' , false)
         ]);
 
-        if (pizzasResult.status === 'fulfilled') {
-          setPizzas(pizzasResult.value.data);
+        if (productsResult.status === 'fulfilled') {
+          setProducts(productsResult.value.data);
         } else {
           setError('Failed to load pizzas');
         }
@@ -197,7 +197,7 @@ const location = useLocation();
               <OrderModal
                 existingOrder={order}
                 locations={locations}
-                pizzas={pizzas}
+                products={products}
                
                 isOpen={isOrderModalOpen}
                 onClose={handleCloseOrderModal}
@@ -207,7 +207,7 @@ const location = useLocation();
             <OrderModal
               existingOrder={order}
               locations={locations}
-              pizzas={pizzas}
+              products={products}
              
               isOpen={isOrderModalOpen}
               onClose={handleCloseOrderModal}
@@ -379,7 +379,7 @@ const location = useLocation();
 
                 {loading && <div><ClipLoader size={50} color="#8d4a5b" /></div>}
 
-                <PizzaList pizzas={pizzas} />
+                <ProductList productsA={products} />
                 <p
                   style={{
                     textAlign: 'center',

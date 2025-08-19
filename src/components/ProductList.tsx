@@ -1,13 +1,16 @@
-// PizzaList.tsx
 import React from 'react';
-import { Pizza } from '../types/Pizza';
+import { Product } from '../types/Product';
 import config from '../config';
 
-interface PizzaListProps {
-  pizzas: Pizza[];
+interface ProductListProps {
+  productsA: Product[] | undefined;
 }
 
-const PizzaList: React.FC<PizzaListProps> = ({ pizzas }) => {
+const ProductList: React.FC<ProductListProps> = ({ productsA = [] }) => {
+  if (productsA.length === 0) {
+    return null;
+  }
+
   return (
     <div
       style={{
@@ -16,9 +19,9 @@ const PizzaList: React.FC<PizzaListProps> = ({ pizzas }) => {
         gap: '1rem',
       }}
     >
-      {pizzas.map((pizza) => (
+      {productsA.map((product) => (
         <div
-          key={pizza.id}
+          key={product.id}
           style={{
             fontSize: '14px',
             background: '#8d4a5b',
@@ -33,7 +36,7 @@ const PizzaList: React.FC<PizzaListProps> = ({ pizzas }) => {
           }}
         >
           <h3 style={{ marginTop: 0 }}>
-            {pizza.pizzanumber} {pizza.name}
+            {product.pizzanumber} {product.name}
           </h3>
 
           <div
@@ -46,8 +49,8 @@ const PizzaList: React.FC<PizzaListProps> = ({ pizzas }) => {
             }}
           >
             <img
-              src={config.API_BASE_URL + pizza.imageurl}
-              alt={pizza.name}
+              src={config.API_BASE_URL + product.imageurl}
+              alt={product.name}
               style={{
                 width: '100%',
                 height: '100%',
@@ -57,13 +60,14 @@ const PizzaList: React.FC<PizzaListProps> = ({ pizzas }) => {
             />
           </div>
 
-          <p style={{ flexGrow: 1 }}>{pizza.description}</p>
+          <p style={{ flexGrow: 1 }}>{product.description}</p>
 
-          <p style={{ fontWeight: 600 }}>{pizza.price.toFixed(2).replace('.', ',')} kr</p>
+          <p style={{ fontWeight: 600 }}>
+            {product.price.toFixed(2).replace('.', ',')} kr
+          </p>
         </div>
       ))}
     </div>
   );
 };
-
-export default PizzaList;
+export default ProductList;

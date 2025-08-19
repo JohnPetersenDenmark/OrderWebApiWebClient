@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';  // Make sure axios is installed and imported
-import { Pizza } from '../types/Pizza';
+import { Product } from '../types/Product';
 
 import { MakeLogEntry } from '../types/MakeLogEntry';
 import { LogEntry } from '../types/LogEntry';
@@ -23,17 +23,17 @@ import FlatpayCheckout from './FlatpayCheckout';
 interface OrderModalProps {
   isOpen: boolean;
   onClose: () => void;
-  pizzas: Pizza[];
+  products: Product[];
 
   locations: TruckLocation[];
   existingOrder: Order | null;
 }
 
-const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose, pizzas: pizzaList, locations }) => {
+const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose, products: productList, locations }) => {
   const [allOrderItems, setAllOrderItems] = useState<OrderItem[]>([]);
 
   const [orderItemsTopping, setOrderItemsTopping] = useState<OrderItem[]>([]);
-  const [orderItemsPizza, setOrderItemsPizza] = useState<OrderItem[]>([]);
+  const [orderItemsProduct, setOrderItemsProduct] = useState<OrderItem[]>([]);
 
   const [orderId, setOrderId] = useState<number>(0);
 
@@ -69,7 +69,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
   useEffect(() => {
     if (!isOpen) return;
 
-    const orderItemsPizza: OrderItem[] = pizzaList.map(pizza => ({
+    const orderItemsProduct: OrderItem[] = productList.map(pizza => ({
       quantity: 1,
       productid: pizza.id,
       producttype: pizza.producttype,
@@ -89,7 +89,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
       existingOrder.orderlines.forEach(orderLine => {
         if (orderLine.producttype == 0)  // pizzas
         {
-          const orderItem = orderItemsPizza.find(orderItem => orderItem.productid === orderLine.productid);
+          const orderItem = orderItemsProduct.find(orderItem => orderItem.productid === orderLine.productid);
           if (orderItem) {
             orderItem.quantity = orderLine.quantity;
             orderItem.unitprice = orderLine.unitprice;
@@ -104,7 +104,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
       });
     }
 
-    setOrderItemsPizza(orderItemsPizza);
+    setOrderItemsProduct(orderItemsProduct);
 
    
     if (existingOrder !== null) {
@@ -128,7 +128,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
 
     setOrderItemsTopping(orderItemsTopping);
 
-    const orderItems = [...orderItemsPizza, ...orderItemsTopping]
+    const orderItems = [...orderItemsProduct, ...orderItemsTopping]
 
     let tmpIndex = 0;
     orderItems.forEach(element => {
@@ -175,7 +175,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
       setSubmitting(false);
       setSubscribeToNewsletter(false);
     }
-  }, [isOpen, pizzaList]);
+  }, [isOpen, productList]);
 
 
 
@@ -481,7 +481,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
 
         <hr />
         {/* Pizza list */}
-        {orderItemsPizza.map((item, index) => (
+        {orderItemsProduct.map((item, index) => (
           <div key={item.productid} className="pizza-item-container">
             <label className="checkbox-label">
               <input
@@ -520,7 +520,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
               <input
                 type="checkbox"
                 checked={item.selected}
-                onChange={() => toggleSelection(index + orderItemsPizza.length)}
+                onChange={() => toggleSelection(index + orderItemsProduct.length)}
                 disabled={submitting}
               />
               <span>
@@ -534,8 +534,8 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
                 <input
                   className="quantity-input"
                   type="number"
-                  value={enteredQuantity[index + orderItemsPizza.length]}
-                  onChange={(e) => updateQuantity(index + orderItemsPizza.length, e.target.value)}
+                  value={enteredQuantity[index + orderItemsProduct.length]}
+                  onChange={(e) => updateQuantity(index + orderItemsProduct.length, e.target.value)}
                   disabled={submitting}
                 />
                 <span>

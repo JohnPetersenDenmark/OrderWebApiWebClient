@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import { Pizza } from '../../types/Pizza';
-import AdminPizzaCreateEdit from './AdminPizzaCreateEdit';
+import { Product } from '../../types/Product';
+import AdminProductCreateEdit from './AdminProductCreateEdit';
 import config from '../../config';
 import { AxiosClientGet, AxiosClientPost, AxiosClientDelete } from '../../types/AxiosClient';
 
@@ -32,20 +32,20 @@ const Container = styled.div`
 `;
 
 const AdminMenues: React.FC = () => {
-  const [pizzas, setPizzas] = useState<Pizza[]>([]);
-  const [pizzaToEdit, setPizzaToEdit] = useState<Pizza | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
-  const [isCreateEditPizzaModalOpen, setIsCreateEditPizzaModalOpen] = useState(false);
-  const [isCreateEditToppingModalOpen, setIsCreateEditToppingModalOpen] = useState(false);
+  const [isCreateEditProductModalOpen, setIsCreateEditProductModalOpen] = useState(false);
+ 
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
    const [reload, setReload] = useState(0); 
 
   useEffect(() => {
-    const fetchPizzas = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await AxiosClientGet('/Home/pizzalist', false);
-        setPizzas(response);
+        const response = await AxiosClientGet('/Home/productlist', false);
+        setProducts(response);
       } catch {
         setError('Failed to load pizzas');
       }
@@ -53,17 +53,17 @@ const AdminMenues: React.FC = () => {
 
     
 
-    fetchPizzas();
+    fetchProducts();
   
-  }, [isCreateEditPizzaModalOpen, isCreateEditToppingModalOpen, submitting, reload]);
+  }, [isCreateEditProductModalOpen,  submitting, reload]);
 
-  const handleDeletePizza = async (pizza: Pizza) => {
+  const handleDeletePizza = async (product: Product) => {
     try {
       setSubmitting(true);
-      await AxiosClientDelete('/Admin/removepizza/' + pizza.id, true);
+      await AxiosClientDelete('/Admin/removeproduct/' + product.id, true);
       setReload(prev => prev + 1);
     } catch {
-      setError('Failed to delete pizza');
+      setError('Failed to delete product');
     } finally {
       setSubmitting(false);
     }
@@ -72,22 +72,19 @@ const AdminMenues: React.FC = () => {
 
 
   const handleCloseCreateEditPizzaModal = () => { 
-    setIsCreateEditPizzaModalOpen(false);
+    setIsCreateEditProductModalOpen(false);
       setReload(prev => prev + 1);
   };
 
-   const handleCloseCreateEditToppingModal = () => { 
-    setIsCreateEditToppingModalOpen(false);
-      setReload(prev => prev + 1);
-  };
+  
 
 
   return (
     <Container>
-      <AdminPizzaCreateEdit
-        isOpen={isCreateEditPizzaModalOpen}
+      <AdminProductCreateEdit
+        isOpen={isCreateEditProductModalOpen}
         onClose={() => handleCloseCreateEditPizzaModal()}
-        pizzaToEdit={pizzaToEdit}
+        productToEdit={productToEdit}
       />
 
     
@@ -112,24 +109,24 @@ const AdminMenues: React.FC = () => {
           <div></div>
         </GridHeaderPizza>
 
-        {pizzas.map((pizza, index) => (
+        {products.map((product, index) => (
           <GridRowPizza key={index}>
             <ImageWrapper>
-              <img src={`${config.API_BASE_URL}${pizza.imageurl}`} alt={pizza.name} />
+              <img src={`${config.API_BASE_URL}${product.imageurl}`} alt={product.name} />
             </ImageWrapper>
-            <div>{pizza.pizzanumber}</div>
-            <div>{pizza.name}</div>
-            <div>{pizza.description}</div>
+            <div>{product.pizzanumber}</div>
+            <div>{product.name}</div>
+            <div>{product.description}</div>
             {/*   <div>{pizza.discountprice.toFixed(2).replace('.', ',')}</div>
             <div>{pizza.discountpercentage}</div> */}
-            <div>{pizza.price.toFixed(2).replace('.', ',')}</div>
+            <div>{product.price.toFixed(2).replace('.', ',')}</div>
             <div>
               <ActionIcon
                 src="/images/edit-icon.png"
                 alt="Edit"
                 onClick={() => {
-                  setPizzaToEdit(pizza);
-                  setIsCreateEditPizzaModalOpen(true);
+                  setProductToEdit(product);
+                  setIsCreateEditProductModalOpen(true);
                 }}
               />
             </div>
@@ -137,7 +134,7 @@ const AdminMenues: React.FC = () => {
               <ActionIcon
                 src="/images/delete-icon.png"
                 alt="Delete"
-                onClick={() => handleDeletePizza(pizza)}
+                onClick={() => handleDeletePizza(product)}
               />
             </div>
           </GridRowPizza>
@@ -146,8 +143,8 @@ const AdminMenues: React.FC = () => {
 
         <NewIconWrapper>
           <ActionIcon src="/images/new-icon.png" alt="Ny" onClick={() => {
-            setPizzaToEdit(null);
-            setIsCreateEditPizzaModalOpen(true);
+            setProductToEdit(null);
+            setIsCreateEditProductModalOpen(true);
           }} />
         </NewIconWrapper>
 
