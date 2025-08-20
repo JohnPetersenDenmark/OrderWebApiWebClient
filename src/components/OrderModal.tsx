@@ -69,16 +69,17 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
   useEffect(() => {
     if (!isOpen) return;
 
-    const orderItemsProduct: OrderItem[] = productList.map(pizza => ({
+    const orderItemsProduct: OrderItem[] = productList.map(product => ({
       quantity: 1,
-      productid: pizza.id,
-      producttype: pizza.producttype,
-      pizzanumber: pizza.pizzanumber,
-      productname: pizza.name,
-      productdescription: pizza.description,
-      unitdiscountpercentage: pizza.discountpercentage,
-      discountedunitprice: pizza.discountprice,
-      unitprice: pizza.price,
+      productid: product.id,
+      producttype: product.producttype,
+      productnumber: product.productnumber,
+      productname: product.name,
+      productdescription: product.description,
+      details : '',
+      unitdiscountpercentage: product.discountpercentage,
+      discountedunitprice: product.discountprice,
+      unitprice: product.price,
       orderid: 0,
       selected: false
     }
@@ -491,7 +492,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
                 disabled={submitting}
               />
               <span>
-                <strong>{item.pizzanumber + ' ' + item.productname}</strong>{' '}
+                <strong>{item.productnumber + ' ' + item.productname}</strong>{' '}
                 (Pris før rabat {item.discountedunitprice.toFixed(2).replaceAll('.', ',')} kr)
               </span>
             </label>

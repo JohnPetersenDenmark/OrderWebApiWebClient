@@ -36,7 +36,7 @@ const ProductList: React.FC<ProductListProps> = ({ productsA = [] }) => {
           }}
         >
           <h3 style={{ marginTop: 0 }}>
-            {product.pizzanumber} {product.name}
+            {product.productnumber} {product.name}
           </h3>
 
           <div

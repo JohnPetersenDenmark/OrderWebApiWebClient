@@ -3,41 +3,49 @@ import axios from 'axios';
 import { Product } from '../../types/Product';
 import FileInput from "../FileInput"
 import config from '../../config';
-import {AxiosClientGet, AxiosClientPost} from '../../types/AxiosClient';
+import { AxiosClientGet, AxiosClientPost } from '../../types/AxiosClient';
 
 
-interface PizzaModalProps {
+interface ProductModalProps {
     isOpen: boolean;
     productToEdit: Product | null;
     onClose: () => void;
 }
 
-const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, productToEdit }) => {
+const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, productToEdit }) => {
 
 
     const [submitting, setSubmitting] = useState(false);
 
-    const [pizzaName, setPizzaName] = useState<string>('');
-    const [pizzaNameTouched, setPizzaNameTouched] = useState(false);
+    const [productName, setProductName] = useState<string>('');
 
-    const [pizzaNumber, setPizzaNumber] = useState<string>('');
-    const [pizzaNumberTouched, setPizzaNumberTouched] = useState(false);
+    const [productNameTouched, setProductNameTouched] = useState(false);
 
-    const [pizzaDescription, setPizzaDescription] = useState<string>('');
-    const [pizzaDescriptionTouched, setPizzaDescriptionTouched] = useState(false);
+    const [productNumber, setProductNumber] = useState<string>('');
+    const [productNumberTouched, setProductNumberTouched] = useState(false);
 
-    const [pizzaPriceBeforeDiscount, setPizzaPriceBeforeDiscount] = useState<string>('');
-    const [pizzaPriceBeforeDiscountTouched, setPizzaPriceBeforeDiscountTouched] = useState(false);
+    const [productDescription, setProductDescription] = useState<string>('');
 
-    const [pizzaDiscountPercentage, setPizzaDiscountPercentage] = useState<string>('');
+    const [productDescriptionTouched, setProductDescriptionTouched] = useState(false);
 
-    const [pizzaDiscountPercentageTouched, setPizzaDiscountPercentageTouched] = useState(false);
+     const [productDetails, setProductDetails] = useState<string>('');
+       const [productDetailsTouched, setProductDetailsTouched] = useState<boolean>(false);
 
-    const [pizzaPriceAfterDiscount, setPizzaPriceAfterDiscount] = useState<string>('');
-    const [pizzaPriceAfterDiscountTouched, setPizzaPriceAfterDiscountTouched] = useState(false);
+    const [productPriceBeforeDiscount, setProductPriceBeforeDiscount] = useState<string>('');
 
-    const [pizzaImageurl, setPizzaImageurl] = useState<string>('');
-    const [pizzaImageurlTouched, setImageurlTouchedTouched] = useState(false);
+    const [productPriceBeforeDiscountTouched, setProductPriceBeforeDiscountTouched] = useState(false);
+
+    const [productDiscountPercentage, setProductDiscountPercentage] = useState<string>('');
+
+    const [productDiscountPercentageTouched, setProductDiscountPercentageTouched] = useState(false);
+
+    const [productPriceAfterDiscount, setProductPriceAfterDiscount] = useState<string>('');
+
+    const [productaPriceAfterDiscountTouched, setProductPriceAfterDiscountTouched] = useState(false);
+
+    const [productImageurl, setProductImageurl] = useState<string>('');
+
+    const [productImageurlTouched, setProductImageurlTouched] = useState(false);
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -45,49 +53,53 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
 
 
 
-    const isPizzaNameValid = pizzaName.length > 0;
-    const isPizzaNumberValid = pizzaNumber.length > 0;
-    const isPizzaDescriptionValid = pizzaDescription.length > 0;
-    const isPriceBeforeDiscountValid = true // !isNaN(pizzaPriceBeforeDiscount)
-    const isPizzaDiscountValid = true // !isNaN(pizzaPriceBeforeDiscount)
-    const isPriceAfterDiscountValid = true // !isNaN(pizzaPriceBeforeDiscount)
-    const isImageurlValid = pizzaImageurl.length > 0;
-    const isFormValid = isPizzaNameValid && isPizzaNumberValid && isPizzaDescriptionValid && isPriceBeforeDiscountValid && isPizzaDiscountValid && isPriceAfterDiscountValid
+    const isProductNameValid = productName.length > 0;
+    const isProductNumberValid = productNumber.length > 0;
+    const isProductDescriptionValid = setProductDescription.length > 0;
+    const isPriceBeforeDiscountValid = true;
+    const isProductDiscountValid = true;
+    const isPriceAfterDiscountValid = true;
+    const isProductDetailsValid = true;
+    const isImageurlValid = productImageurl.length > 0;
+    const isFormValid = isProductNameValid && isProductNumberValid && isProductDescriptionValid && isPriceBeforeDiscountValid && isProductDiscountValid && isPriceAfterDiscountValid
 
 
     useEffect(() => {
         if (!isOpen) return;
 
         if (productToEdit !== null) {
-            setPizzaName(productToEdit.name);
-            setPizzaNumber(productToEdit.pizzanumber)
-            setPizzaDescription(productToEdit.description)
-            setPizzaPriceBeforeDiscount(productToEdit.discountprice.toFixed(2))
-            setPizzaDiscountPercentage(productToEdit.discountpercentage.toFixed(1))
-            setPizzaPriceAfterDiscount(productToEdit.price.toFixed(2))
-            setPizzaImageurl(productToEdit.imageurl)
+            setProductName(productToEdit.name);
+            setProductNumber(productToEdit.productnumber)
+            setProductDescription(productToEdit.description)
+            setProductDetails(productToEdit.details)
+            setProductPriceBeforeDiscount(productToEdit.discountprice.toFixed(2))
+            setProductDiscountPercentage(productToEdit.discountpercentage.toFixed(1))
+            setProductPriceAfterDiscount(productToEdit.price.toFixed(2))
+            setProductImageurl(productToEdit.imageurl)
 
         }
         else {
-            setPizzaName('');
-            setPizzaNumber('')
-            setPizzaDescription('')
-            setPizzaPriceBeforeDiscount('')
-            setPizzaDiscountPercentage('')
-            setPizzaPriceAfterDiscount('')
-            setPizzaImageurl('')
+            setProductName('');
+            setProductNumber('')
+            setProductDescription('')
+            setProductDetails('');
+            setProductPriceBeforeDiscount('')
+            setProductDiscountPercentage('')
+            setProductPriceAfterDiscount('')
+            setProductImageurl('')
             setSelectedFile(null)
 
 
         }
 
-        setPizzaNameTouched(false)
-        setPizzaNumberTouched(false)
-        setPizzaDescriptionTouched(false)
-        setPizzaPriceBeforeDiscountTouched(false)
-        setPizzaDiscountPercentageTouched(false)
-        setPizzaPriceAfterDiscountTouched(false)
-        setImageurlTouchedTouched(false)
+        setProductNameTouched(false)
+        setProductNumberTouched(false)
+        setProductDescriptionTouched(false)
+        setProductPriceBeforeDiscountTouched(false)
+        setProductDiscountPercentageTouched(false)
+        setProductPriceAfterDiscountTouched(false)
+        setProductImageurlTouched(false)
+        setProductDetailsTouched(false)
 
         setSubmitting(false);
 
@@ -101,24 +113,25 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
             return;
         }
 
-        const pizzaData = {
+        const productData = {
             id: productToEdit !== null ? productToEdit.id : 0,
-            name: pizzaName,
-            productnumber: pizzaNumber,
-            description: pizzaDescription,
-            imageurl: pizzaImageurl,
-            price: pizzaPriceAfterDiscount.replaceAll(',', '.'),
-            discountpercentage: pizzaDiscountPercentage.replaceAll(',', '.'),
-            discountprice: pizzaPriceBeforeDiscount.replaceAll(',', '.'),
+            name: productName,
+            productnumber: productNumber,
+            description: productDescription,
+            details : productDetails,
+            imageurl: productImageurl,
+            price: productPriceAfterDiscount.replaceAll(',', '.'),
+            discountpercentage: productDiscountPercentage.replaceAll(',', '.'),
+            discountprice: productPriceBeforeDiscount.replaceAll(',', '.'),
             producttype: 0
         }
 
         if (selectedFile) {
             await handleUpload();
         }
-      //  const url = config.API_BASE_URL + '/Admin/addorupdatepizza'
-        try {           
-            await AxiosClientPost('/Admin/addorupdateproduct', pizzaData, true);
+
+        try {
+            await AxiosClientPost('/Admin/addorupdateproduct', productData, true);
             onClose();
         } catch (error) {
             setSubmitError('Fejl');
@@ -132,15 +145,15 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
     const handlePriceBeforeDiscount = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value.replaceAll(',', '.');
         if (newValue === '') {
-            setPizzaPriceBeforeDiscount('');
+            setProductPriceBeforeDiscount('');
         } else {
 
             let newValueAsNumber = Number(newValue);
             if (isNaN(newValueAsNumber)) {
                 return;
             }
-            setPizzaPriceBeforeDiscount(newValue);
-            setPizzaPriceBeforeDiscountTouched(true);
+            setProductPriceBeforeDiscount(newValue);
+            setProductPriceBeforeDiscountTouched(true);
         }
     };
 
@@ -149,103 +162,83 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
         const newValue = e.target.value.replaceAll(',', '.');
 
         if (newValue === '') {
-            setPizzaPriceBeforeDiscount('');
+            setProductPriceBeforeDiscount('');
         } else {
             let newValueAsNumber = Number(newValue);
             if (isNaN(newValueAsNumber)) {
-                setPizzaPriceBeforeDiscount('0,00');
+                setProductPriceBeforeDiscount('0,00');
                 return;
             }
 
             let newValueAsString = newValueAsNumber.toFixed(2);
             newValueAsString = newValueAsString.replaceAll('.', ',');
 
-            setPizzaPriceBeforeDiscount(newValueAsString);
+            setProductPriceBeforeDiscount(newValueAsString);
 
-           
-            let priceAfterDiscountString = pizzaPriceAfterDiscount;
+
+            let priceAfterDiscountString = productPriceAfterDiscount;
             priceAfterDiscountString = priceAfterDiscountString.replaceAll(',', '.')
-            
-            let priceAfterDiscount  = Number(priceAfterDiscountString);             
+
+            let priceAfterDiscount = Number(priceAfterDiscountString);
             if (isNaN(priceAfterDiscount)) {
-                setPizzaDiscountPercentage("0,00");
+                setProductDiscountPercentage("0,00");
                 return;
             }
 
-            if (priceAfterDiscount > newValueAsNumber)
-            {
-                 setPizzaDiscountPercentage("0,00");
+            if (priceAfterDiscount > newValueAsNumber) {
+                setProductDiscountPercentage("0,00");
                 return;
-            }         
-            let percentageNumber = ((  newValueAsNumber - priceAfterDiscount) / newValueAsNumber) * 100
+            }
+            let percentageNumber = ((newValueAsNumber - priceAfterDiscount) / newValueAsNumber) * 100
             let percentageAsString = percentageNumber.toFixed(1);
             percentageAsString = percentageAsString.replaceAll('.', ',');
-             setPizzaDiscountPercentage(percentageAsString);
+            setProductDiscountPercentage(percentageAsString);
 
         }
     };
 
-   /*  const handleDiscountPercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = e.target.value;
 
-        if (inputValue === '') {
-            setPizzaDiscountPercentage('');
-        } else {
-            //const parsedValue = parseFloat(newValue);
-            var normalizeNumber = inputValue.replaceAll(',', '.');
-            let newValueAsNumber = Number(normalizeNumber);
-            if (isNaN(newValueAsNumber)) {
-                return;
-            }
-            normalizeNumber = normalizeNumber.replaceAll('.', ',')
-
-            //let fixedWith1Decimals = newValueAsNumber.toString().replaceAll('.', ',');
-            setPizzaDiscountPercentage(normalizeNumber);
-        }
-    }; */
 
     const handleOnBlurDiscount = (e: React.ChangeEvent<HTMLInputElement>) => {
 
         const newValue = e.target.value.replaceAll(',', '.');
 
         if (newValue === '') {
-            setPizzaDiscountPercentage('');
+            setProductDiscountPercentage('');
         } else {
             let newValueAsNumber = Number(newValue);
             if (isNaN(newValueAsNumber)) {
-                setPizzaPriceAfterDiscount('0,00');
-                setPizzaPriceBeforeDiscount(pizzaPriceAfterDiscount)
+                setProductPriceAfterDiscount('0,00');
+                setProductPriceBeforeDiscount(productPriceAfterDiscount)
                 return;
             }
 
             let newValueAsString = newValueAsNumber.toFixed(1);
             newValueAsString = newValueAsString.replaceAll('.', ',');
 
-            //if (pizzaDiscountPercentage) {
-            let pizzaPriceAfterDiscountNumber = 0;
-            if (pizzaPriceAfterDiscount) {
-                pizzaPriceAfterDiscountNumber = Number(pizzaPriceAfterDiscount.replaceAll(',', '.'))
+
+            let productPriceAfterDiscountNumber = 0;
+            if (productPriceAfterDiscount) {
+                productPriceAfterDiscountNumber = Number(productPriceAfterDiscount.replaceAll(',', '.'))
             }
 
-            /*  let tmpVal = (newValueAsNumber * pizzaPriceAfterDiscountNumber) / 100
-             let tmpVal1 = pizzaPriceAfterDiscountNumber + tmpVal; */
-            if (pizzaDiscountPercentage) {
-                let pizzaDiscountPercentageNumber = 0;
-                pizzaDiscountPercentageNumber = Number(pizzaDiscountPercentage.replaceAll(',', '.'))
+            if (productDiscountPercentage) {
+                let productDiscountPercentageNumber = 0;
+                productDiscountPercentageNumber = Number(productDiscountPercentage.replaceAll(',', '.'))
 
-                let tmp = (1 - (pizzaDiscountPercentageNumber / 100))
-                let x = pizzaPriceAfterDiscountNumber / tmp
+                let tmp = (1 - (productDiscountPercentageNumber / 100))
+                let x = productPriceAfterDiscountNumber / tmp
 
                 let PriceBeforeDiscountAsString = x.toFixed(2).replaceAll('.', ',');;
-                setPizzaPriceBeforeDiscount(PriceBeforeDiscountAsString);
+                setProductPriceBeforeDiscount(PriceBeforeDiscountAsString);
                 return;
             }
 
-           
-                let PriceBeforeDiscountAsString = newValueAsNumber.toFixed(2).replaceAll('.', ',');;
-                setPizzaPriceBeforeDiscount(PriceBeforeDiscountAsString);
-                setPizzaDiscountPercentage(newValueAsString);
-            
+
+            let PriceBeforeDiscountAsString = newValueAsNumber.toFixed(2).replaceAll('.', ',');;
+            setProductPriceBeforeDiscount(PriceBeforeDiscountAsString);
+            setProductDiscountPercentage(newValueAsString);
+
 
         }
     };
@@ -253,7 +246,7 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
     const handlePriceAfterDiscount = (e: React.ChangeEvent<HTMLInputElement>) => {
         let newValue = e.target.value.replaceAll(',', '.');
         if (newValue === '') {
-            setPizzaPriceAfterDiscount('');
+            setProductPriceAfterDiscount('');
         } else {
 
             let newValueAsNumber = Number(newValue);
@@ -262,8 +255,8 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
             }
 
 
-            setPizzaPriceAfterDiscount(newValue);
-            setPizzaPriceAfterDiscountTouched(true);
+            setProductPriceAfterDiscount(newValue);
+            setProductPriceAfterDiscountTouched(true);
         }
     };
 
@@ -272,37 +265,36 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
         const newValue = e.target.value.replaceAll(',', '.');
 
         if (newValue === '') {
-            setPizzaPriceAfterDiscount('');
+            setProductPriceAfterDiscount('');
         } else {
             let newValueAsNumber = Number(newValue);
             if (isNaN(newValueAsNumber)) {
-                setPizzaPriceAfterDiscount('0,00');
+                setProductPriceAfterDiscount('0,00');
                 return;
             }
             let newValueAsString = newValueAsNumber.toFixed(2);
             newValueAsString = newValueAsString.replaceAll('.', ',');
-            setPizzaPriceAfterDiscount(newValueAsString);
+            setProductPriceAfterDiscount(newValueAsString);
 
 
-            let priceBeforeDiscountString = pizzaPriceBeforeDiscount;
+            let priceBeforeDiscountString = productPriceBeforeDiscount;
             priceBeforeDiscountString = priceBeforeDiscountString.replaceAll(',', '.');
 
-              let priceBeforeDiscount  = Number(priceBeforeDiscountString);   
+            let priceBeforeDiscount = Number(priceBeforeDiscountString);
 
             if (isNaN(priceBeforeDiscount)) {
-                setPizzaDiscountPercentage("0,00");
+                setProductDiscountPercentage("0,00");
                 return;
             }
 
-            if (newValueAsNumber > priceBeforeDiscount)
-            {
-                 setPizzaDiscountPercentage("0,00"); 
+            if (newValueAsNumber > priceBeforeDiscount) {
+                setProductDiscountPercentage("0,00");
                 return;
-            }         
-            let percentageNumber = ((  priceBeforeDiscount - newValueAsNumber) / priceBeforeDiscount) * 100
+            }
+            let percentageNumber = ((priceBeforeDiscount - newValueAsNumber) / priceBeforeDiscount) * 100
             let percentageAsString = percentageNumber.toFixed(1);
             percentageAsString = percentageAsString.replaceAll('.', ',');
-             setPizzaDiscountPercentage(percentageAsString);
+            setProductDiscountPercentage(percentageAsString);
 
         }
     };
@@ -325,13 +317,13 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
             });
 
             if (typeof response.data.imageUrl === 'string') {
-                setPizzaImageurl(response.data.imageUrl)
-                setImageurlTouchedTouched(true);
+                setProductImageurl(response.data.imageUrl)
+                setProductImageurlTouched(true);
             }
 
             else {
-                setPizzaImageurl('/Uploads/dummy.png')
-                setImageurlTouchedTouched(true);
+                setProductImageurl('/Uploads/dummy.png')
+                setProductImageurlTouched(true);
             }
 
             console.log('Upload success:', response.data);
@@ -343,231 +335,253 @@ const AdminProductCreateEdit: React.FC<PizzaModalProps> = ({ isOpen, onClose, pr
     const handleFileSelect = (file: File) => {
         console.log("Parent got file:", file);
         setSelectedFile(file);
-        setPizzaImageurl('/Uploads/' + file.name)
+        setProductImageurl('/Uploads/' + file.name)
     };
 
     if (!isOpen) return null;
 
     return (
-    <div
-        style={{
-         position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: '#8d4a5b',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000,
-        }}
-    >
-
         <div
             style={{
-                backgroundColor: '#c7a6ac',
-        padding: '2rem',
-        borderRadius: '8px',
-        minWidth: '300px',
-        width: '90%',
-        maxWidth: '500px',
-        maxHeight: '90vh',
-        overflowY: 'auto',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: '#8d4a5b',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 1000,
             }}
         >
-            <h2 style={{ backgroundColor: '#8d4a5b', padding: '2rem', color: 'white', borderRadius: '8px', fontSize: '1.5rem' }}>Pizza</h2>
-
-            <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: '200' }}>
-                <label htmlFor="pizzanumber">Pizzanummer:</label><br />
-                <input
-                    id="pizzanumber"
-                    type="text"
-                    value={pizzaNumber}
-                    onChange={(e) => setPizzaNumber(e.target.value)}
-                    onBlur={() => setPizzaNumberTouched(true)}
-                    placeholder="Pizzanummer"
-                    style={{
-                        width: '100%',
-                        padding: '0.5rem',
-                        marginTop: '0.25rem',
-                        borderColor: !isPizzaNumberValid && pizzaNumberTouched ? 'red' : undefined,
-                        borderWidth: '1.5px',
-                        borderStyle: 'solid',
-                        borderRadius: '4px',
-                    }}
-                    disabled={submitting}
-                />
-            </div>
-
-            <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                <label htmlFor="pizzaname">Pizzanavn:</label><br />
-                <input
-                    id="pizzaname"
-                    type="text"
-                    value={pizzaName}
-                    onChange={(e) => setPizzaName(e.target.value)}
-                    onBlur={() => setPizzaNameTouched(true)}
-                    placeholder="Pizzanavn"
-                    style={{
-                        width: '100%',
-                        padding: '0.5rem',
-                        marginTop: '0.25rem',
-                        borderColor: !isPizzaNameValid && pizzaNameTouched ? 'red' : undefined,
-                        borderWidth: '1.5px',
-                        borderStyle: 'solid',
-                        borderRadius: '4px',
-                    }}
-                    disabled={submitting}
-                />
-            </div>
-
-            <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                <label htmlFor="pizzadescription">Beskrivelse:</label><br />
-                <input
-                    id="pizzadescription"
-                    type="text"
-                    value={pizzaDescription}
-                    onChange={(e) => setPizzaDescription(e.target.value)}
-                    onBlur={() => setPizzaDescriptionTouched(true)}
-                    placeholder="Pizzabeskrivelse"
-                    style={{
-                        width: '100%',
-                        padding: '0.5rem',
-                        marginTop: '0.25rem',
-                        borderColor: !isPizzaDescriptionValid && pizzaDescriptionTouched ? 'red' : undefined,
-                        borderWidth: '1.5px',
-                        borderStyle: 'solid',
-                        borderRadius: '4px',
-                    }}
-                    disabled={submitting}
-                />
-            </div>
-
-            <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                <label htmlFor="pricebeforediscount">Pris før rabat:</label><br />
-                <input
-                    id="pricebeforediscount"
-                    type="text"                    
-                    value={pizzaPriceBeforeDiscount.replaceAll('.', ',')}
-                    onChange={handlePriceBeforeDiscount}
-                    onBlur={handleOnBlurPriceBeforeDiscount}
-                    placeholder="Vejl. udsalgspris"
-                    style={{
-                        width: '100%',
-                        padding: '0.5rem',
-                        marginTop: '0.25rem',
-                        borderColor: !isPriceBeforeDiscountValid && pizzaPriceBeforeDiscountTouched ? 'red' : undefined,
-                        borderWidth: '1.5px',
-                        borderStyle: 'solid',
-                        borderRadius: '4px',
-                    }}
-                    disabled={submitting}
-                />
-            </div>
-
-            <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                <label htmlFor="xyz">Rabat i %:</label><br />
-                <input
-                    id="xyz"
-                    type="text"
-                    readOnly
-                    value={pizzaDiscountPercentage}
-                   /*  onChange={handleDiscountPercentage}
-                    onBlur={handleOnBlurDiscount} */
-                    placeholder="Rabat i %"
-                    style={{
-                        width: '100%',
-                        padding: '0.5rem',
-                        marginTop: '0.25rem',
-                        borderColor: !isPizzaDiscountValid && pizzaDiscountPercentageTouched ? 'red' : undefined,
-                        borderWidth: '1.5px',
-                        borderStyle: 'solid',
-                        borderRadius: '4px',
-                    }}
-                    disabled={submitting}
-                />
-            </div>
-
-            <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                <label htmlFor="priceafterdiscount">Pris efter rabat:</label><br />
-                <input
-                    id="priceafterdiscount"
-                    type="text"
-                    value={pizzaPriceAfterDiscount.replaceAll('.', ',')}
-                    onChange={handlePriceAfterDiscount}
-                    onBlur={handleOnBlurPriceAfterDiscount}
-                    placeholder="Vejl. udsalgspris"
-                    style={{
-                        width: '100%',
-                        padding: '0.5rem',
-                        marginTop: '0.25rem',
-                        borderColor: !isPriceAfterDiscountValid && pizzaPriceAfterDiscountTouched ? 'red' : undefined,
-                        borderWidth: '1.5px',
-                        borderStyle: 'solid',
-                        borderRadius: '4px',
-                    }}
-                    disabled={submitting}
-                />
-            </div>
 
             <div
                 style={{
-                    marginBottom: '1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '1rem'
+                    backgroundColor: '#c7a6ac',
+                    padding: '2rem',
+                    borderRadius: '8px',
+                    minWidth: '300px',
+                    width: '90%',
+                    maxWidth: '500px',
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
                 }}
             >
-                <div>
-                    <img
-                        src={config.API_BASE_URL + pizzaImageurl}
+                <h2 style={{ backgroundColor: '#8d4a5b', padding: '2rem', color: 'white', borderRadius: '8px', fontSize: '1.5rem' }}>Product</h2>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: '200' }}>
+                    <label htmlFor="productnumber">Productnummer:</label><br />
+                    <input
+                        id="productnumber"
+                        type="text"
+                        value={productNumber}
+                        onChange={(e) => setProductNumber(e.target.value)}
+                        onBlur={() => setProductNumberTouched(true)}
+                        placeholder="Productnummer"
                         style={{
-                            maxWidth: '200px',
-                            height: 'auto',
-                            marginTop: '5px'
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isProductNumberValid && productNumberTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
                         }}
+                        disabled={submitting}
                     />
                 </div>
 
-                <div>
-                    <FileInput onFileSelect={handleFileSelect} />
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="productname">Produkt:</label><br />
+                    <input
+                        id="productname"
+                        type="text"
+                        value={productName}
+                        onChange={(e) => setProductName(e.target.value)}
+                        onBlur={() => setProductNameTouched(true)}
+                        placeholder="Produktnavn"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isProductNameValid && productNameTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
                 </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="productdescription">Beskrivelse:</label><br />
+                    <input
+                        id="productdescription"
+                        type="text"
+                        value={productDescription}
+                        onChange={(e) => setProductDescription(e.target.value)}
+                        onBlur={() => setProductDescriptionTouched(true)}
+                        placeholder="Beskrivelse"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isProductDescriptionValid && productDescriptionTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="pricebeforediscount">Pris før rabat:</label><br />
+                    <input
+                        id="pricebeforediscount"
+                        type="text"
+                        value={productPriceBeforeDiscount.replaceAll('.', ',')}
+                        onChange={handlePriceBeforeDiscount}
+                        onBlur={handleOnBlurPriceBeforeDiscount}
+                        placeholder="Vejl. udsalgspris"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isPriceBeforeDiscountValid && productPriceBeforeDiscountTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="xyz">Rabat i %:</label><br />
+                    <input
+                        id="xyz"
+                        type="text"
+                        readOnly
+                        value={productDiscountPercentage}
+                        /*  onChange={handleDiscountPercentage}
+                         onBlur={handleOnBlurDiscount} */
+                        placeholder="Rabat i %"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isProductDiscountValid && productDiscountPercentageTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="priceafterdiscount">Pris efter rabat:</label><br />
+                    <input
+                        id="priceafterdiscount"
+                        type="text"
+                        value={productPriceAfterDiscount.replaceAll('.', ',')}
+                        onChange={handlePriceAfterDiscount}
+                        onBlur={handleOnBlurPriceAfterDiscount}
+                        placeholder="Vejl. udsalgspris"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isPriceAfterDiscountValid && productPriceAfterDiscount ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="details">Lang beskrivelse:</label><br />
+                    <input
+                        id="details"
+                        type="text"
+                        value={productDetails}
+                        onChange={(e) => setProductDetails(e.target.value)}
+                          onBlur={() => setProductDetailsTouched(true)}
+                        placeholder="Vejl. udsalgspris"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isProductDetailsValid && productDetailsTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div
+                    style={{
+                        marginBottom: '1rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '1rem'
+                    }}
+                >
+                    <div>
+                        <img
+                            src={config.API_BASE_URL + productImageurl}
+                            style={{
+                                maxWidth: '200px',
+                                height: 'auto',
+                                marginTop: '5px'
+                            }}
+                        />
+                    </div>
+
+                    <div>
+                        <FileInput onFileSelect={handleFileSelect} />
+                    </div>
+                </div>
+
+                <button
+                    onClick={handleSubmit}
+                    disabled={!isFormValid || submitting}
+                    style={{
+                        marginTop: '1rem',
+                        padding: '0.5rem 1rem',
+                        backgroundColor: isFormValid && !submitting ? '#8d4a5b' : 'grey',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: isFormValid && !submitting ? 'pointer' : 'not-allowed',
+                        marginRight: '0.5rem',
+                    }}
+                > Ok</button>
+
+                <button
+                    onClick={onClose}
+                    disabled={submitting}
+                    style={{
+                        marginTop: '1rem',
+                        padding: '0.5rem 1rem',
+                        backgroundColor: !submitting ? '#8d4a5b' : 'grey',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: !submitting ? 'pointer' : 'not-allowed',
+                        marginRight: '0.5rem',
+                    }}
+                > Annuler</button>
             </div>
-
-            <button
-                onClick={handleSubmit}
-                disabled={!isFormValid || submitting}
-                style={{
-                    marginTop: '1rem',
-                    padding: '0.5rem 1rem',
-                    backgroundColor: isFormValid && !submitting ? '#8d4a5b' : 'grey',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: isFormValid && !submitting ? 'pointer' : 'not-allowed',
-                    marginRight: '0.5rem',
-                }}
-            > Ok</button>
-
-            <button
-                onClick={onClose}
-                disabled={submitting}
-                style={{
-                    marginTop: '1rem',
-                    padding: '0.5rem 1rem',
-                    backgroundColor: !submitting ? '#8d4a5b' : 'grey',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: !submitting ? 'pointer' : 'not-allowed',
-                    marginRight: '0.5rem',
-                }}
-            > Annuler</button>
         </div>
-    </div>
-)
+    )
 
 
 }

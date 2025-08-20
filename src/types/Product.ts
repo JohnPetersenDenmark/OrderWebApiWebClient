@@ -1,9 +1,9 @@
 export interface Product {
   id: number;
-  pizzanumber : string,
+  productnumber : string;
   name: string;
-  description: string;
-    details: string;
+  description: string; 
+  details: string;
   imageurl: string;
   price : number;
   discountpercentage : number;

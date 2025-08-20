@@ -556,7 +556,7 @@ setOrders(sortedOrders);
                     <div key={lineIndex} style={styles.orderlineGrid}>
                       <div>{curOrderLine.quantity} stk.</div>
                       <div>
-                        {curOrderLine.pizzanumber} {highlightText(curOrderLine.productname, searchQuery)}
+                        {curOrderLine.productnumber} {highlightText(curOrderLine.productname, searchQuery)}
                       </div>
                       <div style={{ textAlign: 'right' }}>{curOrderLine.unitprice.toFixed(2).replace('.', ',')} kr.</div>
                       <div style={{ textAlign: 'right' }}>

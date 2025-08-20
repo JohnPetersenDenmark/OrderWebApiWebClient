@@ -114,7 +114,7 @@ const AdminMenues: React.FC = () => {
             <ImageWrapper>
               <img src={`${config.API_BASE_URL}${product.imageurl}`} alt={product.name} />
             </ImageWrapper>
-            <div>{product.pizzanumber}</div>
+            <div>{product.productnumber}</div>
             <div>{product.name}</div>
             <div>{product.description}</div>
             {/*   <div>{pizza.discountprice.toFixed(2).replace('.', ',')}</div>

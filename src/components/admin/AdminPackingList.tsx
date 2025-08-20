@@ -140,7 +140,7 @@ const AdminPackingList: React.FC = () => {
         grouped.push({
           pizzaProductId: orderLine.productid,
           pizzaName: orderLine.productname,
-          pizzaNumber: orderLine.pizzanumber,
+          pizzaNumber: orderLine.productnumber,
           lines: [orderLine],
           subtotalNumber: lineQuantity
         });
@@ -259,7 +259,7 @@ const AdminPackingList: React.FC = () => {
                   color: '#000000'
                 }}
               >
-                <div style={{ flex: '1 1 30%', minWidth: '150px' }}>{orderLine.pizzanumber}</div>
+                <div style={{ flex: '1 1 30%', minWidth: '150px' }}>{orderLine.productnumber}</div>
                 <div style={{ flex: '2 1 20%', minWidth: '150px' }}>{orderLine.productname}</div>
                 <div style={{ flex: '3 1 50%', minWidth: '100px', textAlign: 'right' }}>{orderLine.quantity}</div>
               </div>
