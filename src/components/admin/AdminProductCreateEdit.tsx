@@ -121,7 +121,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         const productData = {
             id: productToEdit !== null ? productToEdit.id : 0,
             name: productName,
-            productnumber: productNumber,
+            productnumber: productNumber, 
             description: productDescription,
             details : productDetails,
             imageurl: productImageurl,
