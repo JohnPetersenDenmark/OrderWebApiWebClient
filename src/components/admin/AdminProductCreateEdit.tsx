@@ -3,6 +3,9 @@ import axios from 'axios';
 import { Product } from '../../types/Product';
 import FileInput from "../FileInput"
 import config from '../../config';
+import RichtextEditorQuill from "../RichtextEditorQuill"
+
+
 import { AxiosClientGet, AxiosClientPost } from '../../types/AxiosClient';
 
 
@@ -50,6 +53,8 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const [submitError, setSubmitError] = useState<string>('');
+
+    const [editorHtml, setEditorHtml] = useState("");
 
 
 
@@ -299,6 +304,12 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         }
     };
 
+     const handleRichTextEditorChange = (editorHtml : string) => {
+        setProductDetails(editorHtml)
+        //setEditorHtml(editorHtml);
+     }
+
+      
 
     const handleUpload = async () => {
         if (!selectedFile) {
@@ -505,7 +516,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
                 <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
                     <label htmlFor="details">Lang beskrivelse:</label><br />
-                    <input
+                    {/* <input
                         id="details"
                         type="text"
                         value={productDetails}
@@ -522,9 +533,14 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                             borderRadius: '4px',
                         }}
                         disabled={submitting}
+                    /> */}
+                      <RichtextEditorQuill 
+                    initialValue={productDetails}
+                    onChange={(html) => handleRichTextEditorChange(html)} // get final value here
                     />
                 </div>
-
+               
+             
                 <div
                     style={{
                         marginBottom: '1rem',
