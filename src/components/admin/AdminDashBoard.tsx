@@ -5,6 +5,9 @@ import AdminCalendar from './AdminCalendar'
 import AdminOrders from './AdminOrders'
 import AdminAllOrders from './AdminAllOrders'
 import AdminMenues from './AdminMenues'
+import AdminFishShop from './AdminFishShop'
+import AdminEmployee from './AdminEmployee';
+
  import RevenuePerTimePeriod from '../Statistic/RevenuePerTimePeriod'
 
 import AdminSettings from './AdminSettings'
@@ -67,6 +70,8 @@ const AdminDashBoard: React.FC = () => {
                     > Hjem</button>
                 </div>
 
+                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('FishShop')}>Biler</div>
+                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Employee')}>Medarbejder</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Revenue')}>Omsætning</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Stadepladser')}>Stadepladser</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Kalender')}>Kalender</div>
@@ -76,6 +81,8 @@ const AdminDashBoard: React.FC = () => {
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Menuer')}>Menuer</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Brugere')}>Brugere</div>
 
+                 {activeMenu === 'FishShop' && <AdminFishShop />}
+                  {activeMenu === 'Employee' && <AdminEmployee />}
                 {activeMenu === 'Revenue' && <RevenuePerTimePeriod />}
                 {activeMenu === 'Stadepladser' && <AdminPlaces />}
                 {activeMenu === 'Kalender' && <AdminCalendar />}
