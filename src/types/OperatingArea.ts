@@ -1,8 +1,9 @@
 import { TruckLocation } from "./TruckLocation";
 
-export interface OperatingArea {
+  interface OperatingArea {
   id: number;
   name: string;
-  trucklocationcalendar : TruckLocation[]
+  trucklocationids : number[]
 }
 
+export default OperatingArea
