@@ -5,7 +5,7 @@ import AdminCalendar from './AdminCalendar'
 import AdminOrders from './AdminOrders'
 import AdminAllOrders from './AdminAllOrders'
 import AdminMenues from './AdminMenues'
-import AdminFishShop from './AdminFishShop'
+import AdminFishShops from './AdminFishshops'
 import AdminEmployee from './AdminEmployee';
 import AdminOperatingArea from './AdminOperatingArea';
 
@@ -83,7 +83,7 @@ const AdminDashBoard: React.FC = () => {
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Menuer')}>Menuer</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Brugere')}>Brugere</div>
 
-                 {activeMenu === 'FishShop' && <AdminFishShop />}
+                 {activeMenu === 'FishShop' && <AdminFishShops />}
                   {activeMenu === 'Employee' && <AdminEmployee />}
                    {activeMenu === 'Area' && <AdminOperatingArea />}
                 {activeMenu === 'Revenue' && <RevenuePerTimePeriod />}

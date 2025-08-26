@@ -1,29 +1,34 @@
 
+
 import React, { useEffect, useState } from 'react';
-import { Employee } from '../../types/Employee';
+
+import { FishShop } from '../../types/FishShop';
+
+import FishShopCreateEdit from '../FishShopCreateEdit';
 
 import { AxiosClientGet, AxiosClientPost, AxiosClientDelete } from '../../types/AxiosClient';
-import EmployeeCreateEdit from '../EmployeeCreateEdit';
 
-const AdminEmployee: React.FC = () => {
+const AdminFishshop: React.FC = () => {
 
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [isCreateEditEmployeeModalOpen, setIsCreateEditEmployeeModalOpen] = useState(false);
-  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
+  const [fishShops, setFishshops] = useState<FishShop[]>([]);
+  
+  const [isCreateEditFishShopModalOpen, setIsCreateEditFishShopModalOpen] = useState(false);
+  const [fishShopToEdit, setFishShopToEdit] = useState<FishShop | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(0);
   
     const [error, setError] = useState<string | null>(null);
     
+    var x = 1;
        useEffect(() => {
        
            const fetchData = async () => {
        
              try {
-               const employeesResponse: any = await AxiosClientGet('/Admin/employeelist', true);
+               const fishShopResponse: any = await AxiosClientGet('/Admin/fishshoplist', true);
        
-               setEmployees(employeesResponse);
+               setFishshops(fishShopResponse);
                setLoading(false);
        
              } catch (err) {
@@ -38,47 +43,47 @@ const AdminEmployee: React.FC = () => {
            fetchData();
        
        
-         }, [isCreateEditEmployeeModalOpen, submitting]);
+         }, [isCreateEditFishShopModalOpen, submitting]);
 
-  const handleEdit = (user: Employee) => {
-    setEmployeeToEdit(user);
-    setIsCreateEditEmployeeModalOpen(true);
-  };
-
-  const handleDelete = (user: Employee) => {
-    if (user) {
-      const deleteUser = async () => {
-        try {
-          setSubmitting(true);
-
-          await AxiosClientDelete('/Login/removeuser/' + user.id, true)
-
-
-        } catch (error) {
-          setError('Fejl');
-          console.error(error);
-        } finally {
-          setSubmitting(false);
-          setReload(prev => prev + 1);
-        }
-      };
-      deleteUser();
-
-    }
-  };
-
-  const handleNewEmployee = () => {
-    setIsCreateEditEmployeeModalOpen(true);
-    setEmployeeToEdit(null);
-
-  };
-
-  const handleCloseCreateEditEmployeeModal = () => {
-    setEmployeeToEdit(null);
-    setIsCreateEditEmployeeModalOpen(false);
-    setReload(prev => prev + 1);
-  };
-
+           const handleEdit = (fishShop: FishShop) => {
+             setFishShopToEdit(fishShop);
+             setIsCreateEditFishShopModalOpen(true);
+           };
+         
+           const handleDelete = (fishShop: FishShop) => {
+             if (fishShop) {
+               const deleteFishShop = async () => {
+                 try {
+                   setSubmitting(true);
+         
+                   await AxiosClientDelete('/Admin/XXXXCCCC/' + fishShop.id, true)
+         
+         
+                 } catch (error) {
+                   setError('Fejl');
+                   console.error(error);
+                 } finally {
+                   setSubmitting(false);
+                   setReload(prev => prev + 1);
+                 }
+               };
+               deleteFishShop();
+         
+             }
+           };
+         
+           const handleNewOperatingArea = () => {
+             setIsCreateEditFishShopModalOpen(true);
+             setFishShopToEdit(null);
+         
+           };
+         
+           const handleCloseCreateEditEmployeeModal = () => {
+             setFishShopToEdit(null);
+             setIsCreateEditFishShopModalOpen(false);
+             setReload(prev => prev + 1);
+           };
+         
 
      return (
     <div
@@ -94,9 +99,9 @@ const AdminEmployee: React.FC = () => {
       }}
     >
 
-      <EmployeeCreateEdit
-        isOpen={isCreateEditEmployeeModalOpen}
-        employeeToEdit={employeeToEdit}
+      <FishShopCreateEdit
+        isOpen={isCreateEditFishShopModalOpen}
+        fishShopToEdit={fishShopToEdit}
         onClose={handleCloseCreateEditEmployeeModal} />
 
       <div style={{
@@ -105,17 +110,17 @@ const AdminEmployee: React.FC = () => {
         color: '#22191b',
         margin: '20px',
         textAlign: 'center' as const,
-      }}>Medarbejdere</div>
+      }}>Biler</div>
 
       <div style={{ margin: 'auto', padding: '1rem' }}>
-        {employees && employees.map((employee) => (
-          <div key={employee.id} style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', border: '1px solid grey', borderRadius: '5px', background: '#ffffff', }}>
-            <div style={{ flex: '2', padding: '0.5rem' }}>{employee.name}</div>           
+        {fishShops && fishShops.map((fishShop) => (
+          <div key={fishShop.id} style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', border: '1px solid grey', borderRadius: '5px', background: '#ffffff', }}>
+            <div style={{ flex: '2', padding: '0.5rem' }}>{fishShop.name}</div>           
             <div style={{ flex: '3', padding: '0.5rem' }}>
               <img
                 src="/images/edit-icon.png"
                 alt="Edit"
-                onClick={() => handleEdit(employee)}
+                onClick={() => handleEdit(fishShop)}
                 style={{ cursor: 'pointer', width: '28px', height: '28px' }}
               />
             </div>
@@ -124,7 +129,7 @@ const AdminEmployee: React.FC = () => {
               <img
                 src="/images/delete-icon.png"
                 alt="Delete"
-                onClick={() => handleDelete(employee)}
+                onClick={() => handleDelete(fishShop)}
                 style={{ cursor: 'pointer', width: '28px', height: '28px' }}
               />
             </div>
@@ -152,7 +157,7 @@ const AdminEmployee: React.FC = () => {
           justifyContent: 'center',
           cursor: 'pointer',
         }}
-        onClick={handleNewEmployee}
+        onClick={handleNewOperatingArea}
       >
         <img
           src="/images/new-icon.png"
@@ -165,4 +170,4 @@ const AdminEmployee: React.FC = () => {
   )
 }
 
-export default AdminEmployee
+export default AdminFishshop

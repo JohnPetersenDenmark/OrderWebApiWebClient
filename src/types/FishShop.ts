@@ -4,7 +4,7 @@ import  OperatingArea  from "./OperatingArea";
 export interface FishShop {
   id: number;
   name: string;
-  area : OperatingArea;
-  employee : Employee
+  operatingareaid : number | undefined;
+  employeeid : number | undefined
 }
 

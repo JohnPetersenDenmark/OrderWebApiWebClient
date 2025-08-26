@@ -107,7 +107,7 @@ const AdminOperatingArea: React.FC = () => {
         color: '#22191b',
         margin: '20px',
         textAlign: 'center' as const,
-      }}>Brugere</div>
+      }}>Områder</div>
 
       <div style={{ margin: 'auto', padding: '1rem' }}>
         {operatingAreas && operatingAreas.map((operatingArea) => (

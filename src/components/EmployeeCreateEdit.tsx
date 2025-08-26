@@ -115,7 +115,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                         textAlign: 'center',
                     }}
                 >
-                    Ny medarbejder
+                    Medarbejder
                 </h2>
 
              
@@ -144,7 +144,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                 </div>
                
                 <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="phone"><strong>Kodeord:</strong></label><br />
+                    <label htmlFor="phone"><strong>Telefonnummer:</strong></label><br />
                     <input
                         id="phone"
                         type="text"
@@ -172,7 +172,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
 
                
                 <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="email"><strong>Display name:</strong></label><br />
+                    <label htmlFor="email"><strong>Email:</strong></label><br />
                     <input
                         id="email"
                         type="Text"
