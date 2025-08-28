@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { AxiosClientGet, AxiosClientPost } from '../types/AxiosClient';
 
-import { TruckLocation } from '../types/TruckLocation';
+import { SaleLocation } from '../types/SaleLocation';
+
+
 import OperatingArea from '../types/OperatingArea'
 
 interface RegisterModalProps {
@@ -19,9 +21,9 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
 
     const [operatingAreaId, setOperatingAreaId] = useState<string>('');
 
-    const [truckLocationList, setTruckLocationList] = useState<TruckLocation[]>([]);
+    const [saleLocationList, setSaleLocationList] = useState<SaleLocation[]>([]);
 
-    const [selectedTruckLocations, setSelectedTruckLocations] = useState<TruckLocation[]>([]);
+    const [selectedSaleLocations, setSelectedSaleLocations] = useState<SaleLocation[]>([]);
 
 
     const [selectedTruckLocationsTouched, setSelectedTruckLocationsTouched] = useState(false);
@@ -40,9 +42,9 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
         const fetchData = async () => {
 
             try {
-                const truckLocationsResponse: any = await AxiosClientGet('/Home/truckcalendarlocationlist', true);
+                const saleLocationsResponse: any = await AxiosClientGet('/Home/locationlist', true);
 
-                setTruckLocationList(truckLocationsResponse);
+                setSaleLocationList(saleLocationsResponse);
                 setLoading(false);
 
             } catch (err) {
@@ -64,15 +66,15 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
             setOperatingAreaId(operatingAreaToEdit.id.toString())
             setOperatingAreaName(operatingAreaToEdit.name);
 
-            const noget = truckLocationList.filter(truckLocation =>
+           /*  const noget = saleLocationList.filter(truckLocation =>
                 operatingAreaToEdit.trucklocationids.includes(truckLocation.id))
-            setSelectedTruckLocations(noget)
+            setSelectedSaleLocations(noget) */
         }
 
         else {
             setOperatingAreaId("0")
             setOperatingAreaName('');
-            setSelectedTruckLocations([]);
+            setSelectedSaleLocations([]);
         }
 
         setOperatinAreaNameTouched(false);
@@ -81,15 +83,15 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
 
 
 
-    }, [truckLocationList]);
+    }, [saleLocationList]);
 
-    const toggleLocation = (location: TruckLocation) => {
-        if (selectedTruckLocations.includes(location)) {
+    const toggleLocation = (saleLocation: SaleLocation) => {
+        if (selectedSaleLocations.includes(saleLocation)) {
             // remove
-            setSelectedTruckLocations(selectedTruckLocations.filter((l) => l !== location));
+            setSelectedSaleLocations(selectedSaleLocations.filter((l) => l !== saleLocation));
         } else {
             // add
-            setSelectedTruckLocations([...selectedTruckLocations, location]);
+            setSelectedSaleLocations([...selectedSaleLocations, saleLocation]);
         }
     };
 
@@ -98,7 +100,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
         const userData: OperatingArea = {
             id: Number(operatingAreaId),
             name: operatingAreaName,
-            trucklocationids: selectedTruckLocations.map(loc => loc.id)
+            locationids: selectedSaleLocations.map(loc => loc.id) 
         };
         try {
             setSubmitting(true);
@@ -185,7 +187,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                 <div style={{ marginBottom: '1rem' }}>
                     <h2 className="text-xl font-bold mb-2">Pick Locations</h2>
                     <ul className="mb-4">
-                        {truckLocationList.map((location) => (
+                        {saleLocationList.map((location) => (
                             <li key={location.id} className="mb-1">
                                 <button
                                     onClick={() => toggleLocation(location)}
@@ -195,7 +197,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                                      : "bg-gray-200"
                                  }`} */
                                 >
-                                    {location.locationname} {location.startdatetime}
+                                    {location.locationname} 
                                 </button>
                             </li>
                         ))}
@@ -207,7 +209,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                 <div style={{ marginBottom: '1rem' }}>
                     <h3 className="text-lg font-semibold mb-2">Selected:</h3>
                     <ul>
-                        {selectedTruckLocations.map((loc) => (
+                        {selectedSaleLocations.map((loc) => (
                             <li key={loc.id} className="flex items-center justify-between mb-1">
                                 {loc.locationname}
                                 <button
@@ -218,7 +220,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                                 </button>
                             </li>
                         ))}
-                        {selectedTruckLocations.length === 0 && <p className="text-gray-500">None</p>}
+                        {selectedSaleLocations.length === 0 && <p className="text-gray-500">None</p>}
                     </ul>
                 </div>
                 {submitError && <p style={{ color: 'red' }}>{submitError}</p>}

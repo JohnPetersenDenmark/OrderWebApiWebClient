@@ -86,12 +86,12 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
            // (fishShopToEdit.employeeid)
 
             const preSelectedEmployee = employeeList.filter(employee =>
-                 fishShopToEdit.employeeid == employee.id);
+                 fishShopToEdit?.employeeid == employee.id);
 
              setSelectedEmployee(preSelectedEmployee[0]) 
 
                const preSelectedOperatingArea = operatingAreaList.filter(operatingArea =>
-                 fishShopToEdit.operatingareaid == operatingArea.id);
+                 fishShopToEdit?.operatingareaid == operatingArea.id);
 
              setSelectedOperatingArea(preSelectedOperatingArea[0]) 
         }
@@ -100,6 +100,7 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
             setFishShopId("0")
             setFishShopName('');
             setSelectedEmployee(null);
+            setSelectedOperatingArea(null)
         }
 
         setfishShopNameTouched(false);
@@ -130,6 +131,10 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
         }
     };
 
+     const closeModal = () => {
+       fishShopToEdit = null;
+       onClose();
+    };
 
     const handleSubmit = async () => {
         //const userData: fishShop = {
@@ -298,7 +303,7 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
                         Ok
                     </button>
                     <button
-                        onClick={onClose}
+                        onClick={closeModal}
                         disabled={submitting}
                         style={{
                             flex: 1,

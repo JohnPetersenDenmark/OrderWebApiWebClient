@@ -1,9 +1,9 @@
-import { TruckLocation } from "./TruckLocation";
+
 
   interface OperatingArea {
   id: number;
   name: string;
-  trucklocationids : number[]
+  locationids : number[]
 }
 
 export default OperatingArea

@@ -20,6 +20,15 @@ const AdminPlaceCreateEdit: React.FC<LocationModalProps> = ({ isOpen, onClose, l
   const [placeName, setPlaceName] = useState<string>('');
   const [placeNameTouched, setPlaceNameTouched] = useState(false);
 
+  const [address, setAddress] = useState<string>('');
+    const [addressTouched, setAddressTouched] = useState(false);
+
+      const [latitude, setLatitude] = useState<string>('');
+    const [latitudeTouched, setLatitudeTouched] = useState(false);
+
+        const [longitude, setLongitude] = useState<string>('');
+    const [longitudeTouched, setLongitudeTouched] = useState(false);
+
   const isPlaceNameValid = placeName.length > 0;
   const isFormValid = isPlaceNameValid
 
@@ -47,12 +56,15 @@ const AdminPlaceCreateEdit: React.FC<LocationModalProps> = ({ isOpen, onClose, l
     const placeData = {
       id: locationToEdit !== null ? locationToEdit.id : 0,
       locationname: placeName.trim(),
+      address: address,
+      latitude : latitude,
+      longitude : longitude
     }
 
 
 
     try {
-      const response = await AxiosClientPost('/Admin/addorupdatelocation', placeData, true);
+      const response = await AxiosClientPost('/Admin/addorupdatelocation', placeData, false);
       onClose();
     } catch (error) {
       setSubmitError('Fejl');
@@ -119,6 +131,66 @@ const AdminPlaceCreateEdit: React.FC<LocationModalProps> = ({ isOpen, onClose, l
               padding: '0.5rem',
               borderColor:
                 !isPlaceNameValid && placeNameTouched ? 'red' : undefined,
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              borderRadius: '4px',
+              boxSizing: 'border-box',
+            }}
+            disabled={submitting}
+          />
+        </div>
+
+         <div style={{ marginBottom: '1rem' }}>
+          <input
+            id="address"
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            onBlur={() => setAddressTouched(true)}
+            placeholder="Indtast pladsnavn"
+            style={{
+              width: '100%',
+              padding: '0.5rem',              
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              borderRadius: '4px',
+              boxSizing: 'border-box',
+            }}
+            disabled={submitting}
+          />
+        </div>
+
+         <div style={{ marginBottom: '1rem' }}>
+          <input
+            id="latitude"
+            type="text"
+            value={latitude}
+            onChange={(e) => setLatitude(e.target.value)}
+            onBlur={() => setLatitudeTouched(true)}
+            placeholder="Indtast pladsnavn"
+            style={{
+              width: '100%',
+              padding: '0.5rem',              
+              borderWidth: '1.5px',
+              borderStyle: 'solid',
+              borderRadius: '4px',
+              boxSizing: 'border-box',
+            }}
+            disabled={submitting}
+          />
+        </div>
+
+         <div style={{ marginBottom: '1rem' }}>
+          <input
+            id="longitude"
+            type="text"
+            value={longitude}
+            onChange={(e) => setLongitude(e.target.value)}
+            onBlur={() => setLongitudeTouched(true)}
+            placeholder="Indtast pladsnavn"
+            style={{
+              width: '100%',
+              padding: '0.5rem',              
               borderWidth: '1.5px',
               borderStyle: 'solid',
               borderRadius: '4px',
