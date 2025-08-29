@@ -198,7 +198,7 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
                         textAlign: 'center',
                     }}
                 >
-                    Ny fiskebil
+                    Fiskebil
                 </h2>
 
 
@@ -257,7 +257,7 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
 
 
                 <div style={{ marginBottom: '1rem' }}>
-                    <h2 className="text-xl font-bold mb-2">Vælg medarbejder</h2>
+                    <h2 className="text-xl font-bold mb-2">Vælg område</h2>
                     <ul className="mb-4">
                         {operatingAreaList.map((operationgArea) => (
                             <li key={operationgArea.id} className="mb-1">

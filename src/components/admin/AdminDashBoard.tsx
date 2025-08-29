@@ -8,6 +8,7 @@ import AdminMenues from './AdminMenues'
 import AdminFishShops from './AdminFishshops'
 import AdminEmployee from './AdminEmployee';
 import AdminOperatingArea from './AdminOperatingArea';
+import AdminTemplateSchedule from './AdminTemplateSchedule';
 
  import RevenuePerTimePeriod from '../Statistic/RevenuePerTimePeriod'
 
@@ -74,6 +75,8 @@ const AdminDashBoard: React.FC = () => {
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('FishShop')}>Biler</div>
                  <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Employee')}>Medarbejder</div>
                    <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Area')}>Område</div>
+                   <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('TemplateSchedules')}>Template</div>
+
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Revenue')}>Omsætning</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Stadepladser')}>Stadepladser</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Kalender')}>Kalender</div>
@@ -83,7 +86,8 @@ const AdminDashBoard: React.FC = () => {
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Menuer')}>Menuer</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Brugere')}>Brugere</div>
 
-                 {activeMenu === 'FishShop' && <AdminFishShops />}
+                 {activeMenu === 'TemplateSchedules' && <AdminTemplateSchedule />}
+                  {activeMenu === 'FishShop' && <AdminFishShops />}
                   {activeMenu === 'Employee' && <AdminEmployee />}
                    {activeMenu === 'Area' && <AdminOperatingArea />}
                 {activeMenu === 'Revenue' && <RevenuePerTimePeriod />}

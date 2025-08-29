@@ -156,7 +156,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                         textAlign: 'center',
                     }}
                 >
-                    Ny medarbejder
+                    Område
                 </h2>
 
 
@@ -185,7 +185,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                 </div>
 
                 <div style={{ marginBottom: '1rem' }}>
-                    <h2 className="text-xl font-bold mb-2">Pick Locations</h2>
+                    <h2 className="text-xl font-bold mb-2">Vælg lokation</h2>
                     <ul className="mb-4">
                         {saleLocationList.map((location) => (
                             <li key={location.id} className="mb-1">
