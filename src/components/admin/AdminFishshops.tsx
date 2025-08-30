@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { FishShop } from '../../types/FishShop';
+import { FishShopFullDto } from '../../types/FishShop';
 
 import FishShopCreateEdit from '../FishShopCreateEdit';
 
@@ -10,10 +10,10 @@ import { AxiosClientGet, AxiosClientPost, AxiosClientDelete } from '../../types/
 
 const AdminFishshop: React.FC = () => {
 
-  const [fishShops, setFishshops] = useState<FishShop[]>([]);
+  const [fishShops, setFishshops] = useState<FishShopFullDto[]>([]);
   
   const [isCreateEditFishShopModalOpen, setIsCreateEditFishShopModalOpen] = useState(false);
-  const [fishShopToEdit, setFishShopToEdit] = useState<FishShop | null>(null);
+  const [fishShopToEdit, setFishShopToEdit] = useState<FishShopFullDto | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(0);
@@ -45,12 +45,12 @@ const AdminFishshop: React.FC = () => {
        
          }, [isCreateEditFishShopModalOpen, submitting]);
 
-           const handleEdit = (fishShop: FishShop) => {
+           const handleEdit = (fishShop: FishShopFullDto) => {
              setFishShopToEdit(fishShop);
              setIsCreateEditFishShopModalOpen(true);
            };
          
-           const handleDelete = (fishShop: FishShop) => {
+           const handleDelete = (fishShop: FishShopFullDto) => {
              if (fishShop) {
                const deleteFishShop = async () => {
                  try {

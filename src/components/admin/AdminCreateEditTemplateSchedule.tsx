@@ -5,7 +5,7 @@ import { SaleLocation } from '../../types/SaleLocation';
 import { TemplateSchedule } from '../../types/TemplateSchedule';
 import config from '../../config';
 import { AxiosClientGet, AxiosClientPost } from '../../types/AxiosClient';
-import { FishShop } from '../../types/FishShop';
+import { FishShopFullDto } from '../../types/FishShop';
 
 
 interface LocationModalProps {
@@ -23,7 +23,7 @@ const AdminCreateEditTemplateSchedule: React.FC<LocationModalProps> = ({ isOpen,
     const [templateScheduleNameTouched, setTemplateScheduleNameTouched] = useState(false);
 
     const [saleLocationList, setSaleLocationList] = useState<SaleLocation[]>([]);
-    const [fishShopList, setFishShopList] = useState<FishShop[]>([]);
+    const [fishShopList, setFishShopList] = useState<FishShopFullDto[]>([]);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');

@@ -4,11 +4,11 @@ import { AxiosClientGet, AxiosClientPost } from '../types/AxiosClient';
 import { Employee } from '../types/Employee';
 import OperatingArea from '../types/OperatingArea';
 
-import { FishShop } from '../types/FishShop';
+import { FishShopFullDto, FishShopLightDto } from '../types/FishShop';
 
 interface RegisterModalProps {
     isOpen: boolean;
-    fishShopToEdit: FishShop | null;
+    fishShopToEdit: FishShopFullDto | null;
     onClose: () => void;
 }
 
@@ -16,7 +16,7 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
-    const [fishShop, setFishShop] = useState<FishShop[]>([]);
+    const [fishShop, setFishShop] = useState<FishShopFullDto[]>([]);
 
     const [fishShopName, setFishShopName] = useState<string>('');
     const [fishShopNameTouched, setfishShopNameTouched] = useState(false);
@@ -36,80 +36,73 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>('');
 
+    const [dataListIsLoaded, setDataListIsLoaded] = useState(false);
+
+
+
     const isfishShopNameNameValid = fishShopName.length > 0;
     const isFormValid = isfishShopNameNameValid;
 
-    useEffect(() => {
-        if (!isOpen) return;
+   useEffect(() => {
+  if (!isOpen) return;
 
-        const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
 
-            try {
-                const employeesResponse: any = await AxiosClientGet('/Admin/employeelist', true);
+      const [employeesResponse, operatingAreaResponse] = await Promise.all([
+        AxiosClientGet('/Admin/employeelist', true),
+        AxiosClientGet('/Admin/operatingarealist', true)
+      ]);
 
-                setEmployeeList(employeesResponse);
-                setLoading(false);
+      setEmployeeList(employeesResponse);
+      setOperatingAreaList(operatingAreaResponse);
 
-            } catch (err) {
-                setError('Failed to load locations');
-                setLoading(false);
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
+    } catch (err) {
+      setError("Failed to load data");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            try {
-                const operatingAreaResponse: any = await AxiosClientGet('/Admin/operatingarealist', true);
-
-                setOperatingAreaList(operatingAreaResponse);
-                setLoading(false);
-
-            } catch (err) {
-                setError('Failed to load locations');
-                setLoading(false);
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-
-        }
-
-        fetchData();
-    }, [isOpen]);
-
-    useEffect(() => {
-        //  if (!isOpen) return;
-
-        if (fishShopToEdit !== null) {
-            setFishShopId(fishShopToEdit.id.toString())
-            setFishShopName(fishShopToEdit.name);
-           // (fishShopToEdit.employeeid)
-
-            const preSelectedEmployee = employeeList.filter(employee =>
-                 fishShopToEdit?.employeeid == employee.id);
-
-             setSelectedEmployee(preSelectedEmployee[0]) 
-
-               const preSelectedOperatingArea = operatingAreaList.filter(operatingArea =>
-                 fishShopToEdit?.operatingareaid == operatingArea.id);
-
-             setSelectedOperatingArea(preSelectedOperatingArea[0]) 
-        }
-
-        else {
-            setFishShopId("0")
-            setFishShopName('');
-            setSelectedEmployee(null);
-            setSelectedOperatingArea(null)
-        }
-
-        setfishShopNameTouched(false);
-        setSelectedTruckLocationsTouched(false)
-        setSubmitting(false);
+  fetchData();
+}, [isOpen]);
 
 
+// 2. Preselect when editing + lists are ready
+useEffect(() => {
+  if (!isOpen) return;
 
-    }, [employeeList]);
+  if (!fishShopToEdit) {
+    // new shop
+    setFishShopId("0");
+    setFishShopName('');
+    setSelectedEmployee(null);
+    setSelectedOperatingArea(null);
+  } else {
+    // editing existing shop
+    setFishShopId(fishShopToEdit.id.toString());
+    setFishShopName(fishShopToEdit.name);
+
+    if (employeeList.length > 0) {
+      setSelectedEmployee(
+        employeeList.find(e => e.id === fishShopToEdit?.employeeId) || null
+      );
+    }
+
+    if (operatingAreaList.length > 0) {
+      setSelectedOperatingArea(
+        operatingAreaList.find(o => o.id === fishShopToEdit?.operationAreaId) || null
+      );
+    }
+  }
+
+  setfishShopNameTouched(false);
+  setSelectedTruckLocationsTouched(false);
+  setSubmitting(false);
+
+}, [fishShopToEdit, employeeList, operatingAreaList, isOpen]);
 
 
 
@@ -131,18 +124,18 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
         }
     };
 
-     const closeModal = () => {
-       fishShopToEdit = null;
-       onClose();
+    const closeModal = () => {
+        fishShopToEdit = null;
+        onClose();
     };
 
     const handleSubmit = async () => {
         //const userData: fishShop = {
-        const userData : FishShop = {
+        const userData: FishShopLightDto = {
             id: Number(fishShopId),
             name: fishShopName,
-           employeeid : selectedEmployee?.id,
-           operatingareaid : selectedOperatingArea?.id
+            employeeid: selectedEmployee?.id,
+            operatingareaid: selectedOperatingArea?.id
         };
         try {
             setSubmitting(true);
