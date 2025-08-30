@@ -2,9 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { AxiosClientGet, AxiosClientPost } from '../types/AxiosClient';
 
 import { SaleLocation } from '../types/SaleLocation';
+import OperatingArea from '../types/OperatingArea';
 
-
-import OperatingArea from '../types/OperatingArea'
+interface TemplateSchedule {
+    id : number,
+    operationareaid : number,
+    dayofweek: number;
+    starttime: string;
+    endtime: string;
+    locationid: number;
+    locationname : string;
+}
 
 interface RegisterModalProps {
     isOpen: boolean;
@@ -23,13 +31,10 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
 
     const [saleLocationList, setSaleLocationList] = useState<SaleLocation[]>([]);
 
+    // schedules live here
+    const [templateScheduleList, setTemplateScheduleList] = useState<TemplateSchedule[]>([]);
+
     const [selectedSaleLocations, setSelectedSaleLocations] = useState<SaleLocation[]>([]);
-
-
-    const [selectedTruckLocationsTouched, setSelectedTruckLocationsTouched] = useState(false);
-
-    const [selectedTruckLocationId, setSelectedTruckLocationId] = useState<string>('');
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>('');
 
@@ -40,13 +45,10 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
         if (!isOpen) return;
 
         const fetchData = async () => {
-
             try {
                 const saleLocationsResponse: any = await AxiosClientGet('/Home/locationlist', true);
-
                 setSaleLocationList(saleLocationsResponse);
                 setLoading(false);
-
             } catch (err) {
                 setError('Failed to load locations');
                 setLoading(false);
@@ -54,70 +56,83 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
             } finally {
                 setLoading(false);
             }
-        }
+        };
 
         fetchData();
     }, [isOpen]);
 
     useEffect(() => {
-      //  if (!isOpen) return;
-
         if (operatingAreaToEdit !== null) {
-            setOperatingAreaId(operatingAreaToEdit.id.toString())
+            setOperatingAreaId(operatingAreaToEdit.id.toString());
             setOperatingAreaName(operatingAreaToEdit.name);
-
-           /*  const noget = saleLocationList.filter(truckLocation =>
-                operatingAreaToEdit.trucklocationids.includes(truckLocation.id))
-            setSelectedSaleLocations(noget) */
-        }
-
-        else {
-            setOperatingAreaId("0")
+            setSelectedSaleLocations(operatingAreaToEdit.locations)
+            setTemplateScheduleList(operatingAreaToEdit.templateSchedules)
+        } else {
+            setOperatingAreaId("0");
             setOperatingAreaName('');
             setSelectedSaleLocations([]);
+            setTemplateScheduleList([]);
         }
 
         setOperatinAreaNameTouched(false);
-        setSelectedTruckLocationsTouched(false)
         setSubmitting(false);
-
-
-
-    }, [saleLocationList]);
+    }, [operatingAreaToEdit]);
 
     const toggleLocation = (saleLocation: SaleLocation) => {
-        if (selectedSaleLocations.includes(saleLocation)) {
-            // remove
-            setSelectedSaleLocations(selectedSaleLocations.filter((l) => l !== saleLocation));
+        if (selectedSaleLocations.find((l) => l.id === saleLocation.id)) {
+            // remove location + its schedule
+            setSelectedSaleLocations(selectedSaleLocations.filter((l) => l.id !== saleLocation.id));
+            setTemplateScheduleList(templateScheduleList.filter(s => s.locationid !== saleLocation.id));
         } else {
-            // add
+            // add location + blank schedule
             setSelectedSaleLocations([...selectedSaleLocations, saleLocation]);
+            setTemplateScheduleList([
+                ...templateScheduleList,
+                {
+                    id : 0,
+                    locationname : '',
+                    operationareaid : 0,
+                    dayofweek: 1,
+                    starttime: "09:00",
+                    endtime: "10:00",
+                    locationid: saleLocation.id
+                }
+            ]);
         }
     };
 
+    const updateScheduleField = (locationId: number, field: keyof TemplateSchedule, value: any) => {
+        setTemplateScheduleList(templateScheduleList.map(s =>
+            s.locationid === locationId ? { ...s, [field]: value } : s
+        ));
+    };
 
     const handleSubmit = async () => {
-        const userData: OperatingArea = {
-            id: Number(operatingAreaId),
+
+        const OperatingAreaData  =  {
+            id: operatingAreaToEdit ? operatingAreaToEdit?.id : 0,
             name: operatingAreaName,
-            locationids: selectedSaleLocations.map(loc => loc.id) 
+            locationids: selectedSaleLocations.map(loc => loc.id),
+             templateschedules: templateScheduleList
         };
+
         try {
             setSubmitting(true);
-            let url = "/Admin/addorupdateoperatingarea";
-            const response = await AxiosClientPost(url, userData, false);
-            onClose();
 
+            // 1. Save OperatingArea
+            await AxiosClientPost("/Admin/addorupdateoperatingarea", OperatingAreaData, false);
+
+            // 2. Save TemplateSchedules (bulk API endpoint?)
+           // await AxiosClientPost("/Admin/savetemplateschedules", templateScheduleList, false);
+
+            onClose();
         } catch (error) {
             setSubmitError('Fejl');
             console.error(error);
-
         } finally {
             setSubmitting(false);
         }
     };
-
-
 
     if (!isOpen) return null;
 
@@ -147,124 +162,139 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                     boxSizing: 'border-box',
                 }}
             >
-                <h2
-                    style={{
-                        backgroundColor: '#8d4a5b',
-                        padding: '1rem',
-                        color: 'white',
-                        borderRadius: '8px',
-                        textAlign: 'center',
-                    }}
-                >
-                    Område
-                </h2>
-
-
                 <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="operatingareaname"><strong>Navn:</strong></label><br />
-                    <input
-                        id="operatingareaname"
-                        type="text"
-                        value={operatingAreaName}
-                        onChange={(e) => setOperatingAreaName(e.target.value)}
-                        onBlur={() => setOperatinAreaNameTouched(true)}
-                        placeholder="Indtast navn"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isOperatingAreaNameValid && operatingAreaNameTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                            boxSizing: 'border-box',
-                            fontSize: '1rem',
-                        }}
+                    <h2 className="bg-[#8d4a5b] text-white text-center p-3 rounded-lg">Område</h2>
 
-                    />
-                </div>
+                    {/* Name */}
+                    <div className="mb-4">
+                        <label htmlFor="operatingareaname" className="font-bold">Navn:</label>
+                        <input
+                            id="operatingareaname"
+                            type="text"
+                            value={operatingAreaName}
+                            onChange={(e) => setOperatingAreaName(e.target.value)}
+                            onBlur={() => setOperatinAreaNameTouched(true)}
+                            placeholder="Indtast navn"
+                            className={`w-full p-2 mt-1 border rounded ${!isOperatingAreaNameValid && operatingAreaNameTouched ? "border-red-500" : "border-gray-300"}`}
+                        />
+                    </div>
 
-                <div style={{ marginBottom: '1rem' }}>
-                    <h2 className="text-xl font-bold mb-2">Vælg lokation</h2>
-                    <ul className="mb-4">
-                        {saleLocationList.map((location) => (
-                            <li key={location.id} className="mb-1">
-                                <button
-                                    onClick={() => toggleLocation(location)}
-                                /*  className={`px-3 py-1 rounded ${
-                                   selected.includes(location)
-                                     ? "bg-blue-500 text-white"
-                                     : "bg-gray-200"
-                                 }`} */
-                                >
-                                    {location.locationname} 
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                    {/* Locations */}
+                    <div style={{ marginBottom: '1rem' }}>
+                        <h2 className="text-lg font-bold mb-2">Vælg lokation</h2>
+                        <ul className="space-y-1">
+                            {saleLocationList.map((location) => (
+                                <li key={location.id}>
+                                    <button
+                                        onClick={() => toggleLocation(location)}
+                                        className={`px-3 py-1 rounded ${selectedSaleLocations.find(l => l.id === location.id) ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+                                    >
+                                        {location.locationname}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
 
-
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <h3 className="text-lg font-semibold mb-2">Selected:</h3>
-                    <ul>
-                        {selectedSaleLocations.map((loc) => (
-                            <li key={loc.id} className="flex items-center justify-between mb-1">
-                                {loc.locationname}
-                                <button
-                                    onClick={() => toggleLocation(loc)}
-                                    className="text-red-500 hover:underline"
-                                >
-                                    Remove
-                                </button>
-                            </li>
-                        ))}
+                    {/* Selected + schedules */}
+                     <div style={{ marginBottom: '1rem' }}>
+                        <h3 className="text-lg font-semibold mb-2">Selected:</h3>
                         {selectedSaleLocations.length === 0 && <p className="text-gray-500">None</p>}
-                    </ul>
-                </div>
-                {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
 
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    <button
-                        onClick={handleSubmit}
-                        disabled={!isFormValid || submitting}
-                        style={{
-                            flex: 1,
-                            padding: '0.5rem 1rem',
-                            backgroundColor: isFormValid && !submitting ? '#8d4a5b' : 'grey',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: isFormValid && !submitting ? 'pointer' : 'not-allowed',
-                            minWidth: '100px',
-                        }}
-                    >
-                        Ok
-                    </button>
-                    <button
-                        onClick={onClose}
-                        disabled={submitting}
-                        style={{
-                            flex: 1,
-                            padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? '#8d4a5b' : 'grey',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: !submitting ? 'pointer' : 'not-allowed',
-                            minWidth: '100px',
-                        }}
-                    >
-                        Annuller
-                    </button>
+                        <ul className="space-y-3">
+                            {selectedSaleLocations.map((loc) => {
+                                const schedule = templateScheduleList.find(s => s.locationid === loc.id);
+                                return (
+                                    <li key={loc.id} className="border p-3 rounded">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-medium">{loc.locationname}</span>
+                                            <button
+                                                onClick={() => toggleLocation(loc)}
+                                                className="text-red-500 hover:underline"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+
+                                        {/* Inline schedule editor */}
+                                        {schedule && (
+                                            <div className="flex gap-2 items-center">
+                                                <select
+                                                    value={schedule.dayofweek}
+                                                    onChange={e => updateScheduleField(loc.id, "dayofweek", Number(e.target.value))}
+                                                    className="border rounded p-1"
+                                                >
+                                                    <option value={1}>Mandag</option>
+                                                    <option value={2}>Tirsdag</option>
+                                                    <option value={3}>Onsdag</option>
+                                                    <option value={4}>Torsdag</option>
+                                                    <option value={5}>Fredag</option>
+                                                    <option value={6}>Lørdag</option>
+                                                    <option value={7}>Søndag</option>
+                                                </select>
+
+                                                <input
+                                                    type="time"
+                                                    value={schedule.starttime}
+                                                    onChange={e => updateScheduleField(loc.id, "starttime", e.target.value)}
+                                                    className="border rounded p-1"
+                                                />
+
+                                                <input
+                                                    type="time"
+                                                    value={schedule.endtime}
+                                                    onChange={e => updateScheduleField(loc.id, "endtime", e.target.value)}
+                                                    className="border rounded p-1"
+                                                />
+                                            </div>
+                                        )}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+
+                    {submitError && <p className="text-red-500">{submitError}</p>}
+
+                    {/* Buttons */}
+                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <button
+                            onClick={handleSubmit}
+                            disabled={!isFormValid || submitting}
+                            style={{
+                                flex: 1,
+                                padding: '0.5rem 1rem',
+                                backgroundColor: isFormValid && !submitting ? '#8d4a5b' : 'grey',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: isFormValid && !submitting ? 'pointer' : 'not-allowed',
+                                minWidth: '100px',
+                            }}
+                        >
+                            Ok
+                        </button>
+                        <button
+                            onClick={onClose}
+                            disabled={submitting}
+                            style={{
+                                flex: 1,
+                                padding: '0.5rem 1rem',
+                                backgroundColor: !submitting ? '#8d4a5b' : 'grey',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: !submitting ? 'pointer' : 'not-allowed',
+                                minWidth: '100px',
+                            }}
+                        >
+                            Annuller
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
-
-
-
 
 export default OperatingAreaCreateEdit;

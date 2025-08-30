@@ -1,7 +1,8 @@
 export interface TemplateSchedule {
   id: number;
+  operationareaid: number;
     name : string; 
-  fishshopid : number;
+locationname : string,
   locationid : number,
   dayofweek : number,
   starttime : string; 
