@@ -26,11 +26,9 @@ const AdminFishshop: React.FC = () => {
            const fetchData = async () => {
        
              try {
-              // const fishShopResponse: any = await AxiosClientGet('/Admin/fishshoplist', true);
+               const fishShopResponse: any = await AxiosClientGet('/Admin/fishshoplist', true);
 
-               const fishShopResponse: any = await AxiosClientGet('/Admin/fishshoplistSchedules', true);
-               
-       
+            
                setFishshops(fishShopResponse);
                setLoading(false);
        

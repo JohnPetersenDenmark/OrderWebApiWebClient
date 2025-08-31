@@ -60,7 +60,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
             id: employeeId,
             name : employeeName,
             phone : employeePhone,
-            email: employeeName.trim(),
+            email: employeeEmail.trim(),
            
         };
         try {

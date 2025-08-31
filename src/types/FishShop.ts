@@ -10,8 +10,8 @@ export interface FishShopLightDto {
 
 export interface FishShopFullDto {
   id: number;
-  name: string;
-  operatingarea : OperatingArea | undefined;
+  name: string; 
+  area : OperatingArea | undefined;
   employee : Employee | undefined
     operationAreaId : number | undefined;
   employeeId : number | undefined

@@ -16,6 +16,7 @@ import ProductList from './ProductList';
 import Login from './Login';
 
 import { TruckLocation } from '../types/TruckLocation';
+import DisplayListFishShopCalendar from './DisplayListFishShopCalendar';
 import CheckMyOrder from './CheckMyOrder';
 import AdminDashBoard from './admin/AdminDashBoard';
 import { Order } from '../types/Order';
@@ -30,19 +31,19 @@ export default function Layout() {
 
   const { user, authStatus } = useCurrentUser();
 
-  
+
   const [products, setProducts] = useState<Product[]>([]);
   const [order, setOrder] = useState<Order | null>(null);
 
   const [locations, setLocations] = useState<TruckLocation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-   const [reload, setReload] = useState(0); 
-  
-const location = useLocation();
+  const [reload, setReload] = useState(0);
 
-   const { isOpen, setIsOpen } = useDashboardContext();
- useEffect(() => {
+  const location = useLocation();
+
+  const { isOpen, setIsOpen } = useDashboardContext();
+  useEffect(() => {
     setIsUserDropdownOpen(false);
   }, [location.pathname]);
 
@@ -50,9 +51,9 @@ const location = useLocation();
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [productsResult,  locationsResult] = await Promise.allSettled([
+        const [productsResult, locationsResult] = await Promise.allSettled([
           axios.get<Product[]>(config.API_BASE_URL + '/Home/productlist'),
-        
+
           axios.get<TruckLocation[]>(config.API_BASE_URL + '/Home/truckcalendarlocationlist'),
           // AxiosClientGet( '/Home/truckcalendarlocationlist' , false)
         ]);
@@ -63,7 +64,7 @@ const location = useLocation();
           setError('Failed to load pizzas');
         }
 
-      
+
         if (locationsResult.status === 'fulfilled') {
           let locationsFromTodayAndForward = filterTruckLocationsByTodaysDate(locationsResult.value.data);
           const sortedTruckcalendarlocations = locationsFromTodayAndForward.sort((a, b) => parseDanishDateTime(a.startdatetime).getTime() - parseDanishDateTime(b.startdatetime).getTime());
@@ -103,8 +104,8 @@ const location = useLocation();
   };
 
   const handleCloseLoginModal = () => {
-     setReload(prev => prev + 1);
-     window.location.reload();
+    setReload(prev => prev + 1);
+    window.location.reload();
     setIsLoginModalOpen(false);
   };
 
@@ -180,7 +181,7 @@ const location = useLocation();
 
       {authStatus === 'loggedIn' && isOpen ? (
         <AdminDashBoard />
-    
+
       ) :
 
         (
@@ -193,12 +194,16 @@ const location = useLocation();
               />
             )}
 
+
+         
+
+
             {order && (
               <OrderModal
                 existingOrder={order}
                 locations={locations}
                 products={products}
-               
+
                 isOpen={isOrderModalOpen}
                 onClose={handleCloseOrderModal}
               />
@@ -208,7 +213,7 @@ const location = useLocation();
               existingOrder={order}
               locations={locations}
               products={products}
-             
+
               isOpen={isOrderModalOpen}
               onClose={handleCloseOrderModal}
             />
@@ -251,7 +256,7 @@ const location = useLocation();
               <div style={{ flex: '1 1 250px', background: '#8d4a5b', padding: '1rem', margin: 0, fontSize: '24px', }}>
                 <span
                   onClick={handleTermsOfSaleClick}
-                  style={{ cursor: 'pointer', color:  '#ffffff' }}
+                  style={{ cursor: 'pointer', color: '#ffffff' }}
                 >
                   Handelsbetingelser
                 </span>
@@ -334,6 +339,9 @@ const location = useLocation();
                   margin: 0,
                 }}
               >
+                  <p>
+                   <DisplayListFishShopCalendar />
+                    </p> 
                 <p style={{ textAlign: 'center', fontSize: '34px' }}>
                   Nyd smagen af den originale Mackie's Pizza
                 </p>
@@ -349,7 +357,7 @@ const location = useLocation();
                 <p style={{ textAlign: 'center', fontSize: '20px' }}>
                   Gør som de fleste - Bestil, tag med hjem og bag selv
                 </p>
-               {/*  <p style={{ textAlign: 'center', fontSize: '20px' }}>
+                {/*  <p style={{ textAlign: 'center', fontSize: '20px' }}>
                   <button                  
                     onClick={handleOrderClick}
                     style={{
@@ -364,7 +372,7 @@ const location = useLocation();
                     Bestil og bag selv
                   </button>
                 </p> */}
-             {/*    <p style={{ color: '#ffffff', textAlign: 'center', fontSize: '20px', fontWeight: 700 }}>
+                {/*    <p style={{ color: '#ffffff', textAlign: 'center', fontSize: '20px', fontWeight: 700 }}>
                   Her finder du os
                 </p> */}
                 <p style={{ background: '#fe9abc', textAlign: 'left', fontSize: '15px', fontWeight: 700 }}>

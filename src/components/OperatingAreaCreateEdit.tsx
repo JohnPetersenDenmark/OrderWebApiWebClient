@@ -5,13 +5,13 @@ import { SaleLocation } from '../types/SaleLocation';
 import OperatingArea from '../types/OperatingArea';
 
 interface TemplateSchedule {
-    id : number,
-    operationareaid : number,
+    id: number,
+    operationareaid: number,
     dayofweek: number;
     starttime: string;
     endtime: string;
     locationid: number;
-    locationname : string;
+    locationname: string;
 }
 
 interface RegisterModalProps {
@@ -78,42 +78,55 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
         setSubmitting(false);
     }, [operatingAreaToEdit]);
 
-    const toggleLocation = (saleLocation: SaleLocation) => {
-        if (selectedSaleLocations.find((l) => l.id === saleLocation.id)) {
-            // remove location + its schedule
-            setSelectedSaleLocations(selectedSaleLocations.filter((l) => l.id !== saleLocation.id));
-            setTemplateScheduleList(templateScheduleList.filter(s => s.locationid !== saleLocation.id));
-        } else {
-            // add location + blank schedule
-            setSelectedSaleLocations([...selectedSaleLocations, saleLocation]);
-            setTemplateScheduleList([
-                ...templateScheduleList,
-                {
-                    id : 0,
-                    locationname : '',
-                    operationareaid : 0,
-                    dayofweek: 1,
-                    starttime: "09:00",
-                    endtime: "10:00",
-                    locationid: saleLocation.id
-                }
-            ]);
-        }
+    const addLocation = (saleLocation: SaleLocation) => {
+
+        // add location + blank schedule
+        setSelectedSaleLocations([...selectedSaleLocations, saleLocation]);
+        setTemplateScheduleList([
+            ...templateScheduleList,
+            {
+                id: 0,
+                locationname: '',
+                operationareaid: 0,
+                dayofweek: 1,
+                starttime: "09:00",
+                endtime: "10:00",
+                locationid: saleLocation.id
+            }
+        ]);
     };
 
-    const updateScheduleField = (locationId: number, field: keyof TemplateSchedule, value: any) => {
-        setTemplateScheduleList(templateScheduleList.map(s =>
-            s.locationid === locationId ? { ...s, [field]: value } : s
-        ));
+    const removeLocation = (saleLocation: SaleLocation, index: number) => {
+
+
+
+        setSelectedSaleLocations(prev => prev.filter((_, i) => i !== index));
+        setTemplateScheduleList(prev => prev.filter((_, i) => i !== index));
+
+        /*   if (selectedSaleLocations.find((l) => l.id === saleLocation.id)) {
+              // remove location + its schedule
+              setSelectedSaleLocations(selectedSaleLocations.filter((l) => l.id !== saleLocation.id));
+              setTemplateScheduleList(templateScheduleList.filter(s => s.locationid !== saleLocation.id));
+          
+           } */
+    };
+
+    const updateScheduleField = (index: number, locationId: number, field: keyof TemplateSchedule, value: any) => {
+          setTemplateScheduleList(templateScheduleList.map((s , i) =>
+             i === index ? { ...s, [field]: value } : s
+         )); 
+
+       // setTemplateScheduleList(prev => prev.filter((_, i) => i !== index));
+
     };
 
     const handleSubmit = async () => {
 
-        const OperatingAreaData  =  {
+        const OperatingAreaData = {
             id: operatingAreaToEdit ? operatingAreaToEdit?.id : 0,
             name: operatingAreaName,
             locationids: selectedSaleLocations.map(loc => loc.id),
-             templateschedules: templateScheduleList
+            templateschedules: templateScheduleList
         };
 
         try {
@@ -123,7 +136,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
             await AxiosClientPost("/Admin/addorupdateoperatingarea", OperatingAreaData, false);
 
             // 2. Save TemplateSchedules (bulk API endpoint?)
-           // await AxiosClientPost("/Admin/savetemplateschedules", templateScheduleList, false);
+            // await AxiosClientPost("/Admin/savetemplateschedules", templateScheduleList, false);
 
             onClose();
         } catch (error) {
@@ -186,7 +199,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                             {saleLocationList.map((location) => (
                                 <li key={location.id}>
                                     <button
-                                        onClick={() => toggleLocation(location)}
+                                        onClick={() => addLocation(location)}
                                         className={`px-3 py-1 rounded ${selectedSaleLocations.find(l => l.id === location.id) ? "bg-blue-500 text-white" : "bg-gray-200"}`}
                                     >
                                         {location.locationname}
@@ -197,19 +210,20 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                     </div>
 
                     {/* Selected + schedules */}
-                     <div style={{ marginBottom: '1rem' }}>
+                    <div style={{ marginBottom: '1rem' }}>
                         <h3 className="text-lg font-semibold mb-2">Selected:</h3>
                         {selectedSaleLocations.length === 0 && <p className="text-gray-500">None</p>}
 
                         <ul className="space-y-3">
-                            {selectedSaleLocations.map((loc) => {
-                                const schedule = templateScheduleList.find(s => s.locationid === loc.id);
+                            {selectedSaleLocations.map((loc, index) => {
+                                // const schedule = templateScheduleList.find(s => s.locationid === loc.id);
+                                  const schedule = templateScheduleList[index];
                                 return (
                                     <li key={loc.id} className="border p-3 rounded">
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="font-medium">{loc.locationname}</span>
                                             <button
-                                                onClick={() => toggleLocation(loc)}
+                                                onClick={() => removeLocation(loc, index)}
                                                 className="text-red-500 hover:underline"
                                             >
                                                 Remove
@@ -221,7 +235,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                                             <div className="flex gap-2 items-center">
                                                 <select
                                                     value={schedule.dayofweek}
-                                                    onChange={e => updateScheduleField(loc.id, "dayofweek", Number(e.target.value))}
+                                                    onChange={e => updateScheduleField(index, loc.id, "dayofweek", Number(e.target.value))}
                                                     className="border rounded p-1"
                                                 >
                                                     <option value={1}>Mandag</option>
@@ -236,14 +250,14 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                                                 <input
                                                     type="time"
                                                     value={schedule.starttime}
-                                                    onChange={e => updateScheduleField(loc.id, "starttime", e.target.value)}
+                                                    onChange={e => updateScheduleField(index, loc.id, "starttime", e.target.value)}
                                                     className="border rounded p-1"
                                                 />
 
                                                 <input
                                                     type="time"
                                                     value={schedule.endtime}
-                                                    onChange={e => updateScheduleField(loc.id, "endtime", e.target.value)}
+                                                    onChange={e => updateScheduleField(index, loc.id, "endtime", e.target.value)}
                                                     className="border rounded p-1"
                                                 />
                                             </div>
@@ -257,7 +271,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, operati
                     {submitError && <p className="text-red-500">{submitError}</p>}
 
                     {/* Buttons */}
-                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <button
                             onClick={handleSubmit}
                             disabled={!isFormValid || submitting}
