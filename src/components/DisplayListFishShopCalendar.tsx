@@ -41,9 +41,9 @@ const DisplayListFishShopCalendar: React.FC = () => {
                       .join(", ");
    */
                 if (fishShopResponse.length > 0) {
-                    const locationNamesPerShop = fishShopResponse.map( (shop : any) =>
+                    const locationNamesPerShop = fishShopResponse.map((shop: any) =>
                         shop.area?.locations
-                            ?.map( (loc : any)  => loc?.locationname)
+                            ?.map((loc: any) => loc?.locationname)
                             .filter(Boolean)
                             .join(", ") || "No locations"
                     );
@@ -67,6 +67,16 @@ const DisplayListFishShopCalendar: React.FC = () => {
 
         fetchData();
     }, []);
+
+    const weekDayNames : string[] = [];
+
+    weekDayNames[0] = 'Mandag'
+     weekDayNames[1] = 'Tirsdag'
+      weekDayNames[2] = 'Onsdag'
+       weekDayNames[3] = 'Torsdag'
+        weekDayNames[4] = 'Fredag'
+         weekDayNames[5] = 'Lørdag'
+          weekDayNames[6] = 'Søndag'
 
 
     return (
@@ -97,13 +107,27 @@ const DisplayListFishShopCalendar: React.FC = () => {
                             {locationNames[index]}
                         </p>
 
-                         <p>
-                           Kontakt {fishShop.employee?.name} på telefon {fishShop.employee?.phone} i vognens åbningstid.                          
+                        <p>
+                            Kontakt {fishShop.employee?.name} på telefon {fishShop.employee?.phone} i vognens åbningstid.
                         </p>
 
-                          <p>                         
-                           Du kan også sende en email til : {fishShop.employee?.email}
+                        <p>
+                            Du kan også sende en email til : {fishShop.employee?.email}
                         </p>
+
+                        <p>
+                            Vi er hos dig:
+                        </p>
+
+
+                        {fishShop.area?.templateSchedules?.map((templateSchedule, tsIndex) => (
+                            <p key={tsIndex}>
+                             {weekDayNames[templateSchedule.dayofweek] } {templateSchedule.locationname} {templateSchedule.starttime} - {templateSchedule.endtime}
+                            </p>
+                        ))}
+
+
+
                     </div>
 
 
