@@ -27,19 +27,11 @@ const DisplayListFishShopCalendar: React.FC = () => {
     useEffect(() => {
 
         const fetchData = async () => {
-
             try {
-
                 const fishShopResponse: any = await AxiosClientGet('/Admin/fishshoplistSchedules', true);
 
                 setFishshops(fishShopResponse);
-
-                /*   const tmpLocationNames = fishShops
-                      .flatMap(fishshop => fishshop.area?.locations || []) // flatten arrays
-                      .map(location => location?.locationname)                     // extract names
-                      .filter(Boolean)                                     // remove null/undefined
-                      .join(", ");
-   */
+        
                 if (fishShopResponse.length > 0) {
                     const locationNamesPerShop = fishShopResponse.map((shop: any) =>
                         shop.area?.locations
@@ -60,95 +52,53 @@ const DisplayListFishShopCalendar: React.FC = () => {
             } finally {
                 setLoading(false);
             }
-
-
-
         }
-
         fetchData();
     }, []);
 
-    const weekDayNames : string[] = [];
+    const weekDayNames: string[] = [];
 
     weekDayNames[0] = 'Mandag'
-     weekDayNames[1] = 'Tirsdag'
-      weekDayNames[2] = 'Onsdag'
-       weekDayNames[3] = 'Torsdag'
-        weekDayNames[4] = 'Fredag'
-         weekDayNames[5] = 'Lørdag'
-          weekDayNames[6] = 'Søndag'
+    weekDayNames[1] = 'Tirsdag'
+    weekDayNames[2] = 'Onsdag'
+    weekDayNames[3] = 'Torsdag'
+    weekDayNames[4] = 'Fredag'
+    weekDayNames[5] = 'Lørdag'
+    weekDayNames[6] = 'Søndag'
 
 
     return (
-        <div style={{ color: '#ffffff', display: 'grid', gridTemplateColumns: '1fr ', textAlign: 'center' }}>
-            <br />
-            <div style={{ fontSize: '30px' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center mt-4"
+           style={{ textAlign : 'left' , margin : '20px'}} // fixed column width
+        >
+            {fishShops?.map((fishShop, index) => (
+                <div
+                    key={index}
+                    className="bg-white text-customBlue p-4 rounded-lg shadow text-xl"
+                    
+                >
+                    <div className="font-bold">{fishShop.area?.name}</div>
+                    <p  className="text-black text-lg">{locationNames[index]}</p>
+                    
+                    <p className="text-hoverYellow text-xl">
+                        Kontakt {fishShop.employee?.name} på telefon {fishShop.employee?.phone} i
+                        vognens åbningstid.
+                    </p>
+                      <p className="text-hoverYellow text-xl">
+                        Du kan også sende en email til : {fishShop.employee?.email}</p>
+                    <p className="text-black text-lg">Vi er hos dig:</p>
 
-                <br /><br />
-                <hr
-                    style={{
-                        height: '1px',
-                        backgroundColor: '#999',
-                        border: 'none',
-                        width: '30%',
-                        margin: '0 auto'
-                    }}
-                />
-            </div>
-            {fishShops && fishShops.map((fishShop, index) => (
-                <React.Fragment key={fishShop.id}>
-
-                    <div style={{ fontSize: '20px', marginTop: '15px' }}>
-
-                        <p>
-                            {fishShop.area?.name}
+                    {fishShop.area?.templateSchedules?.map((templateSchedule, tsIndex) => (
+                        <p className="text-black text-lg" key={tsIndex}>
+                            {weekDayNames[templateSchedule.dayofweek]}{" "}
+                            {templateSchedule.locationname} {templateSchedule.starttime} -{" "}
+                            {templateSchedule.endtime}
                         </p>
-                        <p>
-                            {locationNames[index]}
-                        </p>
-
-                        <p>
-                            Kontakt {fishShop.employee?.name} på telefon {fishShop.employee?.phone} i vognens åbningstid.
-                        </p>
-
-                        <p>
-                            Du kan også sende en email til : {fishShop.employee?.email}
-                        </p>
-
-                        <p>
-                            Vi er hos dig:
-                        </p>
-
-
-                        {fishShop.area?.templateSchedules?.map((templateSchedule, tsIndex) => (
-                            <p key={tsIndex}>
-                             {weekDayNames[templateSchedule.dayofweek] } {templateSchedule.locationname} {templateSchedule.starttime} - {templateSchedule.endtime}
-                            </p>
-                        ))}
-
-
-
-                    </div>
-
-
-                    <div style={{ color: '#000000', fontSize: '20px' }}></div>
-                    <div style={{ fontSize: '20px' }}>
-                        <br /><br />
-                        <hr
-                            style={{
-                                height: '1px',
-                                backgroundColor: '#999',
-                                border: 'none',
-                                width: '20%',
-                                margin: '0 auto'
-                            }}
-                        />
-                    </div>
-
-                </React.Fragment>
+                    ))}
+                </div>
             ))}
         </div>
-    )
+    );
 }
 
 export default DisplayListFishShopCalendar

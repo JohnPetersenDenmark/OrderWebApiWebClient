@@ -10,7 +10,7 @@ import AdminEmployee from './AdminEmployee';
 import AdminOperatingArea from './AdminOperatingArea';
 import AdminTemplateSchedule from './AdminTemplateSchedule';
 
- import RevenuePerTimePeriod from '../Statistic/RevenuePerTimePeriod'
+import RevenuePerTimePeriod from '../Statistic/RevenuePerTimePeriod'
 
 import AdminSettings from './AdminSettings'
 import AdminUsers from './AdminUsers'
@@ -73,9 +73,9 @@ const AdminDashBoard: React.FC = () => {
                 </div>
 
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('FishShop')}>Biler</div>
-                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Employee')}>Medarbejder</div>
-                   <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Area')}>Område</div>
-                   <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('TemplateSchedules')}>Template</div>
+                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Employee')}>Medarbejder</div>
+                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Area')}>Område</div>
+                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('TemplateSchedules')}>Template</div>
 
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Revenue')}>Omsætning</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Stadepladser')}>Stadepladser</div>
@@ -86,15 +86,15 @@ const AdminDashBoard: React.FC = () => {
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Menuer')}>Menuer</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Brugere')}>Brugere</div>
 
-                 {activeMenu === 'TemplateSchedules' && <AdminTemplateSchedule />}
-                  {activeMenu === 'FishShop' && <AdminFishShops />}
-                  {activeMenu === 'Employee' && <AdminEmployee />}
-                   {activeMenu === 'Area' && <AdminOperatingArea />}
+                {activeMenu === 'TemplateSchedules' && <AdminTemplateSchedule />}
+                {activeMenu === 'FishShop' && <AdminFishShops />}
+                {activeMenu === 'Employee' && <AdminEmployee />}
+                {activeMenu === 'Area' && <AdminOperatingArea />}
                 {activeMenu === 'Revenue' && <RevenuePerTimePeriod />}
                 {activeMenu === 'Stadepladser' && <AdminPlaces />}
                 {activeMenu === 'Kalender' && <AdminCalendar />}
                 {activeMenu === 'AlleBestillinger' && <AdminAllOrders />}
-                  {activeMenu === 'Bestillinger' && <AdminOrders />}
+                {activeMenu === 'Bestillinger' && <AdminOrders />}
                 {activeMenu === 'Pakkeliste' && <AdminPackingList />}
                 {activeMenu === 'Menuer' && <AdminMenues />}
                 {activeMenu === 'Brugere' && <AdminUsers />}

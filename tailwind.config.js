@@ -5,7 +5,9 @@ module.exports = {
     extend: {
        colors: {
         customBlue: '#5470a9',
-        hoverYellow : '#ff9b20'
+        hoverYellow : '#ff9b20',
+         hoverYellowLight : '#ffb84d',
+         customGreyLight : '#f7f7f7'
       }
     },
   },
