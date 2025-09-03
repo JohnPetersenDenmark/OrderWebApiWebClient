@@ -5,6 +5,7 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentCancel from "./components/PaymentCancel";
 import TermsOfSale from './components/TermsOfSale';
 import { CurrentUser } from "./components/CurrentUser";
+import CreateOrder from "./components/CreateOrder";
 import { DashboardProvider } from "./components/admin/DashboardContext";
 import AdminDashboard from "./components/admin/AdminDashBoard";
 
@@ -36,6 +37,7 @@ export default function App() {
 
             {/* Admin route, standalone */}
             <Route path="/admin" element={<AdminDashboard />} />
+             <Route path="/createOrder" element={<CreateOrder />} />
           </Routes>
         </DashboardProvider>
       </CurrentUser>

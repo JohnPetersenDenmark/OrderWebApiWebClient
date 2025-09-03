@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 
 import {  useNavigate } from "react-router-dom";
-
+import CreateOrder from './CreateOrder';
 import DisplayListFishShopCalendar from './DisplayListFishShopCalendar';
+import { FishShopFullDto } from '../types/FishShop';
+import { TemplateSchedule } from '../types/TemplateSchedule';
 export default function Layout() {
 
     const [selectedMenuPoint, setSelectedMenuPoint] = useState(0);
@@ -16,12 +18,15 @@ export default function Layout() {
         }
     }
 
+      function handleSelectedFishShop( fishShop : FishShopFullDto, templateScedule : TemplateSchedule) {
+       
+        navigate("/createOrder", { state: { fishShop, templateScedule } });
+    }
+
     return (
         <>
            {selectedMenuPoint === 5 ? "<main></main>" : ''}
-
           
-
             <div className="flex flex-col gap-60  bg-customBlue">
                 <div className="flex">
                     {/* Column 1 */}
@@ -144,8 +149,8 @@ export default function Layout() {
                 <div className="text-hoverYellow text-3xl" >
                     Her finder du vores 6 mobile fiskeforretninger
                 </div>
-
-                <DisplayListFishShopCalendar />
+ 
+                <DisplayListFishShopCalendar onSelect={handleSelectedFishShop} />
             </div>
         </>
     );

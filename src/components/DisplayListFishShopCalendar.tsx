@@ -5,14 +5,21 @@ import React, { useEffect, useState } from 'react';
 import { FishShopFullDto } from '../types/FishShop';
 
 import { SaleLocation } from '../types/SaleLocation';
+import { TemplateSchedule } from '../types/TemplateSchedule';
 
 import { AxiosClientGet, AxiosClientPost, AxiosClientDelete } from '../types/AxiosClient';
 
-const DisplayListFishShopCalendar: React.FC = () => {
+interface FishShopToSelectProps {        
+    onSelect: (shop: FishShopFullDto, schedule: TemplateSchedule) => void;
+}
+
+const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect}) => {
 
     const [fishShops, setFishshops] = useState<FishShopFullDto[]>([]);
 
     const [locationNames, setLocationNames] = useState<string[]>([]);
+
+    const [locationsVisible, setLocationsVisible] = useState<boolean[]>([]);
 
     const [isCreateEditFishShopModalOpen, setIsCreateEditFishShopModalOpen] = useState(false);
 
@@ -31,9 +38,11 @@ const DisplayListFishShopCalendar: React.FC = () => {
                 const fishShopResponse: any = await AxiosClientGet('/Admin/fishshoplistSchedules', true);
 
                 setFishshops(fishShopResponse);
-        
+
+
                 if (fishShopResponse.length > 0) {
-                    const locationNamesPerShop = fishShopResponse.map((shop: any) =>
+                    const locationNamesPerShop = fishShopResponse.map((shop: any, index: number) =>
+
                         shop.area?.locations
                             ?.map((loc: any) => loc?.locationname)
                             .filter(Boolean)
@@ -41,6 +50,16 @@ const DisplayListFishShopCalendar: React.FC = () => {
                     );
 
                     setLocationNames(locationNamesPerShop);
+                }
+                const tmpLocationsVisible: boolean[] = [];
+
+                if (fishShopResponse.length > 0) {
+                    const locationNamesPerShop = fishShopResponse.map((shop: any, index: number) =>
+                        tmpLocationsVisible[index] = false
+                    );
+
+                    setLocationsVisible(tmpLocationsVisible);
+
                 }
 
                 setLoading(false);
@@ -66,36 +85,78 @@ const DisplayListFishShopCalendar: React.FC = () => {
     weekDayNames[5] = 'Lørdag'
     weekDayNames[6] = 'Søndag'
 
+    const toggleLocationVisible = (index: number) => {
+        setLocationsVisible((prevFlags) =>
+            prevFlags.map((flag, i) => (i === index ? !flag : flag))
+        );
+    };
+
+    const handleSubmit = (fishShop: FishShopFullDto, templateSchedule: TemplateSchedule) => {
+        onSelect(fishShop, templateSchedule);
+    };
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center mt-4"
-           style={{ textAlign : 'left' , margin : '20px'}} // fixed column width
+            style={{ textAlign: 'left', margin: '20px' }} // fixed column width
         >
             {fishShops?.map((fishShop, index) => (
                 <div
                     key={index}
                     className="bg-white text-customBlue p-4 rounded-lg shadow text-xl"
-                    
+
                 >
-                    <div className="font-bold">{fishShop.area?.name}</div>
-                    <p  className="text-black text-lg">{locationNames[index]}</p>
-                    
-                    <p className="text-hoverYellow text-xl">
+                    <p className="font-bold text-3xl">{fishShop.area?.name}</p>
+                    <p className="text-black text-lg mt-5">{locationNames[index]}</p>
+
+                    <p className="text-hoverYellow text-xl mt-5 font-bold">
                         Kontakt {fishShop.employee?.name} på telefon {fishShop.employee?.phone} i
                         vognens åbningstid.
                     </p>
-                      <p className="text-hoverYellow text-xl">
-                        Du kan også sende en email til : {fishShop.employee?.email}</p>
-                    <p className="text-black text-lg">Vi er hos dig:</p>
+                    <p className="text-hoverYellow text-xl font-bold">
+                        Du kan også sende en email til : {fishShop.employee?.email}
+                    </p>
 
-                    {fishShop.area?.templateSchedules?.map((templateSchedule, tsIndex) => (
-                        <p className="text-black text-lg" key={tsIndex}>
-                            {weekDayNames[templateSchedule.dayofweek]}{" "}
-                            {templateSchedule.locationname} {templateSchedule.starttime} -{" "}
-                            {templateSchedule.endtime}
+
+                    {locationsVisible[index] ?
+                        <p
+                            className="text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
+                            onClick={() => toggleLocationVisible(index)}
+                        >
+                            Se mindre
+                            <hr />
                         </p>
-                    ))}
+                        :
+                        <p className="text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
+                            onClick={() => toggleLocationVisible(index)}
+                        >
+                            Se hvornår at vi er hos dig:
+                            <hr />
+                        </p>
+                    }
+
+                    {locationsVisible[index] ?
+                        <>
+                            {fishShop.area?.templateSchedules?.map((templateSchedule, tsIndex) => (
+                                <>
+                                    <div className="grid grid-cols-2 items-center text-black text-lg mt-5 mb-5" key={tsIndex}
+                                        onClick={() => handleSubmit(fishShop, templateSchedule)}
+                                    >
+                                        <div>
+                                            <div> {weekDayNames[templateSchedule.dayofweek]}{" "}</div>
+                                            <div> {templateSchedule.locationname}</div>
+                                        </div>
+                                        <div>
+                                            {templateSchedule.starttime} -{" "} {templateSchedule.endtime}
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                </>
+                            ))} </>
+
+                        : ''}
                 </div>
+
             ))}
         </div>
     );

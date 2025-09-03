@@ -339,9 +339,9 @@ export default function OLDLayout() {
                   margin: 0,
                 }}
               >
-                  <p>
+               {/*    <p>
                    <DisplayListFishShopCalendar />
-                    </p> 
+                    </p>  */}
                 <p style={{ textAlign: 'center', fontSize: '34px' }}>
                   Nyd smagen af den originale Mackie's Pizza
                 </p>
