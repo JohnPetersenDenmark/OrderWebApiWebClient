@@ -121,6 +121,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         const productData = {
             id: productToEdit !== null ? productToEdit.id : 0,
             name: productName,
+           
             productnumber: productNumber, 
             description: productDescription,
             details : productDetails,
@@ -136,7 +137,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         }
 
         try {
-            await AxiosClientPost('/Admin/addorupdateproduct', productData, true);
+            await AxiosClientPost('/Admin/addorupdateproduct', productData, false);
             onClose();
         } catch (error) {
             setSubmitError('Fejl');
