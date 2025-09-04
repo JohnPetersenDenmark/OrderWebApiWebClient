@@ -69,7 +69,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
   useEffect(() => {
     if (!isOpen) return;
 
-    const orderItemsProduct: OrderItem[] = productList.map(product => ({
+    const orderItemsProduct: any[] = productList.map(product => ({
       quantity: 1,
       productid: product.id,
       producttype: product.producttype,

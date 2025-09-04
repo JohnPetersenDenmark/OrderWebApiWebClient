@@ -6,6 +6,10 @@ import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { Product } from '../types/Product';
 import { AxiosClientGet } from '../types/AxiosClient';
+import { useNavigate } from "react-router-dom";
+import ProductCard from './ProductCard';
+import Cart from './Cart';
+
 
 export default function CreateOrder() {
 
@@ -21,7 +25,7 @@ export default function CreateOrder() {
 
     const [phone, setPhone] = useState<string>('');
     const [phoneTouched, setPhoneTouched] = useState(false);
-
+    const [selectedMenuPoint, setSelectedMenuPoint] = useState(0);
     const [email, setEmail] = useState<string>('');
     const [emailTouched, setEmailTouched] = useState(false);
 
@@ -34,8 +38,7 @@ export default function CreateOrder() {
     const [paymentError, setPaymentError] = useState<string | null>(null);
     const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
-    var x = fishShop;
-    var y = templateScedule
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -53,13 +56,18 @@ export default function CreateOrder() {
                     producttype: product.producttype,
                     productnumber: product.productnumber,
                     productname: product.name,
+                    imageurl : product.imageurl,
                     productdescription: product.description,
                     details: '',
                     unitdiscountpercentage: product.discountpercentage,
                     discountedunitprice: product.discountprice,
                     unitprice: product.price,
                     orderid: 0,
-                    selected: false
+                    selected: false,
+                    badge: "This Badge",
+                    weight : "100g",
+                    shelfLife : "2 dage",
+                    pricePerKg : 120
                 }
                 ));
 
@@ -120,47 +128,53 @@ export default function CreateOrder() {
 
     };
 
+    function handleMenuSelection(menuItem: number) {
+        setSelectedMenuPoint(menuItem);
+        if (menuItem === 1) {
+            navigate("/home")
+        }
+    }
 
 
     return (
         <>
-            <div className="flex flex-col gap-60  bg-customBlue">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center mt-4"
-                    style={{ textAlign: 'left', margin: '20px' }} // fixed column width
-                >
-                    {orderItemsProduct.map((item, index) => (
-                        <div key={item.productid} className="pizza-item-container">
-                            <label className="checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    checked={item.selected}
-                                    onChange={() => toggleSelection(index)}
-                                    disabled={submitting}
-                                />
-                                <span>
-                                    <strong>{item.productnumber + ' ' + item.productname}</strong>{' '}
-                                    (Pris før rabat {item.discountedunitprice.toFixed(2).replaceAll('.', ',')} kr)
-                                </span>
-                            </label>
+            <div className="flex flex-col gap-30  bg-customBlue text-left">
+                <div className="flex">
+                    {/* Column 1 */}
+                    <div className="flex-1  text-white p-4 text-left">
+                        <img src="/images/jjfisk_logo.svg" alt="Logo" height={100} width={100} />
+                    </div>
 
-                            {item.selected && (
-                                <div className="quantity-container">
-                                    <input
-                                        className="quantity-input"
-                                        type="number"
-                                        value={enteredQuantity[index]}
-                                        onChange={(e) => updateQuantity(index, e.target.value)}
-                                        disabled={submitting}
-                                    />
-                                    <span>
-                                        {(item.unitprice * item.quantity).toFixed(2).replaceAll('.', ',')} kr
-                                    </span>
-                                </div>
-                            )}
+                    {/* Column 2 with nested row */}
+                    <div className="flex-1 text-white p-4">
+                        <div className="grid grid-cols-5 gap-2 text-left">
+                            <div className="text-2xl p-2">
+                                <span
+                                    onClick={() => handleMenuSelection(1)}
+                                    className={`cursor-pointer hover:text-hoverYellow ${selectedMenuPoint == 1 ? 'text-hoverYellow' : 'text-white'}`} >
+                                    FORSIDE
+                                </span>
+                            </div>
                         </div>
-                    ))}
+                    </div>
                 </div>
             </div>
-        </>);
+
+            <div className="flex gap-6 bg-customGreyLight text-left mt-10" >
+                <div className="flex-[1] ml-10">Menu</div>
+
+
+                <div className="flex-[5] flex gap-6 bg-customGreyLight text-xl"
+                >
+                    {orderItemsProduct.map((orderItem, index) => (
+                       <ProductCard  orderItem={orderItem} />
+                    ))}
+                </div>
+                <div className="flex-[1] mr-10">
+                    <Cart />
+                </div>
+            </div >
+        </>
+    );
 }
 

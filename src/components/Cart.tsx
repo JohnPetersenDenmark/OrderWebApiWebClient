@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCart } from './CartContext';
 
 interface Pizza {
   id: number;
@@ -12,22 +13,37 @@ interface CartProps {
   onRemove: (index: number) => void;
 }
 
-export default function Cart({ cartItems, onRemove }: CartProps) {
-  const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+export default function Cart() {
 
-  return (
-    <div className="pizzaCard">
-      <h2>Your Cart</h2>
-      {cartItems.length === 0 && <p>Cart is empty.</p>}
-      <ul>
-        {cartItems.map((item, idx) => (
-          <li key={idx}>
-            {item.name} - ${item.price.toFixed(2)}{' '}
-            <button onClick={() => onRemove(idx)}>Remove</button>
-          </li>
-        ))}
-      </ul>
-      <h3>Total: ${total.toFixed(2)}</h3>
+const { cart } = useCart();
+
+  const items = Object.values(cart);
+  const grandTotal = items.reduce(
+    (sum, item) => sum + item.unitprice * item.quantity,
+    0
+  );
+
+   return (
+    <div className="text-2xl p-4 bg-gray-50 rounded-xl shadow-md">
+      <h2 className="text-2xl font-bold mb-2">🛒 Din kurv</h2>
+      {items.length === 0 ? (
+        <p className="text-gray-500">Kurven er tom</p>
+      ) : (
+        <ul>
+          {items.map((item) => (
+            <li
+              key={item.productid}
+              className="text-sm flex justify-between py-2 border-b"
+            >
+              <span>
+                {item.productname} x {item.quantity}
+              </span>
+              <span>{(item.unitprice * item.quantity).toFixed(2)} kr</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mt-3 font-semibold">Total: {grandTotal.toFixed(2)} kr</div>
     </div>
   );
 }
