@@ -9,6 +9,8 @@ import { AxiosClientGet } from '../types/AxiosClient';
 import { useNavigate } from "react-router-dom";
 import ProductCard from './ProductCard';
 import Cart from './Cart';
+import CustomerDetails from './CustomerDetails';
+import PickupLocation from './PickupLocation';
 
 
 export default function CreateOrder() {
@@ -56,7 +58,7 @@ export default function CreateOrder() {
                     producttype: product.producttype,
                     productnumber: product.productnumber,
                     productname: product.name,
-                    imageurl : product.imageurl,
+                    imageurl: product.imageurl,
                     productdescription: product.description,
                     details: '',
                     unitdiscountpercentage: product.discountpercentage,
@@ -65,9 +67,9 @@ export default function CreateOrder() {
                     orderid: 0,
                     selected: false,
                     badge: "This Badge",
-                    weight : "100g",
-                    shelfLife : "2 dage",
-                    pricePerKg : 120
+                    weight: "100g",
+                    shelfLife: "2 dage",
+                    pricePerKg: 120
                 }
                 ));
 
@@ -164,14 +166,27 @@ export default function CreateOrder() {
                 <div className="flex-[1] ml-10">Menu</div>
 
 
-                <div className="flex-[5] flex gap-6 bg-customGreyLight text-xl"
+                <div className="flex-[5] grid grid-cols-4 gap-6  bg-customGreyLight text-xl"
                 >
                     {orderItemsProduct.map((orderItem, index) => (
-                       <ProductCard  orderItem={orderItem} />
+                        <ProductCard orderItem={orderItem} />
                     ))}
                 </div>
-                <div className="flex-[1] mr-10">
-                    <Cart />
+                <div className="flex-[1] mr-20">
+
+                    <div className="mt-10">
+                        <Cart />
+                    </div>
+
+                    <div className="mt-10">
+                        <CustomerDetails />
+                    </div>
+
+                    <div className="mt-10">
+                        <PickupLocation templateScedule= {templateScedule} />
+                    </div>
+                    
+
                 </div>
             </div >
         </>

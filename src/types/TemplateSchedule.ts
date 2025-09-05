@@ -7,4 +7,5 @@ export interface TemplateSchedule {
   dayofweek: number,
   starttime: string;
   endtime: string;
+  date : string
 }
