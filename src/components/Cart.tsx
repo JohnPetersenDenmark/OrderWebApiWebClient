@@ -33,7 +33,7 @@ const { cart } = useCart();
           {items.map((item) => (
             <li
               key={item.productid}
-              className="text-sm flex justify-between py-2 border-b"
+              className="text-xl flex justify-between py-2 border-b"
             >
               <span>
                 {item.productname} x {item.quantity}

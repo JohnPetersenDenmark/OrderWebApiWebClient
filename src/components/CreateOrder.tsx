@@ -26,6 +26,9 @@ export default function CreateOrder() {
     const [customerName, setCustomerName] = useState<string>('');
     const [nameTouched, setNameTouched] = useState(false);
 
+    const [productCategories, setProductCategories] = useState<ProductCategory[]>([]);
+    const [selectedSearchProductCategory, setSelectedSearchProductCategory] = useState<ProductCategory>();
+
     //  const [allOrderItems, setAllOrderItems] = useState<OrderItem[]>([]);
     const [enteredQuantity, setEnteredQuantity] = useState<string[]>([]);
 
@@ -61,6 +64,16 @@ export default function CreateOrder() {
         const fetchProducts = async () => {
 
             try {
+
+                const categoryResponse: any = await AxiosClientGet('/Home/productcategorylist', false);
+
+                setProductCategories(categoryResponse)
+
+            } catch (err) {
+
+            }
+
+            try {
                 const productsResponse: any = await AxiosClientGet('/Home/productlist', true);
 
                 setProducts(productsResponse);
@@ -84,20 +97,29 @@ export default function CreateOrder() {
                     shelfLife: product.shelflife,
                     pricePerKg: product.priceperkilo,
 
-                   /*  productcategories  :  product.productcategories.map((category : ProductCategory) => (
-                     {
-                        id : category.id,
-                        categoryname : category.categoryname
-                     })) */
+                    /*  productcategories  :  product.productcategories.map((category : ProductCategory) => (
+                      {
+                         id : category.id,
+                         categoryname : category.categoryname
+                      })) */
 
-                 productcategories  :  product.productcategories
+                    productcategories: product.productcategories
 
                 }
                 ));
 
 
+                if (!selectedSearchProductCategory) {
+                    setOrderItemsProduct(tmpOrderItemsProduct);
+                } else {
+                    const filteredOrderItemProducts = tmpOrderItemsProduct.filter((p) =>
+                        p.productcategories?.some(
+                            (cat) => cat.id === selectedSearchProductCategory.id
+                        )
+                    );
 
-                setOrderItemsProduct(tmpOrderItemsProduct);
+                    setOrderItemsProduct(filteredOrderItemProducts);
+                }
 
                 setLoading(false);
 
@@ -121,7 +143,7 @@ export default function CreateOrder() {
         setSubmitError(null);
         setSubmitSuccess(null);
         setSubmitting(false);
-    }, []);
+    }, [selectedSearchProductCategory]);
 
     /*   const toggleSelection = (index: number) => {
           const updated = [...allOrderItems];
@@ -159,6 +181,10 @@ export default function CreateOrder() {
         if (menuItem === 1) {
             navigate("/home")
         }
+    }
+
+    function categorySelected(category: ProductCategory) {
+        setSelectedSearchProductCategory(category);
     }
 
     const SubmitOrder = async () => {
@@ -227,8 +253,19 @@ export default function CreateOrder() {
                 </div>
             </div>
 
-            <div className="flex gap-6 bg-customGreyLight text-left mt-10" >
-                <div className="flex-[1] ml-10">Menu</div>
+            <div className="flex gap-6 bg-customGreyLight text-left mt-10 text-2xl" >
+                <div className="flex-[1] ml-10 font-bold">
+                    Vælg kategori
+                    {productCategories.map((productCategory, index) => (
+                        <p 
+                            key={index}
+                            onClick={() => categorySelected(productCategory)}
+                            className="font-normal cursor-pointer hover:underline text-xl mt-5"
+                        >
+                            {productCategory.categoryname}
+                        </p>
+                    ))}
+                </div>
 
 
                 <div className="flex-[5] grid grid-cols-4 gap-6  bg-customGreyLight text-xl"
@@ -237,13 +274,15 @@ export default function CreateOrder() {
                         <ProductCard orderItem={orderItem} />
                     ))}
                 </div>
+
+
                 <div className="flex-[1] mr-20">
 
                     <div className="mt-10">
                         <Cart />
                     </div>
 
-                    <div className="text-2xl p-4 bg-gray-50 rounded-xl shadow-md">
+                    <div className="text-2xl p-4 bg-gray-50 rounded-xl shadow-md mt-10">
                         <h2 className="text-xl font-bold mb-2">
                             Kontaktinfo:
                         </h2>
@@ -308,7 +347,7 @@ export default function CreateOrder() {
                             placeholder="Skriv eventuelle ønsker eller bemærkninger her..."
                             spellCheck='false'
                             rows={3}
-                            className="text-xl"
+                            className="text-xl w-96 h-40 border rounded p-2"
                             disabled={submitting}
                         />
                     </div>
