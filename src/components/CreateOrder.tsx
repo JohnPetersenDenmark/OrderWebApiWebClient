@@ -5,12 +5,14 @@ import { OrderItem } from '../types/OrderItem';
 import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { Product } from '../types/Product';
-import { AxiosClientGet } from '../types/AxiosClient';
+import { AxiosClientGet, AxiosClientPost } from '../types/AxiosClient';
 import { useNavigate } from "react-router-dom";
 import ProductCard from './ProductCard';
 import Cart from './Cart';
 import CustomerDetails from './CustomerDetails';
 import PickupLocation from './PickupLocation';
+import { Order } from '../types/Order';
+import { useCart } from './CartContext';
 
 
 export default function CreateOrder() {
@@ -22,7 +24,7 @@ export default function CreateOrder() {
     const [customerName, setCustomerName] = useState<string>('');
     const [nameTouched, setNameTouched] = useState(false);
 
-    const [allOrderItems, setAllOrderItems] = useState<OrderItem[]>([]);
+    //  const [allOrderItems, setAllOrderItems] = useState<OrderItem[]>([]);
     const [enteredQuantity, setEnteredQuantity] = useState<string[]>([]);
 
     const [phone, setPhone] = useState<string>('');
@@ -41,7 +43,9 @@ export default function CreateOrder() {
     const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
     const navigate = useNavigate();
+    const { cart } = useCart();
 
+const isFormValid = true;
 
     useEffect(() => {
 
@@ -52,7 +56,7 @@ export default function CreateOrder() {
 
                 setProducts(productsResponse);
 
-                const orderItemsProduct: OrderItem[] = productsResponse.map((product: any) => ({
+                const tmpOrderItemsProduct: OrderItem[] = productsResponse.map((product: any) => ({
                     quantity: 1,
                     productid: product.id,
                     producttype: product.producttype,
@@ -66,14 +70,14 @@ export default function CreateOrder() {
                     unitprice: product.price,
                     orderid: 0,
                     selected: false,
-                    badge: "This Badge",
-                    weight: "100g",
-                    shelfLife: "2 dage",
-                    pricePerKg: 120
+                    badge: product.badge,
+                    weight: product.weight,
+                    shelfLife: product.shelflife,
+                    pricePerKg: product.priceperkilo
                 }
                 ));
 
-                setOrderItemsProduct(orderItemsProduct);
+                setOrderItemsProduct(tmpOrderItemsProduct);
 
                 setLoading(false);
 
@@ -99,36 +103,36 @@ export default function CreateOrder() {
         setSubmitting(false);
     }, []);
 
-    const toggleSelection = (index: number) => {
-        const updated = [...allOrderItems];
-        updated[index].selected = !updated[index].selected;
-        setAllOrderItems(updated);
-    };
-
-    const updateQuantity = (index: number, quantity: string) => {
-
-        if (quantity === '') {
-            enteredQuantity[index] = '';
-            const updated = [...allOrderItems];
-            updated[index].quantity = 0;
-            setAllOrderItems(updated);
-            return
-            return;
-            // quantityAsNumber = 0;
-        }
-
-        let quantityAsNumber = Number(quantity);
-
-        if (!isNaN(quantityAsNumber)) {
-            enteredQuantity[index] = quantity;
-            const updated = [...allOrderItems];
-            updated[index].quantity = quantityAsNumber;
-            setAllOrderItems(updated);
-            return
-        }
-
-
-    };
+    /*   const toggleSelection = (index: number) => {
+          const updated = [...allOrderItems];
+          updated[index].selected = !updated[index].selected;
+          setAllOrderItems(updated);
+      };
+  
+      const updateQuantity = (index: number, quantity: string) => {
+  
+          if (quantity === '') {
+              enteredQuantity[index] = '';
+              const updated = [...allOrderItems];
+              updated[index].quantity = 0;
+              setAllOrderItems(updated);
+              return
+              return;
+              // quantityAsNumber = 0;
+          }
+  
+          let quantityAsNumber = Number(quantity);
+  
+          if (!isNaN(quantityAsNumber)) {
+              enteredQuantity[index] = quantity;
+              const updated = [...allOrderItems];
+              updated[index].quantity = quantityAsNumber;
+              setAllOrderItems(updated);
+              return
+          }
+  
+  
+      }; */
 
     function handleMenuSelection(menuItem: number) {
         setSelectedMenuPoint(menuItem);
@@ -136,6 +140,47 @@ export default function CreateOrder() {
             navigate("/home")
         }
     }
+
+    const SubmitOrder = async () => {
+        setSubmitting(true);
+
+        const customerOrderCodeAsString = Math.floor(1000 + Math.random() * 9000).toString();
+
+        const orderData: Order = {
+            id: 0,
+            customerName: customerName.trim(),
+            customerorderCode: customerOrderCodeAsString,
+            phone: phone,
+            email: email,
+            locationId: templateScedule.locationid,
+            createddatetime: new Date().toISOString(),
+            modifieddatetime: new Date().toISOString(),
+            payeddatetime: new Date().toISOString(),
+            locationname: 'aaaa',
+            locationstartdatetime: '',
+            locationenddatetime: '',
+            locationbeautifiedstartdatetime: 'aaa',
+            locationbeautifiedTimeInterval: 'aaaa',
+            totalPrice: 0,
+            // totalPrice: parseFloat(getTotal()),
+
+            comment: comment.trim(),
+            orderlines: Object.values(cart)
+
+        };
+
+        try {
+            let response: any;
+            response = await AxiosClientPost('/Home/createorder', orderData, false);
+
+        } catch (error) {
+
+            setSubmitError('Kunne ikke sende bestillingen. Prøv igen senere.');
+            console.error(error);
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
 
     return (
@@ -183,9 +228,42 @@ export default function CreateOrder() {
                     </div>
 
                     <div className="mt-10">
-                        <PickupLocation templateScedule= {templateScedule} />
+                        <label htmlFor="comment" className="text-xl">Kommentarer til bestillingen:</label>
+                        <textarea
+                            id="comment"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                            placeholder="Skriv eventuelle ønsker eller bemærkninger her..."
+                            spellCheck='false'
+                            rows={3}
+                            className="text-xl"
+                            disabled={submitting}
+                        />
                     </div>
-                    
+
+                    <div className="mt-10">
+                        <button
+                            onClick={SubmitOrder}
+                            disabled={submitting}
+                            style={{
+                                padding: '0.5rem 1rem',
+                                backgroundColor:
+                                    isFormValid && !submitting ? '#5470a9' : 'grey',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor:
+                                    isFormValid && !submitting ? 'pointer' : 'not-allowed',
+                                marginRight: '0.5rem',
+                            }}
+                        >
+                            Ok
+                        </button>
+                    </div>
+
+                    <div className="mt-10">
+                        <PickupLocation templateScedule={templateScedule} />
+                    </div>
 
                 </div>
             </div >

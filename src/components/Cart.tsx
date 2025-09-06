@@ -1,17 +1,17 @@
 import React from 'react';
 import { useCart } from './CartContext';
 
-interface Pizza {
+/* interface Pizza {
   id: number;
   name: string;
   description: string;
   price: number;
-}
+} */
 
-interface CartProps {
+/* interface CartProps {
   cartItems: Pizza[];
   onRemove: (index: number) => void;
-}
+} */
 
 export default function Cart() {
 

@@ -29,10 +29,22 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     const [productDescription, setProductDescription] = useState<string>('');
 
+    const [badge, setBadge] = useState<string>('');
+    const [badgeTouched, setBadgeTouched] = useState(false);
+
+    const [weight, setWeight] = useState<string>('');
+    const [weightTouched, setWeightTouched] = useState(false);
+
+    const [shelflife, setShelflife] = useState<string>('');
+    const [shelflifeTouched, setShelflifeTouched] = useState(false);
+
+    const [pricePerKilo, setPricePerKilo] = useState<string>('');
+    const [pricePerKiloTouched, setPricePerKiloTouched] = useState(false);
+
     const [productDescriptionTouched, setProductDescriptionTouched] = useState(false);
 
-     const [productDetails, setProductDetails] = useState<string>('');
-       const [productDetailsTouched, setProductDetailsTouched] = useState<boolean>(false);
+    const [productDetails, setProductDetails] = useState<string>('');
+    const [productDetailsTouched, setProductDetailsTouched] = useState<boolean>(false);
 
     const [productPriceBeforeDiscount, setProductPriceBeforeDiscount] = useState<string>('');
 
@@ -60,13 +72,23 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     const isProductNameValid = productName.length > 0;
     const isProductNumberValid = productNumber.length > 0;
-    const isProductDescriptionValid = setProductDescription.length > 0;
+    const isProductDescriptionValid = productDescription.length > 0;
+   /*  const isBadgeValid = badge.length > 0;
+    const isWeightValid = weight.length > 0;
+    const isShelflifeValid = shelflife.length > 0; */
+
+  const isBadgeValid = true;
+    const isWeightValid = true;
+    const isShelflifeValid = true; 
+
+    const isPricePerKiloValid = true;
     const isPriceBeforeDiscountValid = true;
     const isProductDiscountValid = true;
     const isPriceAfterDiscountValid = true;
     const isProductDetailsValid = true;
     const isImageurlValid = productImageurl.length > 0;
-    const isFormValid = isProductNameValid && isProductNumberValid && isProductDescriptionValid && isPriceBeforeDiscountValid && isProductDiscountValid && isPriceAfterDiscountValid
+    const isFormValid = isProductNameValid && isProductNumberValid && isProductDescriptionValid && isPriceBeforeDiscountValid
+        && isProductDiscountValid && isPriceAfterDiscountValid && isBadgeValid && isWeightValid && isShelflifeValid && isPricePerKiloValid
 
 
     useEffect(() => {
@@ -75,6 +97,10 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         if (productToEdit !== null) {
             setProductName(productToEdit.name);
             setProductNumber(productToEdit.productnumber)
+            setBadge(productToEdit.badge)
+            setWeight(productToEdit.weight)
+             setShelflife(productToEdit.shelflife)
+             setPricePerKilo(productToEdit.priceperkilo.toString())
             setProductDescription(productToEdit.description)
             setProductDetails(productToEdit.details)
             setProductPriceBeforeDiscount(productToEdit.discountprice.toFixed(2))
@@ -86,6 +112,10 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         else {
             setProductName('');
             setProductNumber('')
+            setBadge('');
+            setWeight('');
+            setShelflife('');
+            setPricePerKilo('')
             setProductDescription('')
             setProductDetails('');
             setProductPriceBeforeDiscount('')
@@ -100,6 +130,10 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         setProductNameTouched(false)
         setProductNumberTouched(false)
         setProductDescriptionTouched(false)
+        setBadgeTouched(false);
+        setWeightTouched(false)
+        setShelflifeTouched(false)
+        setPricePerKiloTouched(false)
         setProductPriceBeforeDiscountTouched(false)
         setProductDiscountPercentageTouched(false)
         setProductPriceAfterDiscountTouched(false)
@@ -121,15 +155,19 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         const productData = {
             id: productToEdit !== null ? productToEdit.id : 0,
             name: productName,
-           
-            productnumber: productNumber, 
+
+            productnumber: productNumber,
             description: productDescription,
-            details : productDetails,
+            details: productDetails,
             imageurl: productImageurl,
             price: productPriceAfterDiscount.replaceAll(',', '.'),
             discountpercentage: productDiscountPercentage.replaceAll(',', '.'),
             discountprice: productPriceBeforeDiscount.replaceAll(',', '.'),
-            producttype: 0
+            producttype: 0,
+            badge: badge,
+            weight: weight,
+            shelfLife: shelflife,
+            priceperkilo: pricePerKilo
         }
 
         if (selectedFile) {
@@ -305,12 +343,12 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         }
     };
 
-     const handleRichTextEditorChange = (editorHtml : string) => {
+    const handleRichTextEditorChange = (editorHtml: string) => {
         setProductDetails(editorHtml)
         //setEditorHtml(editorHtml);
-     }
+    }
 
-      
+
 
     const handleUpload = async () => {
         if (!selectedFile) {
@@ -449,6 +487,95 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                 </div>
 
                 <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="badge">Mærkat:</label><br />
+                    <input
+                        id="badge"
+                        type="text"
+                        value={badge}
+                        onChange={(e) => setBadge(e.target.value)}
+                        onBlur={() => setBadgeTouched(true)}
+                        placeholder="Mærkat"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isBadgeValid && badgeTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="weight">Vægt</label><br />
+                    <input
+                        id="weight"
+                        type="text"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        onBlur={() => setWeightTouched(true)}
+                        placeholder="Vægt"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isWeightValid && weightTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="shelflife">Holdbarhed</label><br />
+                    <input
+                        id="shelflife"
+                        type="text"
+                        value={shelflife}
+                        onChange={(e) => setShelflife(e.target.value)}
+                        onBlur={() => setShelflifeTouched(true)}
+                        placeholder="Holdbarhed"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isShelflifeValid && shelflifeTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
+                    <label htmlFor="priceperkilo">Kilopris</label><br />
+                    <input
+                        id="priceperkilo"
+                        type="text"
+                        value={pricePerKilo.replaceAll('.', ',')}
+                        onChange={(e) => setPricePerKilo(e.target.value)}
+                        onBlur={() => setPricePerKiloTouched(true)}
+
+                        placeholder="Kilopris"
+                        style={{
+                            width: '100%',
+                            padding: '0.5rem',
+                            marginTop: '0.25rem',
+                            borderColor: !isPricePerKiloValid && pricePerKiloTouched ? 'red' : undefined,
+                            borderWidth: '1.5px',
+                            borderStyle: 'solid',
+                            borderRadius: '4px',
+                        }}
+                        disabled={submitting}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
                     <label htmlFor="pricebeforediscount">Pris før rabat:</label><br />
                     <input
                         id="pricebeforediscount"
@@ -535,13 +662,13 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         }}
                         disabled={submitting}
                     /> */}
-                      <RichtextEditorQuill 
-                    initialValue={productDetails}
-                    onChange={(html) => handleRichTextEditorChange(html)} // get final value here
+                    <RichtextEditorQuill
+                        initialValue={productDetails}
+                        onChange={(html) => handleRichTextEditorChange(html)} // get final value here
                     />
                 </div>
-               
-             
+
+
                 <div
                     style={{
                         marginBottom: '1rem',
