@@ -5,14 +5,16 @@ import { OrderItem } from '../types/OrderItem';
 import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { Product } from '../types/Product';
+import { ProductCategory } from '../types/ProducCategory';
 import { AxiosClientGet, AxiosClientPost } from '../types/AxiosClient';
 import { useNavigate } from "react-router-dom";
 import ProductCard from './ProductCard';
 import Cart from './Cart';
-import CustomerDetails from './CustomerDetails';
+
 import PickupLocation from './PickupLocation';
 import { Order } from '../types/Order';
 import { useCart } from './CartContext';
+import { id } from 'date-fns/locale';
 
 
 export default function CreateOrder() {
@@ -45,7 +47,14 @@ export default function CreateOrder() {
     const navigate = useNavigate();
     const { cart } = useCart();
 
-const isFormValid = true;
+    const isNameValid = customerName.trim().length > 0;
+    const isPhoneValid = phone.trim().length > 0;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValid = emailRegex.test(email);
+    const IsAnyOrderLines = Object.values(cart).length > 0
+
+
+    const isFormValid = isNameValid && isPhoneValid && isEmailValid && IsAnyOrderLines
 
     useEffect(() => {
 
@@ -73,9 +82,20 @@ const isFormValid = true;
                     badge: product.badge,
                     weight: product.weight,
                     shelfLife: product.shelflife,
-                    pricePerKg: product.priceperkilo
+                    pricePerKg: product.priceperkilo,
+
+                   /*  productcategories  :  product.productcategories.map((category : ProductCategory) => (
+                     {
+                        id : category.id,
+                        categoryname : category.categoryname
+                     })) */
+
+                 productcategories  :  product.productcategories
+
                 }
                 ));
+
+
 
                 setOrderItemsProduct(tmpOrderItemsProduct);
 
@@ -223,8 +243,60 @@ const isFormValid = true;
                         <Cart />
                     </div>
 
-                    <div className="mt-10">
-                        <CustomerDetails />
+                    <div className="text-2xl p-4 bg-gray-50 rounded-xl shadow-md">
+                        <h2 className="text-xl font-bold mb-2">
+                            Kontaktinfo:
+                        </h2>
+                        {/* Customer name */}
+                        <label htmlFor="customerName" className="text-xl"></label>
+                        <input
+                            id="customerName"
+                            type="text"
+                            value={customerName}
+                            onChange={(e) => setCustomerName(e.target.value)}
+                            onBlur={() => setNameTouched(true)}
+                            placeholder="Indtast dit navn"
+                            className="text-xl"
+                            disabled={submitting}
+                        />
+                        {!isNameValid && nameTouched && (
+                            <p className="text-xl" style={{ color: 'red', marginTop: '0.25rem' }}>Navn må ikke være tomt.</p>
+                        )}
+
+                        <label htmlFor="phone" className="text-xl">Telefonnummer:</label>
+                        <input
+                            id="phone"
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            onBlur={() => setPhoneTouched(true)}
+                            placeholder="+451234567890 eller 12345678"
+                            className="text-xl"
+                            maxLength={12}
+                            disabled={submitting}
+                        />
+                        {!isPhoneValid && phoneTouched && (
+                            <p className="text-xl" style={{ color: 'red', marginTop: '0.25rem' }}>
+                                Telefonnummer skal være enten 8 cifre eller '+' efterfulgt af 10 cifre.
+                            </p>
+                        )}
+
+                        {/* Email */}
+                        <label htmlFor="email" className="text-xl">Email:</label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            onBlur={() => setEmailTouched(true)}
+                            placeholder="Indtast din email"
+                            className="text-xl"
+                            disabled={submitting}
+                        />
+                        {!isEmailValid && emailTouched && (
+                            <p className="text-xl" style={{ color: 'red', marginTop: '0.25rem' }}>Indtast venligst en gyldig emailadresse.</p>
+                        )}
+
                     </div>
 
                     <div className="mt-10">

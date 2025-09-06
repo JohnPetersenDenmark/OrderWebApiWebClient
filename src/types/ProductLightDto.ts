@@ -1,7 +1,6 @@
 
-import { ProductCategory } from "./ProducCategory";
 
-export interface Product {
+export interface ProductLightDto {
   id: number;
   productnumber: string;
   name: string;
@@ -13,13 +12,10 @@ export interface Product {
   discountprice: number;
   producttype: number;
 
-  productcategories : ProductCategory[]
+  productcategoryIds : number[]
 
   badge: string,
   weight: string,
   shelflife: string,
   priceperkilo: number
-
-  
-
 }

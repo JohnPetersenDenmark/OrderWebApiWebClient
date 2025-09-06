@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Product } from '../../types/Product';
+import { ProductCategory } from '../../types/ProducCategory';
 import FileInput from "../FileInput"
 import config from '../../config';
 import RichtextEditorQuill from "../RichtextEditorQuill"
@@ -41,6 +42,12 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
     const [pricePerKilo, setPricePerKilo] = useState<string>('');
     const [pricePerKiloTouched, setPricePerKiloTouched] = useState(false);
 
+    // const [selectedProductCategories, setSelectedProductCategories] = useState<ProductCategory[]>([]);
+
+    const [selectedProductCategories, setSelectedProductCategories] = React.useState<ProductCategory[]>([]);
+
+    const [allProductCategories, setAllProductCategories] = useState<ProductCategory[]>([]);
+
     const [productDescriptionTouched, setProductDescriptionTouched] = useState(false);
 
     const [productDetails, setProductDetails] = useState<string>('');
@@ -58,6 +65,10 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     const [productaPriceAfterDiscountTouched, setProductPriceAfterDiscountTouched] = useState(false);
 
+    const [loading, setLoading] = useState(true);
+    const [reload, setReload] = useState(0);
+    const [error, setError] = useState<string | null>(null);
+
     const [productImageurl, setProductImageurl] = useState<string>('');
 
     const [productImageurlTouched, setProductImageurlTouched] = useState(false);
@@ -73,13 +84,13 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
     const isProductNameValid = productName.length > 0;
     const isProductNumberValid = productNumber.length > 0;
     const isProductDescriptionValid = productDescription.length > 0;
-   /*  const isBadgeValid = badge.length > 0;
-    const isWeightValid = weight.length > 0;
-    const isShelflifeValid = shelflife.length > 0; */
+    /*  const isBadgeValid = badge.length > 0;
+     const isWeightValid = weight.length > 0;
+     const isShelflifeValid = shelflife.length > 0; */
 
-  const isBadgeValid = true;
+    const isBadgeValid = true;
     const isWeightValid = true;
-    const isShelflifeValid = true; 
+    const isShelflifeValid = true;
 
     const isPricePerKiloValid = true;
     const isPriceBeforeDiscountValid = true;
@@ -94,19 +105,39 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
     useEffect(() => {
         if (!isOpen) return;
 
+        const fetchData = async () => {
+
+            try {
+                const categoryResponse: any = await AxiosClientGet('/Home/productcategorylist', false);
+
+                setAllProductCategories(categoryResponse);
+                setLoading(false);
+
+            } catch (err) {
+                setError('Failed to load locations');
+                setLoading(false);
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchData();
+
         if (productToEdit !== null) {
             setProductName(productToEdit.name);
             setProductNumber(productToEdit.productnumber)
             setBadge(productToEdit.badge)
             setWeight(productToEdit.weight)
-             setShelflife(productToEdit.shelflife)
-             setPricePerKilo(productToEdit.priceperkilo.toString())
+            setShelflife(productToEdit.shelflife)
+            setPricePerKilo(productToEdit.priceperkilo.toString())
             setProductDescription(productToEdit.description)
             setProductDetails(productToEdit.details)
             setProductPriceBeforeDiscount(productToEdit.discountprice.toFixed(2))
             setProductDiscountPercentage(productToEdit.discountpercentage.toFixed(1))
             setProductPriceAfterDiscount(productToEdit.price.toFixed(2))
             setProductImageurl(productToEdit.imageurl)
+            setSelectedProductCategories(productToEdit.productcategories)
 
         }
         else {
@@ -123,6 +154,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             setProductPriceAfterDiscount('')
             setProductImageurl('')
             setSelectedFile(null)
+            setSelectedProductCategories([])
 
 
         }
@@ -144,7 +176,17 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     }, [isOpen]);
 
+    const handleChangeProductCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedIds = Array.from(e.target.selectedOptions, opt => opt.value);
+        if (selectedProductCategories)
+        {
+           
+        }
 
+          const selectedObjects =  allProductCategories.filter(c => selectedIds.includes(c.id.toString()));
+            setSelectedProductCategories(selectedObjects);
+       
+    };
 
     const handleSubmit = async () => {
 
@@ -167,7 +209,8 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             badge: badge,
             weight: weight,
             shelfLife: shelflife,
-            priceperkilo: pricePerKilo
+            priceperkilo: pricePerKilo,
+            productcategoryIds : selectedProductCategories.map(cat => cat.id)  
         }
 
         if (selectedFile) {
@@ -484,6 +527,21 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         }}
                         disabled={submitting}
                     />
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label htmlFor="productcategory" style={{ fontWeight: 'bold' }}>Vælg produktkategori:</label><br />
+                    <select
+                        multiple
+                        value={selectedProductCategories && selectedProductCategories.map(c => c.id.toString())} // map objects → ids
+                        onChange={handleChangeProductCategory}
+                    >
+                        {allProductCategories.map(cat => (
+                            <option key={cat.id} value={cat.id}>
+                                {cat.categoryname}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>

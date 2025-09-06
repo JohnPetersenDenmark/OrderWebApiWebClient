@@ -1,4 +1,5 @@
-import { Product } from '../types/Product';
+
+import { ProductCategory } from './ProducCategory';
 
 export interface OrderItem {
   orderid: number,
@@ -14,6 +15,8 @@ export interface OrderItem {
   unitdiscountpercentage: number,
   discountedunitprice: number,
   producttype: number;
+
+  productcategories : ProductCategory[]
 
   badge: string;
   weight: string;

@@ -9,6 +9,7 @@ import AdminFishShops from './AdminFishshops'
 import AdminEmployee from './AdminEmployee';
 import AdminOperatingArea from './AdminOperatingArea';
 import AdminTemplateSchedule from './AdminTemplateSchedule';
+import AdminProductCategories from './AdminProductCategories';
 
 import RevenuePerTimePeriod from '../Statistic/RevenuePerTimePeriod'
 
@@ -84,6 +85,7 @@ const AdminDashBoard: React.FC = () => {
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('AlleBestillinger')}>Alle Bestillinger</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Pakkeliste')}>Pakkeliste</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Menuer')}>Menuer</div>
+                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('ProductCategories')}>Produktkategorier</div>
                 <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Brugere')}>Brugere</div>
 
                 {activeMenu === 'TemplateSchedules' && <AdminTemplateSchedule />}
@@ -97,6 +99,7 @@ const AdminDashBoard: React.FC = () => {
                 {activeMenu === 'Bestillinger' && <AdminOrders />}
                 {activeMenu === 'Pakkeliste' && <AdminPackingList />}
                 {activeMenu === 'Menuer' && <AdminMenues />}
+                 {activeMenu === 'ProductCategories' && <AdminProductCategories />}
                 {activeMenu === 'Brugere' && <AdminUsers />}
             </div>
         </>
