@@ -10,6 +10,7 @@ import AdminEmployee from './AdminEmployee';
 import AdminOperatingArea from './AdminOperatingArea';
 import AdminTemplateSchedule from './AdminTemplateSchedule';
 import AdminProductCategories from './AdminProductCategories';
+import { useNavigate } from "react-router-dom";
 
 import RevenuePerTimePeriod from '../Statistic/RevenuePerTimePeriod'
 
@@ -24,12 +25,16 @@ interface DashboardModalProps {
     onClose: () => void;
 }
 
+interface MenuPoint {
+    clickableText: string;
+    component: React.ComponentType; // points to actual component
+}
 // const AdminDashBoard: React.FC<DashboardModalProps> = ({ isOpen, onClose }) => {
 const AdminDashBoard: React.FC = () => {
 
-    const [activeMenu, setActiveMenu] = useState('Bestillinger');
-
     const { user, authStatus } = useCurrentUser();
+    const [selectedMenuPoint, setSelectedMenuPoint] = useState(0);
+    const navigate = useNavigate();
 
     const { isOpen, setIsOpen } = useDashboardContext();
 
@@ -37,71 +42,110 @@ const AdminDashBoard: React.FC = () => {
         setIsOpen(false);
     };
 
+    function handleMenuSelection(menuItem: number) {
+        setSelectedMenuPoint(menuItem);
+        /*  if (menuItem === 5) {
+             navigate("/admin")
+         } */
+    }
+
+    const menuArray: MenuPoint[] = [];
+
+ let newMenuPoint = {
+        clickableText: "Ordrer",
+        component: AdminOrders
+    }
+     menuArray.push(newMenuPoint)
+
+
+     newMenuPoint = {
+        clickableText: "Produkter",
+        component: AdminMenues
+    }
+     menuArray.push(newMenuPoint)
+
+
+     newMenuPoint = {
+        clickableText: "Brugere",
+        component: AdminUsers
+
+    }    
+    menuArray.push(newMenuPoint)
+
+    
+      newMenuPoint = {
+        clickableText: "Biler",
+        component: AdminFishShops
+    }
+    menuArray.push(newMenuPoint)
+
+      newMenuPoint = {
+        clickableText: "Stadepladser",
+        component: AdminPlaces
+    }
+    menuArray.push(newMenuPoint)
+
+        newMenuPoint = {
+        clickableText: "Områder",
+        component: AdminOperatingArea
+    }
+    menuArray.push(newMenuPoint)
+
+            newMenuPoint = {
+        clickableText: "Medarbejdere",
+        component: AdminEmployee
+    }
+    menuArray.push(newMenuPoint)
+
+                newMenuPoint = {
+        clickableText: "Produktkategorier",
+        component: AdminProductCategories
+    }
+    menuArray.push(newMenuPoint)
+
+
+
+    
 
     return (
         <>
-            <div
-                style={{
+              <div className="flex flex-col gap-60  bg-customBlue">
+                <div className="flex">
+                    {/* Column 1 */}
+                    <div className="flex-1  text-white p-4 text-center">
+                        <img src="/images/jjfisk_logo.svg" alt="Logo" height={100} width={100} />
+                    </div>
 
-                    fontSize: '30px',
-                    color: '#8d4a5b',
-                    fontWeight: 700,
-                    marginLeft: '0px',
-                    marginTop: '40px',
-                    marginBottom: '40px'
-                }}
-            >
+                    {/* Column 2 with nested row */}
+                    <div className="flex-5 text-white p-4">
+                       <div className="grid grid-cols-10 gap-2 text-center">
+                           {menuArray.map((menuPoint, index) => (
+                            <>
+                                <div
+                                    className={`cursor-pointer hover:text-hoverYellow ${selectedMenuPoint == index ? 'text-hoverYellow' : 'text-white'}`}
+                                    onClick={() => handleMenuSelection(index)}
+                                >
+                                    {menuPoint.clickableText}
+                                </div>
+                            </>
+                        ))}
+                          </div>
+                    </div>
 
-                <div style={{ color: '#000000', textAlign: 'right', marginLeft: '100px' }}>  {user ? user.displayname : ''}</div>
-
-                <div style={{ color: '#000000', textAlign: 'right', marginLeft: '100px' }}>
-
-
-                    <button
-                        onClick={handleClose}
-
-                        style={{
-                            marginTop: '1rem',
-                            padding: '0.5rem 1rem',
-                            backgroundColor: '#8d4a5b',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            marginRight: '0.5rem',
-                        }}
-                    > Hjem</button>
+                    {/* Column 3 */}
+                    <div className="flex-1 text-white p-4 text-center">
+                        Column 3
+                    </div>
                 </div>
 
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('FishShop')}>Biler</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Employee')}>Medarbejder</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Area')}>Område</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('TemplateSchedules')}>Template</div>
+                </div>
 
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Revenue')}>Omsætning</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Stadepladser')}>Stadepladser</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Kalender')}>Kalender</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Bestillinger')}>Bestillinger</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('AlleBestillinger')}>Alle Bestillinger</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Pakkeliste')}>Pakkeliste</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Menuer')}>Menuer</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('ProductCategories')}>Produktkategorier</div>
-                <div style={{ cursor: 'pointer', marginLeft: '100px' }} onClick={() => setActiveMenu('Brugere')}>Brugere</div>
+                {menuArray[selectedMenuPoint]?.component
+                    ? React.createElement(menuArray[selectedMenuPoint].component)
+                    : ''}
 
-                {activeMenu === 'TemplateSchedules' && <AdminTemplateSchedule />}
-                {activeMenu === 'FishShop' && <AdminFishShops />}
-                {activeMenu === 'Employee' && <AdminEmployee />}
-                {activeMenu === 'Area' && <AdminOperatingArea />}
-                {activeMenu === 'Revenue' && <RevenuePerTimePeriod />}
-                {activeMenu === 'Stadepladser' && <AdminPlaces />}
-                {activeMenu === 'Kalender' && <AdminCalendar />}
-                {activeMenu === 'AlleBestillinger' && <AdminAllOrders />}
-                {activeMenu === 'Bestillinger' && <AdminOrders />}
-                {activeMenu === 'Pakkeliste' && <AdminPackingList />}
-                {activeMenu === 'Menuer' && <AdminMenues />}
-                 {activeMenu === 'ProductCategories' && <AdminProductCategories />}
-                {activeMenu === 'Brugere' && <AdminUsers />}
-            </div>
+
+            
         </>
 
     )

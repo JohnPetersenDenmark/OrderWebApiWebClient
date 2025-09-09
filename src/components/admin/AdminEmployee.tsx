@@ -87,9 +87,8 @@ const AdminEmployee: React.FC = () => {
         border: '1px solid grey',
         borderRadius: '5px',
         fontSize: '20px',
-        color: '#22191b',
+        color: '#22191b',       
         fontWeight: 200,
-
         margin: 'auto',
       }}
     >

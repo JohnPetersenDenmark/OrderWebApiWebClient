@@ -36,7 +36,7 @@ export default function Layout() {
 
                     {/* Column 2 with nested row */}
                     <div className="flex-1 text-white p-4">
-                        <div className="grid grid-cols-5 gap-2 text-center">
+                       <div className="grid grid-cols-5 gap-2 text-center">
                             <div className="text-2xl p-2">
                                 <span
                                     onClick={() => handleMenuSelection(1)}

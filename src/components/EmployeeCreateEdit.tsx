@@ -88,7 +88,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundColor: '#8d4a5b',
+                backgroundColor: '#ccd4e5',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -98,7 +98,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
         >
             <div
                 style={{
-                    backgroundColor: '#c7a6ac',
+                    backgroundColor: '#5470a9',
                     padding: '1.5rem',
                     borderRadius: '8px',
                     width: '90%',
@@ -108,7 +108,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
             >
                 <h2
                     style={{
-                        backgroundColor: '#8d4a5b',
+                        backgroundColor: '#5470a9',
                         padding: '1rem',
                         color: 'white',
                         borderRadius: '8px',
@@ -207,7 +207,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                         style={{
                             flex: 1,
                             padding: '0.5rem 1rem',
-                            backgroundColor: isFormValid && !submitting ? '#8d4a5b' : 'grey',
+                            backgroundColor: isFormValid && !submitting ? '#ffb84d' : 'grey',
                             color: 'white',
                             border: 'none',
                             borderRadius: '4px',
@@ -223,7 +223,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                         style={{
                             flex: 1,
                             padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? '#8d4a5b' : 'grey',
+                            backgroundColor: !submitting ? '#ffb84d' : 'grey',
                             color: 'white',
                             border: 'none',
                             borderRadius: '4px',

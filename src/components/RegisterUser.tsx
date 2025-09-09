@@ -110,7 +110,7 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundColor: '#8d4a5b',
+                backgroundColor: '#ccd4e5',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -120,7 +120,7 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
         >
             <div
                 style={{
-                    backgroundColor: '#c7a6ac',
+                    backgroundColor: '#5470a9',
                     padding: '1.5rem',
                     borderRadius: '8px',
                     width: '90%',
@@ -130,7 +130,7 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
             >
                 <h2
                     style={{
-                        backgroundColor: '#8d4a5b',
+                        backgroundColor: '#5470a9',
                         padding: '1rem',
                         color: 'white',
                         borderRadius: '8px',
@@ -179,6 +179,7 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
                         onBlur={() => setPasswordTouched(true)}
                         placeholder="Indtast kodeord"
                         style={{
+                            backgroundColor : 'white',
                             width: '100%',
                             padding: '0.5rem',
                             marginTop: '0.25rem',
@@ -233,7 +234,7 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
                         style={{
                             flex: 1,
                             padding: '0.5rem 1rem',
-                            backgroundColor: isFormValid && !submitting ? '#8d4a5b' : 'grey',
+                            backgroundColor: isFormValid && !submitting ? '#ffb84d' : 'grey',
                             color: 'white',
                             border: 'none',
                             borderRadius: '4px',
@@ -249,7 +250,7 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
                         style={{
                             flex: 1,
                             padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? '#8d4a5b' : 'grey',
+                            backgroundColor: !submitting ? '#ffb84d' : 'grey',
                             color: 'white',
                             border: 'none',
                             borderRadius: '4px',

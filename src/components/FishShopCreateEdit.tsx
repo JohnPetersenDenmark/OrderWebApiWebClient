@@ -43,66 +43,66 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
     const isfishShopNameNameValid = fishShopName.length > 0;
     const isFormValid = isfishShopNameNameValid;
 
-   useEffect(() => {
-  if (!isOpen) return;
+    useEffect(() => {
+        if (!isOpen) return;
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
+        const fetchData = async () => {
+            try {
+                setLoading(true);
 
-      const [employeesResponse, operatingAreaResponse] = await Promise.all([
-        AxiosClientGet('/Admin/employeelist', true),
-        AxiosClientGet('/Admin/operatingarealist', true)
-      ]);
+                const [employeesResponse, operatingAreaResponse] = await Promise.all([
+                    AxiosClientGet('/Admin/employeelist', true),
+                    AxiosClientGet('/Admin/operatingarealist', true)
+                ]);
 
-      setEmployeeList(employeesResponse);
-      setOperatingAreaList(operatingAreaResponse);
+                setEmployeeList(employeesResponse);
+                setOperatingAreaList(operatingAreaResponse);
 
-    } catch (err) {
-      setError("Failed to load data");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+            } catch (err) {
+                setError("Failed to load data");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  fetchData();
-}, [isOpen]);
+        fetchData();
+    }, [isOpen]);
 
 
-// 2. Preselect when editing + lists are ready
-useEffect(() => {
-  if (!isOpen) return;
+    // 2. Preselect when editing + lists are ready
+    useEffect(() => {
+        if (!isOpen) return;
 
-  if (!fishShopToEdit) {
-    // new shop
-    setFishShopId("0");
-    setFishShopName('');
-    setSelectedEmployee(null);
-    setSelectedOperatingArea(null);
-  } else {
-    // editing existing shop
-    setFishShopId(fishShopToEdit.id.toString());
-    setFishShopName(fishShopToEdit.name);
+        if (!fishShopToEdit) {
+            // new shop
+            setFishShopId("0");
+            setFishShopName('');
+            setSelectedEmployee(null);
+            setSelectedOperatingArea(null);
+        } else {
+            // editing existing shop
+            setFishShopId(fishShopToEdit.id.toString());
+            setFishShopName(fishShopToEdit.name);
 
-    if (employeeList.length > 0) {
-      setSelectedEmployee(
-        employeeList.find(e => e.id === fishShopToEdit?.employeeId) || null
-      );
-    }
+            if (employeeList.length > 0) {
+                setSelectedEmployee(
+                    employeeList.find(e => e.id === fishShopToEdit?.employeeId) || null
+                );
+            }
 
-    if (operatingAreaList.length > 0) {
-      setSelectedOperatingArea(
-        operatingAreaList.find(o => o.id === fishShopToEdit?.operationAreaId) || null
-      );
-    }
-  }
+            if (operatingAreaList.length > 0) {
+                setSelectedOperatingArea(
+                    operatingAreaList.find(o => o.id === fishShopToEdit?.operationAreaId) || null
+                );
+            }
+        }
 
-  setfishShopNameTouched(false);
-  setSelectedTruckLocationsTouched(false);
-  setSubmitting(false);
+        setfishShopNameTouched(false);
+        setSelectedTruckLocationsTouched(false);
+        setSubmitting(false);
 
-}, [fishShopToEdit, employeeList, operatingAreaList, isOpen]);
+    }, [fishShopToEdit, employeeList, operatingAreaList, isOpen]);
 
 
 
@@ -164,7 +164,7 @@ useEffect(() => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundColor: '#8d4a5b',
+                backgroundColor: '#ccd4e5',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -174,7 +174,7 @@ useEffect(() => {
         >
             <div
                 style={{
-                    backgroundColor: '#c7a6ac',
+                    backgroundColor: '#5470a9',
                     padding: '1.5rem',
                     borderRadius: '8px',
                     width: '90%',
@@ -184,7 +184,7 @@ useEffect(() => {
             >
                 <h2
                     style={{
-                        backgroundColor: '#8d4a5b',
+                        backgroundColor: '#5470a9',
                         padding: '1rem',
                         color: 'white',
                         borderRadius: '8px',
@@ -219,61 +219,65 @@ useEffect(() => {
                     />
                 </div>
 
-                <div style={{ marginBottom: '1rem' }}>
-                    <h2 className="text-xl font-bold mb-2">Vælg medarbejder</h2>
-                    <ul className="mb-4">
-                        {employeeList.map((employee) => (
-                            <li key={employee.id} className="mb-1">
-                                <button
-                                    onClick={() => toggleEmployee(employee)}
-                                /*  className={`px-3 py-1 rounded ${
-                                   selected.includes(location)
-                                     ? "bg-blue-500 text-white"
-                                     : "bg-gray-200"
-                                 }`} */
-                                >
-                                    {employee.name} {employee.phone}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="flex space-x-4">
+                    <div className="flex-1" style={{ marginBottom: '1rem' }}>
+                        <h2 className="text-xl font-bold mb-2">Vælg medarbejder</h2>
+                        <ul className="mb-4 bg-white">
+                            {employeeList.map((employee) => (
+                                <li key={employee.id} className="mb-1 text-left">
+                                    <button
+                                        onClick={() => toggleEmployee(employee)}
+                                    /*  className={`px-3 py-1 rounded ${
+                                       selected.includes(location)
+                                         ? "bg-blue-500 text-white"
+                                         : "bg-gray-200"
+                                     }`} */
+                                    >
+                                        {employee.name}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+
+
+
+                    <div className="flex-1" style={{ marginBottom: '1rem' }}>
+                        <h3 className="text-lg font-semibold mb-2">Valgt:</h3>
+                        <ul className="mb-4 bg-white">
+                            <li>{selectedEmployee?.name}</li>
+                        </ul>
+                    </div>
                 </div>
 
+                <div className="flex space-x-4">
+                    <div className="flex-1" style={{ marginBottom: '1rem' }}>
+                        <h2 className="text-xl font-bold mb-2">Vælg område</h2>
+                        <ul className="mb-4 bg-white">
+                            {operatingAreaList.map((operationgArea) => (
+                                <li key={operationgArea.id} className="mb-1 bg-white ml-3">
+                                    <button
+                                        onClick={() => toggleOperatingArea(operationgArea)}                                      
+                                    /*  className={`px-3 py-1 rounded ${
+                                       selected.includes(location)
+                                         ? "bg-blue-500 text-white"
+                                         : "bg-gray-200"
+                                     }`} */
+                                    >
+                                        {operationgArea.name}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
 
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <h3 className="text-lg font-semibold mb-2">Selected:</h3>
-                    <ul>
-                        <li>{selectedEmployee?.name}</li>
-                    </ul>
-                </div>
-
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <h2 className="text-xl font-bold mb-2">Vælg område</h2>
-                    <ul className="mb-4">
-                        {operatingAreaList.map((operationgArea) => (
-                            <li key={operationgArea.id} className="mb-1">
-                                <button
-                                    onClick={() => toggleOperatingArea(operationgArea)}
-                                /*  className={`px-3 py-1 rounded ${
-                                   selected.includes(location)
-                                     ? "bg-blue-500 text-white"
-                                     : "bg-gray-200"
-                                 }`} */
-                                >
-                                    {operationgArea.name}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
-                <div style={{ marginBottom: '1rem' }}>
-                    <h3 className="text-lg font-semibold mb-2">Selected:</h3>
-                    <ul>
-                        <li>{selectedOperatingArea?.name}</li>
-                    </ul>
+                    <div className="flex-1" style={{ marginBottom: '1rem' }}>
+                        <h3 className="text-lg font-semibold mb-2">Valgt:</h3>
+                        <ul className="mb-4 bg-white">
+                            <li>{selectedOperatingArea?.name}</li>
+                        </ul>
+                    </div>
                 </div>
 
                 {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
@@ -285,7 +289,7 @@ useEffect(() => {
                         style={{
                             flex: 1,
                             padding: '0.5rem 1rem',
-                            backgroundColor: isFormValid && !submitting ? '#8d4a5b' : 'grey',
+                            backgroundColor: isFormValid && !submitting ? '#ffb84d' : 'grey',
                             color: 'white',
                             border: 'none',
                             borderRadius: '4px',
@@ -301,7 +305,7 @@ useEffect(() => {
                         style={{
                             flex: 1,
                             padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? '#8d4a5b' : 'grey',
+                            backgroundColor: !submitting ? '#ffb84d' : 'grey',
                             color: 'white',
                             border: 'none',
                             borderRadius: '4px',

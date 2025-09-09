@@ -153,7 +153,7 @@ const AdminMenues: React.FC = () => {
       </SectionWrapper>
 
       {/* Toppings Section */}
-      <SectionWrapper bgColor="white">
+    {/*   <SectionWrapper bgColor="white">
         <GridHeaderTopping>
           <div></div>
           <div>Tilbehør</div>
@@ -163,14 +163,14 @@ const AdminMenues: React.FC = () => {
           <div></div>
           <div></div>
 
-        </GridHeaderTopping>
+        </GridHeaderTopping> */}
 
        
 
 
         
 
-      </SectionWrapper>
+      {/* </SectionWrapper> */}
     </Container>
   );
 };

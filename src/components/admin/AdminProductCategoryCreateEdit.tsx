@@ -87,7 +87,7 @@ const AdminProductCategoryCreateEdit: React.FC<ProductCategoryModalProps> = ({ i
     >
       <div
         style={{
-          backgroundColor: '#c7a6ac',
+          backgroundColor: '#5470a9',
           padding: '1.5rem',
           borderRadius: '8px',
           width: '90%',
@@ -96,7 +96,7 @@ const AdminProductCategoryCreateEdit: React.FC<ProductCategoryModalProps> = ({ i
       >
         <h2
           style={{
-            backgroundColor: '#8d4a5b',
+            backgroundColor: '#5470a9',
             padding: '1rem',
             color: 'white',
             borderRadius: '8px',
@@ -144,7 +144,7 @@ const AdminProductCategoryCreateEdit: React.FC<ProductCategoryModalProps> = ({ i
             style={{
               padding: '0.5rem 1rem',
               backgroundColor:
-                isFormValid && !submitting ? '#8d4a5b' : 'grey',
+                isFormValid && !submitting ? '#ffb84d' : 'grey',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
@@ -161,7 +161,7 @@ const AdminProductCategoryCreateEdit: React.FC<ProductCategoryModalProps> = ({ i
             disabled={submitting}
             style={{
               padding: '0.5rem 1rem',
-              backgroundColor: !submitting ? '#8d4a5b' : 'grey',
+              backgroundColor: !submitting ? '#ffb84d' : 'grey',
               color: 'white',
               border: 'none',
               borderRadius: '4px',

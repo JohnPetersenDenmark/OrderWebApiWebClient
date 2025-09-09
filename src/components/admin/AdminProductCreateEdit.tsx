@@ -178,14 +178,13 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     const handleChangeProductCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedIds = Array.from(e.target.selectedOptions, opt => opt.value);
-        if (selectedProductCategories)
-        {
-           
+        if (selectedProductCategories) {
+
         }
 
-          const selectedObjects =  allProductCategories.filter(c => selectedIds.includes(c.id.toString()));
-            setSelectedProductCategories(selectedObjects);
-       
+        const selectedObjects = allProductCategories.filter(c => selectedIds.includes(c.id.toString()));
+        setSelectedProductCategories(selectedObjects);
+
     };
 
     const handleSubmit = async () => {
@@ -210,7 +209,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             weight: weight,
             shelfLife: shelflife,
             priceperkilo: pricePerKilo,
-            productcategoryIds : selectedProductCategories.map(cat => cat.id)  
+            productcategoryIds: selectedProductCategories.map(cat => cat.id)
         }
 
         if (selectedFile) {
@@ -436,354 +435,385 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
     return (
         <div
             style={{
-                position: 'fixed',
+                position: "fixed",
                 top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
-                backgroundColor: '#8d4a5b',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                backgroundColor: "#ccd4e5",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 zIndex: 1000,
             }}
         >
-
             <div
                 style={{
-                    backgroundColor: '#c7a6ac',
-                    padding: '2rem',
-                    borderRadius: '8px',
-                    minWidth: '300px',
-                    width: '90%',
-                    maxWidth: '500px',
-                    maxHeight: '90vh',
-                    overflowY: 'auto',
+                    backgroundColor: "#5470a9",
+                    padding: "2rem",
+                    borderRadius: "8px",
+                    minWidth: "300px",
+                    width: "95%",
+                    maxWidth: "1400px", // bigger to fit 3 cols nicely
+                    maxHeight: "90vh",
+                    overflowY: "auto",
                 }}
             >
-                <h2 style={{ backgroundColor: '#8d4a5b', padding: '2rem', color: 'white', borderRadius: '8px', fontSize: '1.5rem' }}>Product</h2>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: '200' }}>
-                    <label htmlFor="productnumber">Productnummer:</label><br />
-                    <input
-                        id="productnumber"
-                        type="text"
-                        value={productNumber}
-                        onChange={(e) => setProductNumber(e.target.value)}
-                        onBlur={() => setProductNumberTouched(true)}
-                        placeholder="Productnummer"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isProductNumberValid && productNumberTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="productname">Produkt:</label><br />
-                    <input
-                        id="productname"
-                        type="text"
-                        value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
-                        onBlur={() => setProductNameTouched(true)}
-                        placeholder="Produktnavn"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isProductNameValid && productNameTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="productdescription">Beskrivelse:</label><br />
-                    <input
-                        id="productdescription"
-                        type="text"
-                        value={productDescription}
-                        onChange={(e) => setProductDescription(e.target.value)}
-                        onBlur={() => setProductDescriptionTouched(true)}
-                        placeholder="Beskrivelse"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isProductDescriptionValid && productDescriptionTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1.5rem' }}>
-                    <label htmlFor="productcategory" style={{ fontWeight: 'bold' }}>Vælg produktkategori:</label><br />
-                    <select
-                        multiple
-                        value={selectedProductCategories && selectedProductCategories.map(c => c.id.toString())} // map objects → ids
-                        onChange={handleChangeProductCategory}
-                    >
-                        {allProductCategories.map(cat => (
-                            <option key={cat.id} value={cat.id}>
-                                {cat.categoryname}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="badge">Mærkat:</label><br />
-                    <input
-                        id="badge"
-                        type="text"
-                        value={badge}
-                        onChange={(e) => setBadge(e.target.value)}
-                        onBlur={() => setBadgeTouched(true)}
-                        placeholder="Mærkat"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isBadgeValid && badgeTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="weight">Vægt</label><br />
-                    <input
-                        id="weight"
-                        type="text"
-                        value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
-                        onBlur={() => setWeightTouched(true)}
-                        placeholder="Vægt"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isWeightValid && weightTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="shelflife">Holdbarhed</label><br />
-                    <input
-                        id="shelflife"
-                        type="text"
-                        value={shelflife}
-                        onChange={(e) => setShelflife(e.target.value)}
-                        onBlur={() => setShelflifeTouched(true)}
-                        placeholder="Holdbarhed"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isShelflifeValid && shelflifeTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="priceperkilo">Kilopris</label><br />
-                    <input
-                        id="priceperkilo"
-                        type="text"
-                        value={pricePerKilo.replaceAll('.', ',')}
-                        onChange={(e) => setPricePerKilo(e.target.value)}
-                        onBlur={() => setPricePerKiloTouched(true)}
-
-                        placeholder="Kilopris"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isPricePerKiloValid && pricePerKiloTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="pricebeforediscount">Pris før rabat:</label><br />
-                    <input
-                        id="pricebeforediscount"
-                        type="text"
-                        value={productPriceBeforeDiscount.replaceAll('.', ',')}
-                        onChange={handlePriceBeforeDiscount}
-                        onBlur={handleOnBlurPriceBeforeDiscount}
-                        placeholder="Vejl. udsalgspris"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isPriceBeforeDiscountValid && productPriceBeforeDiscountTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="xyz">Rabat i %:</label><br />
-                    <input
-                        id="xyz"
-                        type="text"
-                        readOnly
-                        value={productDiscountPercentage}
-                        /*  onChange={handleDiscountPercentage}
-                         onBlur={handleOnBlurDiscount} */
-                        placeholder="Rabat i %"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isProductDiscountValid && productDiscountPercentageTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="priceafterdiscount">Pris efter rabat:</label><br />
-                    <input
-                        id="priceafterdiscount"
-                        type="text"
-                        value={productPriceAfterDiscount.replaceAll('.', ',')}
-                        onChange={handlePriceAfterDiscount}
-                        onBlur={handleOnBlurPriceAfterDiscount}
-                        placeholder="Vejl. udsalgspris"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isPriceAfterDiscountValid && productPriceAfterDiscount ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    />
-                </div>
-
-                <div style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 200 }}>
-                    <label htmlFor="details">Lang beskrivelse:</label><br />
-                    {/* <input
-                        id="details"
-                        type="text"
-                        value={productDetails}
-                        onChange={(e) => setProductDetails(e.target.value)}
-                          onBlur={() => setProductDetailsTouched(true)}
-                        placeholder="Vejl. udsalgspris"
-                        style={{
-                            width: '100%',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderColor: !isProductDetailsValid && productDetailsTouched ? 'red' : undefined,
-                            borderWidth: '1.5px',
-                            borderStyle: 'solid',
-                            borderRadius: '4px',
-                        }}
-                        disabled={submitting}
-                    /> */}
-                    <RichtextEditorQuill
-                        initialValue={productDetails}
-                        onChange={(html) => handleRichTextEditorChange(html)} // get final value here
-                    />
-                </div>
-
-
-                <div
+                <h2
                     style={{
-                        marginBottom: '1rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '1rem'
+                        backgroundColor: "#5470a9",
+                        padding: "2rem",
+                        color: "white",
+                        borderRadius: "8px",
+                        fontSize: "1.5rem",
                     }}
                 >
+                    Product
+                </h2>
+
+                {/* === 2-COLUMN GRID FOR INPUTS === */}
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, 1fr)", // changed to 2 columns
+                        gap: "1rem",
+                        marginTop: "1rem",
+                    }}
+                >
+                    {/* Product number */}
                     <div>
-                        <img
-                            src={config.API_BASE_URL + productImageurl}
+                        <label htmlFor="productnumber">Productnummer:</label>
+                        <input
+                            id="productnumber"
+                            type="text"
+                            value={productNumber}
+                            onChange={(e) => setProductNumber(e.target.value)}
+                            onBlur={() => setProductNumberTouched(true)}
+                            placeholder="Productnummer"
                             style={{
-                                maxWidth: '200px',
-                                height: 'auto',
-                                marginTop: '5px'
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor:
+                                    !isProductNumberValid && productNumberTouched ? "red" : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
                             }}
+                            disabled={submitting}
                         />
                     </div>
 
+                    {/* Product name */}
                     <div>
+                        <label htmlFor="productname">Produkt:</label>
+                        <input
+                            id="productname"
+                            type="text"
+                            value={productName}
+                            onChange={(e) => setProductName(e.target.value)}
+                            onBlur={() => setProductNameTouched(true)}
+                            placeholder="Produktnavn"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor:
+                                    !isProductNameValid && productNameTouched ? "red" : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
+                    </div>
+
+
+
+                    <div
+                        style={{
+                            marginTop: "1.5rem",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: "1rem",
+                        }}
+                    >
+                        <img
+                            src={config.API_BASE_URL + productImageurl}
+                            style={{
+                                maxWidth: "200px",
+                                height: "auto",
+                                marginTop: "5px",
+                            }}
+                        />
                         <FileInput onFileSelect={handleFileSelect} />
+                    </div>
+
+                    {/* Product category - spans full width */}
+                    <div >
+                        <label htmlFor="productcategory" style={{ fontWeight: "bold" , color : 'white'}}>
+                            Vælg produktkategori:
+                        </label>
+                        <select
+                            multiple
+                            value={selectedProductCategories?.map((c) => c.id.toString())}
+                            onChange={handleChangeProductCategory}
+                            style={{ width: "100%", padding: "0.5rem", marginTop: "0.25rem" }}
+                        >
+                            {allProductCategories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.categoryname}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                     {/* Product description */}
+                    <div>
+                        <label htmlFor="productdescription">Beskrivelse:</label>
+                        <input
+                            id="productdescription"
+                            type="text"
+                            value={productDescription}
+                            onChange={(e) => setProductDescription(e.target.value)}
+                            onBlur={() => setProductDescriptionTouched(true)}
+                            placeholder="Beskrivelse"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor:
+                                    !isProductDescriptionValid && productDescriptionTouched
+                                        ? "red"
+                                        : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
+                    </div>
+
+                    {/* Badge */}
+                    <div>
+                        <label htmlFor="badge">Mærkat:</label>
+                        <input
+                            id="badge"
+                            type="text"
+                            value={badge}
+                            onChange={(e) => setBadge(e.target.value)}
+                            onBlur={() => setBadgeTouched(true)}
+                            placeholder="Mærkat"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor: !isBadgeValid && badgeTouched ? "red" : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
+                    </div>
+
+                    {/* Weight */}
+                    <div>
+                        <label htmlFor="weight">Vægt</label>
+                        <input
+                            id="weight"
+                            type="text"
+                            value={weight}
+                            onChange={(e) => setWeight(e.target.value)}
+                            onBlur={() => setWeightTouched(true)}
+                            placeholder="Vægt"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor: !isWeightValid && weightTouched ? "red" : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
+                    </div>
+
+                    {/* Shelflife */}
+                    <div>
+                        <label htmlFor="shelflife">Holdbarhed</label>
+                        <input
+                            id="shelflife"
+                            type="text"
+                            value={shelflife}
+                            onChange={(e) => setShelflife(e.target.value)}
+                            onBlur={() => setShelflifeTouched(true)}
+                            placeholder="Holdbarhed"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor: !isShelflifeValid && shelflifeTouched ? "red" : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
+                    </div>
+
+                    {/* Price per kilo */}
+                    <div>
+                        <label htmlFor="priceperkilo">Kilopris</label>
+                        <input
+                            id="priceperkilo"
+                            type="text"
+                            value={pricePerKilo.replaceAll(".", ",")}
+                            onChange={(e) => setPricePerKilo(e.target.value)}
+                            onBlur={() => setPricePerKiloTouched(true)}
+                            placeholder="Kilopris"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor:
+                                    !isPricePerKiloValid && pricePerKiloTouched ? "red" : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
+                    </div>
+
+                    {/* Price before discount */}
+                    <div>
+                        <label htmlFor="pricebeforediscount">Pris før rabat:</label>
+                        <input
+                            id="pricebeforediscount"
+                            type="text"
+                            value={productPriceBeforeDiscount.replaceAll(".", ",")}
+                            onChange={handlePriceBeforeDiscount}
+                            onBlur={handleOnBlurPriceBeforeDiscount}
+                            placeholder="Vejl. udsalgspris"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor:
+                                    !isPriceBeforeDiscountValid && productPriceBeforeDiscountTouched
+                                        ? "red"
+                                        : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
+                    </div>
+
+                    {/* Discount percentage */}
+                    <div>
+                        <label htmlFor="xyz">Rabat i %:</label>
+                        <input
+                            id="xyz"
+                            type="text"
+                            readOnly
+                            value={productDiscountPercentage}
+                            placeholder="Rabat i %"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor:
+                                    !isProductDiscountValid && productDiscountPercentageTouched
+                                        ? "red"
+                                        : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
+                    </div>
+
+                    {/* Price after discount */}
+                    <div>
+                        <label htmlFor="priceafterdiscount">Pris efter rabat:</label>
+                        <input
+                            id="priceafterdiscount"
+                            type="text"
+                            value={productPriceAfterDiscount.replaceAll(".", ",")}
+                            onChange={handlePriceAfterDiscount}
+                            onBlur={handleOnBlurPriceAfterDiscount}
+                            placeholder="Vejl. udsalgspris"
+                            style={{
+                                width: "100%",
+                                padding: "0.5rem",
+                                marginTop: "0.25rem",
+                                borderColor:
+                                    !isPriceAfterDiscountValid && productPriceAfterDiscount
+                                        ? "red"
+                                        : undefined,
+                                borderWidth: "1.5px",
+                                borderStyle: "solid",
+                                borderRadius: "4px",
+                            }}
+                            disabled={submitting}
+                        />
                     </div>
                 </div>
 
-                <button
-                    onClick={handleSubmit}
-                    disabled={!isFormValid || submitting}
-                    style={{
-                        marginTop: '1rem',
-                        padding: '0.5rem 1rem',
-                        backgroundColor: isFormValid && !submitting ? '#8d4a5b' : 'grey',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: isFormValid && !submitting ? 'pointer' : 'not-allowed',
-                        marginRight: '0.5rem',
-                    }}
-                > Ok</button>
 
-                <button
-                    onClick={onClose}
-                    disabled={submitting}
-                    style={{
-                        marginTop: '1rem',
-                        padding: '0.5rem 1rem',
-                        backgroundColor: !submitting ? '#8d4a5b' : 'grey',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: !submitting ? 'pointer' : 'not-allowed',
-                        marginRight: '0.5rem',
-                    }}
-                > Annuler</button>
+                {/* === FULL-WIDTH FIELDS === */}
+                <div style={{ marginTop: "1.5rem" }}>
+                    <label htmlFor="details">Lang beskrivelse:</label>
+                    <RichtextEditorQuill
+                        initialValue={productDetails}
+                        onChange={(html) => handleRichTextEditorChange(html)}
+                    />
+                </div>
+
+              
+
+                {/* Buttons */}
+                <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
+                    <button
+                        onClick={handleSubmit}
+                        disabled={!isFormValid || submitting}
+                        style={{
+                            padding: "0.5rem 1rem",
+                            backgroundColor: isFormValid && !submitting ? "#ffb84d" : "grey",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
+                        }}
+                    >
+                        Ok
+                    </button>
+                    <button
+                        onClick={onClose}
+                        disabled={submitting}
+                        style={{
+                            padding: "0.5rem 1rem",
+                            backgroundColor: !submitting ? "#ffb84d" : "grey",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: !submitting ? "pointer" : "not-allowed",
+                        }}
+                    >
+                        Annuler
+                    </button>
+                </div>
             </div>
         </div>
-    )
+    );
+
+
 
 
 }

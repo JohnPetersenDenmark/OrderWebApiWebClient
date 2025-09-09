@@ -20,9 +20,9 @@
   align-items: center;
   justify-content: center;
   gap: 15px;
-  color: #8d4a5b;
-  background-color: #c7a6ac;
-  border: 1.5px solid #8d4a5b;
+  color: #5470a9;
+  background-color: #5470a9;
+  border: 1.5px solid #ccd4e5;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -40,11 +40,11 @@ width: 50px;
 height: 50px;
 font-size: 30px;
 display : flex;
-color: #8d4a5b; display: flex;
+color: #ccd4e5; display: flex;
 align-items: center; 
 justify-content: center;
 border-radius: 25px;
-background-color: #f3ecff;
+background-color: #ffb84d;
 }
 
 .selected-file {
