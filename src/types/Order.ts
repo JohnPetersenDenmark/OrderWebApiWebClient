@@ -1,4 +1,5 @@
 import { OrderItem } from '../types/OrderItem';
+import { TemplateSchedule } from './TemplateSchedule';
 
 export interface Order {
     id: number,
@@ -17,5 +18,9 @@ export interface Order {
     payeddatetime : string,
     comment: string
     orderlines: OrderItem[],
-    totalPrice: number
+    totalPrice: number,
+    templateScheduleId : number,
+    fishShopId : number,
+    deliveryDate : string,
+      templateSchedule : TemplateSchedule | undefined
 }

@@ -50,21 +50,24 @@ const AdminOrders: React.FC = () => {
 
         const ordersResponse = await AxiosClientGet('/Home/orderlistnew', false);
 
-        const ordersFromTodayAndForward = filterOrderByTodaysDate(ordersResponse);
-        const sortedOrders = ordersFromTodayAndForward.sort(
+       // const ordersFromTodayAndForward = filterOrderByTodaysDate(ordersResponse);
+
+     /*    const sortedOrders = ordersResponse.sort(
           (a, b) =>
             parseDanishDateTime(b.locationstartdatetime).getTime() -
             parseDanishDateTime(a.locationstartdatetime).getTime()
-        );
+        ); */
 
-        setAllOrdersSorted(sortedOrders);
+        //setAllOrdersSorted(ordersResponse);
 
-        if (selectedLocationId) {
+        setOrders(ordersResponse);
+
+      /*   if (selectedLocationId) {
           const filteredByLocation = filterOrdersByLocation(sortedOrders, selectedLocationId);
           setOrders(filteredByLocation);
         } else {
           setOrders(sortedOrders);
-        }
+        } */
 
 
       } catch (err: any) {
@@ -531,7 +534,7 @@ const AdminOrders: React.FC = () => {
             return (
               <div key={curOrder.id} style={styles.orderCard}>
                 <div style={styles.orderHeader}>
-                  {curOrder.locationbeautifiedstartdatetime} - {curOrder.locationname}
+                  {curOrder.deliveryDate} {curOrder.templateSchedule?.location.locationname} 
                 </div>
 
                 <div className="ordersGridHeader" style={styles.ordersGridHeader}>
@@ -542,6 +545,8 @@ const AdminOrders: React.FC = () => {
                   <div>Email: {curOrder.email}</div>
                   <div>Oprettet: {formatDateToDanish(new Date(curOrder.createddatetime + "Z"))}</div>
                   <div>Ændret: {formatDateToDanish(new Date(curOrder.modifieddatetime + "Z"))}</div>
+                  {/* <div>Leveringsdato: {formatDateToDanish(new Date(curOrder.deliveryDate + "Z"))}</div> */}
+                   <div>Leveringsdato: {curOrder.deliveryDate}</div>
                   <div>{curOrder.payeddatetime ? "Betalt: " + formatDateToDanish(new Date(curOrder.payeddatetime + "Z")) : ''}</div>
                   {/* <div> <img
                     src="/images/edit-icon.png"

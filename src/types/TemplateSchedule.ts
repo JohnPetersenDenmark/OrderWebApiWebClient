@@ -1,3 +1,5 @@
+import { SaleLocation } from "./SaleLocation";
+
 export interface TemplateSchedule {
   id: number;
   operationareaid: number;
@@ -8,4 +10,5 @@ export interface TemplateSchedule {
   starttime: string;
   endtime: string;
   date : string
+location : SaleLocation
 }

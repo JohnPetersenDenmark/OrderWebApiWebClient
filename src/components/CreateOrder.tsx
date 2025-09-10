@@ -209,11 +209,14 @@ export default function CreateOrder() {
             locationbeautifiedTimeInterval: 'aaaa',
             totalPrice: 0,
             // totalPrice: parseFloat(getTotal()),
-
+            templateScheduleId: templateScedule.id,
+            deliveryDate: templateScedule.date,
+            fishShopId: fishShop.id,
             comment: comment.trim(),
-            orderlines: Object.values(cart)
+            orderlines: Object.values(cart),
+              templateSchedule : templateScedule
 
-        };
+        }; 
 
         try {
             let response: any;
@@ -257,7 +260,7 @@ export default function CreateOrder() {
                 <div className="flex-[1] ml-10 font-bold">
                     Vælg kategori
                     {productCategories.map((productCategory, index) => (
-                        <p 
+                        <p
                             key={index}
                             onClick={() => categorySelected(productCategory)}
                             className="font-normal cursor-pointer hover:underline text-xl mt-5"
