@@ -366,6 +366,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ existingOrder, isOpen, onClose,
       templateScheduleId : 0,
       deliveryDate : "dummy",
       fishShopId : 0,
+      fishShop : undefined,
       templateSchedule : undefined,
 
       // subscribeToNewsletter,

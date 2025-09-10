@@ -1,6 +1,6 @@
 import { Employee } from "./Employee";
 import  OperatingArea  from "./OperatingArea";
-import { TemplateSchedule } from "./TemplateSchedule";
+
 
 export interface FishShopLightDto {
   id: number;

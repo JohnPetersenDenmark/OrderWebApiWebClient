@@ -1,5 +1,6 @@
 import { OrderItem } from '../types/OrderItem';
 import { TemplateSchedule } from './TemplateSchedule';
+import { FishShopLightDto } from './FishShop';
 
 export interface Order {
     id: number,
@@ -22,5 +23,6 @@ export interface Order {
     templateScheduleId : number,
     fishShopId : number,
     deliveryDate : string,
-      templateSchedule : TemplateSchedule | undefined
+      templateSchedule : TemplateSchedule | undefined,
+     fishShop :  FishShopLightDto | undefined
 }

@@ -214,7 +214,8 @@ export default function CreateOrder() {
             fishShopId: fishShop.id,
             comment: comment.trim(),
             orderlines: Object.values(cart),
-              templateSchedule : templateScedule
+              templateSchedule : templateScedule,
+              fishShop : undefined
 
         }; 
 

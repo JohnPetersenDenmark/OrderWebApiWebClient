@@ -2,14 +2,16 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Order } from '../../types/Order';
 import TestRealTimeUpdate from '../TestRealTimeUpdate';
-import config from '../../config';
-import { TruckLocation } from '../../types/TruckLocation';
+
+// import { TruckLocation } from '../../types/TruckLocation';
+import { SaleLocation } from '../../types/SaleLocation';
 import { Payment } from "../../types/Payment";
 import { filterOrderByTodaysDate } from '../../types/MiscFunctions';
 import { filterTruckLocationsByTodaysDate } from '../../types/MiscFunctions';
 import { parseDanishDateTime } from '../../types/MiscFunctions';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { AxiosClientGet, AxiosClientPost, AxiosClientDelete } from '../../types/AxiosClient';
+import { FishShopLightDto } from '../../types/FishShop';
 
 
 
@@ -22,10 +24,16 @@ const AdminOrders: React.FC = () => {
 
   const [newOrderArrived, setNewOrderArrived] = useState(false);
 
-  const [selectedLocation, setSelectedLocation] = useState<TruckLocation | null>(null);
-  const [locations, setLocations] = useState<TruckLocation[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<SaleLocation | null>(null);
+  const [locations, setLocations] = useState<SaleLocation[]>([]);
+ 
   const [selectedLocationId, setSelectedLocationId] = useState<string>('');
   const [locationTouched, setLocationTouched] = useState(false);
+
+   const [fishShops, setFishShops] = useState<FishShopLightDto[]>([]);
+   const [selectedFishShopId, setSelectedFishShopId] = useState<string>('');
+   const [selectedFishShop, setSelectedFishShop] = useState<FishShopLightDto | null>(null);
+   const [fishShopTouched, setFishShopTouched] = useState(false);
 
   const [reload, setReload] = useState(0);
   const [isEditOrderModalOpen, setsEditOrderModalOpen] = useState(false);
@@ -52,15 +60,13 @@ const AdminOrders: React.FC = () => {
 
        // const ordersFromTodayAndForward = filterOrderByTodaysDate(ordersResponse);
 
-     /*    const sortedOrders = ordersResponse.sort(
-          (a, b) =>
-            parseDanishDateTime(b.locationstartdatetime).getTime() -
-            parseDanishDateTime(a.locationstartdatetime).getTime()
-        ); */
+        const sortedOrders = ordersResponse.sort(
+          (a, b) => new Date(a.deliveryDate).getTime() - new Date(b.deliveryDate).getTime()
+        );
 
-        //setAllOrdersSorted(ordersResponse);
+        setAllOrdersSorted(ordersResponse);
 
-        setOrders(ordersResponse);
+        setOrders(sortedOrders);
 
       /*   if (selectedLocationId) {
           const filteredByLocation = filterOrdersByLocation(sortedOrders, selectedLocationId);
@@ -95,10 +101,20 @@ const AdminOrders: React.FC = () => {
       try {
         setLoadingLocations(true);
 
-        const locationsResponse = await AxiosClientGet('/Home/truckcalendarlocationlist', false);
-        let locationsAfterTodayAndForward = filterTruckLocationsByTodaysDate(locationsResponse);
-        const sortedTruckcalendarlocations = locationsAfterTodayAndForward.sort((a, b) => parseDanishDateTime(a.startdatetime).getTime() - parseDanishDateTime(b.startdatetime).getTime());
-        setLocations(sortedTruckcalendarlocations);
+        const locationsResponse = await AxiosClientGet('/Home/locationlist', false);      
+        setLocations(locationsResponse);
+      } catch (err) {
+        setError('Failed to load locations');
+        console.error(err);
+      } finally {
+        setLoadingLocations(false);
+      }
+
+        try {
+        setLoadingLocations(true);
+
+        const fishShopsResponse = await AxiosClientGet('/Admin/fishshoplistnew', false);      
+        setFishShops(fishShopsResponse);
       } catch (err) {
         setError('Failed to load locations');
         console.error(err);
@@ -189,6 +205,23 @@ const AdminOrders: React.FC = () => {
     const get = (type: string) => parts.find(p => p.type === type)?.value ?? "";
 
     return `${get("day")}-${get("month")}-${get("year")} ${get("hour")}:${get("minute")}`;
+  }
+
+    function formatDateToDanishDateOnly(date: Date): string {
+    const options: Intl.DateTimeFormatOptions = {
+      timeZone: "Europe/Copenhagen",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+
+    const parts = new Intl.DateTimeFormat("da-DK", options).formatToParts(date);
+    const get = (type: string) => parts.find(p => p.type === type)?.value ?? "";
+
+    return `${get("day")}-${get("month")}-${get("year")}`;
   }
   /*   const filterOrderByTodaysDate = ((sorders: Order[]) => {
       const now = new Date();
@@ -300,6 +333,24 @@ const AdminOrders: React.FC = () => {
     }
   };
 
+  const handleFishShopChanged = (fishShopId: string) => {
+
+    setSelectedFishShopId(fishShopId);
+
+    if (fishShopId) {
+      let filteredByFishShop = filterOrdersByFishShop(allOrdersSorted, fishShopId)
+      setOrders(filteredByFishShop);
+    }
+    else {
+      setOrders(allOrdersSorted);
+    }
+
+    let fishShop = fishShops.find(tmpFishShop => tmpFishShop.id === Number(fishShopId));
+    if (fishShop) {
+      setSelectedFishShop(fishShop);
+    }
+  };
+
 
 
   const filterOrdersByLocation = ((sorders: Order[], truckLocationId: string) => {
@@ -307,7 +358,7 @@ const AdminOrders: React.FC = () => {
     let filteredOrdersByComment: Order[] = []
 
     if (!truckLocationId) {
-      return filteredOrdersByComment
+      return filteredOrdersByComment 
     }
 
     let copyOfSelectedLocationId = Number(truckLocationId);
@@ -321,6 +372,27 @@ const AdminOrders: React.FC = () => {
 
     });
     return filteredOrdersByComment
+  })
+
+   const filterOrdersByFishShop = ((sorders: Order[], fishShopId: string) => {
+
+    let filteredOrdersByFishShop: Order[] = []
+
+    if (!fishShopId) {
+      return filteredOrdersByFishShop 
+    }
+
+    let copyOfSelectedFishShopId = Number(fishShopId);
+
+    sorders.forEach(order => {
+
+      if (order.fishShop?.id == copyOfSelectedFishShopId) {
+
+        filteredOrdersByFishShop.push(order);
+      }
+
+    });
+    return filteredOrdersByFishShop
   })
 
   function isOrderPaid(orderId : string) {
@@ -375,7 +447,7 @@ const AdminOrders: React.FC = () => {
       padding: '10px',
       textAlign: 'left' as const,
       fontSize: '22px',
-      backgroundColor: '#8d4a5b',
+      backgroundColor: '#5470a9', 
       color: 'white',
       borderRadius: '4px',
       wordBreak: 'break-word' as const,
@@ -478,7 +550,7 @@ const AdminOrders: React.FC = () => {
       <style>{mediaQueries}</style>
       {/* <div style={{ styles.container, width: '100vw', overflowX: 'hidden' }}> */}
       <div style={styles.container}>
-        <div style={styles.title}>Bestillinger</div>
+        <div style={styles.title}>Ordrer</div>
 
         <TestRealTimeUpdate doNotify={handleNewOrderArrived} />
         <div style={styles.headerGrid}>
@@ -490,7 +562,6 @@ const AdminOrders: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <div>
-
             <select
               id="locationSelect"
               value={selectedLocationId}
@@ -502,12 +573,28 @@ const AdminOrders: React.FC = () => {
               <option value="" >-- Alle --</option>
               {locations.map(loc => (
                 <option key={loc.id} value={loc.id}>
-                  {loc.locationname} ({loc.startdatetime.split(' ')[0]}) {loc.startdatetime.slice(-5)}–{loc.enddatetime.slice(-5)}
+                  {loc.locationname} 
                 </option>
               ))}
             </select>
+          </div>
 
-
+          <div>
+            <select
+              id="fishshopSelect"
+              value={selectedFishShopId}
+              onChange={(e) => handleFishShopChanged(e.target.value)}
+              onBlur={() => setFishShopTouched(true)}
+              className="select"
+              disabled={submitting}
+            >
+              <option value="" >-- Alle --</option>
+              {fishShops.map(fishShop => (
+                <option key={fishShop.id} value={fishShop.id}>
+                  {fishShop.name} 
+                </option>
+              ))}
+            </select>
           </div>
 
         </div>
@@ -534,7 +621,7 @@ const AdminOrders: React.FC = () => {
             return (
               <div key={curOrder.id} style={styles.orderCard}>
                 <div style={styles.orderHeader}>
-                  {curOrder.deliveryDate} {curOrder.templateSchedule?.location.locationname} 
+                 {curOrder?.fishShop?.name && curOrder?.fishShop.name }  {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate + "Z"))} {curOrder.templateSchedule?.location.locationname} 
                 </div>
 
                 <div className="ordersGridHeader" style={styles.ordersGridHeader}>
@@ -545,8 +632,11 @@ const AdminOrders: React.FC = () => {
                   <div>Email: {curOrder.email}</div>
                   <div>Oprettet: {formatDateToDanish(new Date(curOrder.createddatetime + "Z"))}</div>
                   <div>Ændret: {formatDateToDanish(new Date(curOrder.modifieddatetime + "Z"))}</div>
+                   <div>Leveringsdato: {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate + "Z"))}</div>
+                 
+                  {/* <div>Ændret: {new Date(curOrder.deliveryDate ).toLocaleDateString("da-DK")}</div> */}
                   {/* <div>Leveringsdato: {formatDateToDanish(new Date(curOrder.deliveryDate + "Z"))}</div> */}
-                   <div>Leveringsdato: {curOrder.deliveryDate}</div>
+                   {/* <div>Leveringsdato: {curOrder.deliveryDate}</div> */}
                   <div>{curOrder.payeddatetime ? "Betalt: " + formatDateToDanish(new Date(curOrder.payeddatetime + "Z")) : ''}</div>
                   {/* <div> <img
                     src="/images/edit-icon.png"
