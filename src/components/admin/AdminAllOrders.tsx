@@ -54,14 +54,14 @@ const AdminAllOrders: React.FC = () => {
         );
 
         setAllOrdersSorted(sortedOrders);
-setOrders(sortedOrders);
+        setOrders(sortedOrders);
 
-     /*    if (selectedLocationId) {
-          const filteredByLocation = filterOrdersByLocation(sortedOrders, selectedLocationId);
-          setOrders(filteredByLocation);
-        } else {
-          setOrders(sortedOrders);
-        } */
+        /*    if (selectedLocationId) {
+             const filteredByLocation = filterOrdersByLocation(sortedOrders, selectedLocationId);
+             setOrders(filteredByLocation);
+           } else {
+             setOrders(sortedOrders);
+           } */
       } catch (err: any) {
         setError(err.message || 'Failed to load orders');
         console.error(err);
@@ -71,7 +71,7 @@ setOrders(sortedOrders);
 
 
 
-      try {
+      /* try {
         setLoadingLocations(true);
 
         const locationsResponse = await AxiosClientGet('/Home/truckcalendarlocationlist', false);
@@ -83,7 +83,7 @@ setOrders(sortedOrders);
         console.error(err);
       } finally {
         setLoadingLocations(false);
-      }
+      } */
     };
 
     fetchData();

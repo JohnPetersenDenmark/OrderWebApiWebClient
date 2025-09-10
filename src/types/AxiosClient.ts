@@ -33,8 +33,8 @@ export async function AxiosClientGet(apiUrl: string, sendToken: boolean): Promis
     }
 
   }
-  else{
-      try {
+  else {
+    try {
       const response = await axios.get<any[]>(url);
 
       return response.data;
@@ -79,8 +79,8 @@ export async function AxiosClientGetSpecial<T>(apiUrl: string, sendToken: boolea
     }
 
   }
-  else{
-      try {
+  else {
+    try {
       const response = await axios.get<T>(url);
 
       return response.data;
@@ -126,8 +126,8 @@ export async function AxiosClientPost(apiUrl: string, payload: any, sendToken: b
     }
 
   }
-  else{
-      try {
+  else {
+    try {
       const response = await axios.post<any[]>(url, payload);
 
       return response.data;
@@ -140,7 +140,7 @@ export async function AxiosClientPost(apiUrl: string, payload: any, sendToken: b
   }
 }
 
-export async function AxiosClientDelete(apiUrl: string,  sendToken: boolean): Promise<any[]> {
+export async function AxiosClientDelete(apiUrl: string, sendToken: boolean): Promise<any[]> {
   let token = '';
 
   const url = config.API_BASE_URL + apiUrl;
@@ -157,7 +157,7 @@ export async function AxiosClientDelete(apiUrl: string,  sendToken: boolean): Pr
     }
 
     try {
-      const response = await axios.delete<any[]>(url,  {
+      const response = await axios.delete<any[]>(url, {
         headers: {
           "Content-Type": 'application/json',
           Authorization: `Bearer ${token}`,
@@ -173,8 +173,8 @@ export async function AxiosClientDelete(apiUrl: string,  sendToken: boolean): Pr
     }
 
   }
-  else{
-      try {
+  else {
+    try {
       const response = await axios.delete<any[]>(url);
 
       return response.data;

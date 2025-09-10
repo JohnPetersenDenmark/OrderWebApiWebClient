@@ -48,7 +48,7 @@ const AdminOrders: React.FC = () => {
       try {
         setLoadingOrders(true);
 
-        const ordersResponse = await AxiosClientGet('/Home/orderlist', true);
+        const ordersResponse = await AxiosClientGet('/Home/orderlistnew', false);
 
         const ordersFromTodayAndForward = filterOrderByTodaysDate(ordersResponse);
         const sortedOrders = ordersFromTodayAndForward.sort(

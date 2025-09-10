@@ -77,13 +77,13 @@ const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect
 
     const weekDayNames: string[] = [];
 
-    weekDayNames[0] = 'Mandag'
-    weekDayNames[1] = 'Tirsdag'
-    weekDayNames[2] = 'Onsdag'
-    weekDayNames[3] = 'Torsdag'
-    weekDayNames[4] = 'Fredag'
-    weekDayNames[5] = 'Lørdag'
-    weekDayNames[6] = 'Søndag'
+    weekDayNames[1] = 'Mandag'
+    weekDayNames[2] = 'Tirsdag'
+    weekDayNames[3] = 'Onsdag'
+    weekDayNames[4] = 'Torsdag'
+    weekDayNames[5] = 'Fredag'
+    weekDayNames[6] = 'Lørdag'
+    weekDayNames[7] = 'Søndag'
 
     const toggleLocationVisible = (index: number) => {
         setLocationsVisible((prevFlags) =>

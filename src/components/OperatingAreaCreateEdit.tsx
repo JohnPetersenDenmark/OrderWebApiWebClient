@@ -34,12 +34,8 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({
   const [operatingAreaId, setOperatingAreaId] = useState("0");
 
   const [saleLocationList, setSaleLocationList] = useState<SaleLocation[]>([]);
-  const [templateScheduleList, setTemplateScheduleList] = useState<
-    TemplateSchedule[]
-  >([]);
-  const [selectedSaleLocations, setSelectedSaleLocations] = useState<
-    SaleLocation[]
-  >([]);
+  const [templateScheduleList, setTemplateScheduleList] = useState<TemplateSchedule[]>([]);
+  const [selectedSaleLocations, setSelectedSaleLocations] = useState<SaleLocation[]>([]);
 
   const [loading, setLoading] = useState(false);
 
