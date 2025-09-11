@@ -1,7 +1,8 @@
 
 
 import React, { useEffect, useState } from 'react';
-
+import { ChevronDown } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import { FishShopFullDto } from '../types/FishShop';
 
 import { SaleLocation } from '../types/SaleLocation';
@@ -122,14 +123,14 @@ const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect
                             className="text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
                             onClick={() => toggleLocationVisible(index)}
                         >
-                            Se mindre
+                            <ChevronUp /> Se mindre                           
                             <hr />
                         </p>
                         :
                         <p className="text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
                             onClick={() => toggleLocationVisible(index)}
                         >
-                            Se hvornår at vi er hos dig:
+                           <ChevronDown />  Se hvornår at vi er hos dig:                              
                             <hr />
                         </p>
                     }

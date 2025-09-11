@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { ChevronDown } from "lucide-react";
 import React, { useEffect, useState } from 'react';
 import { Order } from '../../types/Order';
 import TestRealTimeUpdate from '../TestRealTimeUpdate';
@@ -19,6 +19,7 @@ const AdminOrders: React.FC = () => {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [allOrdersSorted, setAllOrdersSorted] = useState<Order[]>([]);
+  //  const [filterredorders, setFilteredOrders] = useState<Order[]>([]);
 
   const [payments, setPayments] = useState<Payment[]>([]);
 
@@ -26,14 +27,14 @@ const AdminOrders: React.FC = () => {
 
   const [selectedLocation, setSelectedLocation] = useState<SaleLocation | null>(null);
   const [locations, setLocations] = useState<SaleLocation[]>([]);
- 
+
   const [selectedLocationId, setSelectedLocationId] = useState<string>('');
   const [locationTouched, setLocationTouched] = useState(false);
 
-   const [fishShops, setFishShops] = useState<FishShopLightDto[]>([]);
-   const [selectedFishShopId, setSelectedFishShopId] = useState<string>('');
-   const [selectedFishShop, setSelectedFishShop] = useState<FishShopLightDto | null>(null);
-   const [fishShopTouched, setFishShopTouched] = useState(false);
+  const [fishShops, setFishShops] = useState<FishShopLightDto[]>([]);
+  const [selectedFishShopId, setSelectedFishShopId] = useState<string>('');
+  const [selectedFishShop, setSelectedFishShop] = useState<FishShopLightDto | null>(null);
+  const [fishShopTouched, setFishShopTouched] = useState(false);
 
   const [reload, setReload] = useState(0);
   const [isEditOrderModalOpen, setsEditOrderModalOpen] = useState(false);
@@ -58,22 +59,17 @@ const AdminOrders: React.FC = () => {
 
         const ordersResponse = await AxiosClientGet('/Home/orderlistnew', false);
 
-       // const ordersFromTodayAndForward = filterOrderByTodaysDate(ordersResponse);
+        // const ordersFromTodayAndForward = filterOrderByTodaysDate(ordersResponse);
 
         const sortedOrders = ordersResponse.sort(
           (a, b) => new Date(a.deliveryDate).getTime() - new Date(b.deliveryDate).getTime()
         );
 
-        setAllOrdersSorted(ordersResponse);
+        setAllOrdersSorted(sortedOrders);
 
         setOrders(sortedOrders);
 
-      /*   if (selectedLocationId) {
-          const filteredByLocation = filterOrdersByLocation(sortedOrders, selectedLocationId);
-          setOrders(filteredByLocation);
-        } else {
-          setOrders(sortedOrders);
-        } */
+        // setFilteredOrders(sortedOrders);
 
 
       } catch (err: any) {
@@ -101,7 +97,7 @@ const AdminOrders: React.FC = () => {
       try {
         setLoadingLocations(true);
 
-        const locationsResponse = await AxiosClientGet('/Home/locationlist', false);      
+        const locationsResponse = await AxiosClientGet('/Home/locationlist', false);
         setLocations(locationsResponse);
       } catch (err) {
         setError('Failed to load locations');
@@ -110,10 +106,10 @@ const AdminOrders: React.FC = () => {
         setLoadingLocations(false);
       }
 
-        try {
+      try {
         setLoadingLocations(true);
 
-        const fishShopsResponse = await AxiosClientGet('/Admin/fishshoplistnew', false);      
+        const fishShopsResponse = await AxiosClientGet('/Admin/fishshoplistnew', false);
         setFishShops(fishShopsResponse);
       } catch (err) {
         setError('Failed to load locations');
@@ -141,14 +137,40 @@ const AdminOrders: React.FC = () => {
   };
 
   const filteredOrders = orders.filter(order => {
+
+
     const orderIdMatches = order.customerorderCode.toString().includes(searchQuery);
     const customerNameMatches = order.customerName?.toLowerCase().includes(searchQuery.toLowerCase());
     const orderLineMatches = order.orderlines?.some(line =>
       line.productname?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    return orderIdMatches || customerNameMatches || orderLineMatches;
+    return orderIdMatches || customerNameMatches || orderLineMatches
   });
+
+  function filterOrdersByFishShopSelection(ordersToFilterFrom: Order[], fishShopId: string) {
+
+    let fishShopIdMatches = false;
+    return ordersToFilterFrom.filter(order => {
+
+
+      if (fishShopId !== '') {
+        fishShopIdMatches = order.fishShop?.id === Number(fishShopId);
+      }
+
+      return fishShopIdMatches;
+    });
+  }
+
+  function filterOrdersByLocationSelection(ordersToFilterFrom: Order[], locationId: string) {
+    let locationIdMatches = false;
+    return ordersToFilterFrom.filter(order => {
+      if (locationId != '') {
+        locationIdMatches = order.templateSchedule?.locationid == Number(locationId)
+      }
+      return locationIdMatches
+    });
+  }
 
   const highlightText = (text: string, query: string) => {
     if (!query) return text;
@@ -164,6 +186,8 @@ const AdminOrders: React.FC = () => {
   };
 
   const displayedOrders = searchQuery.trim() === '' ? orders : filteredOrders;
+
+  //const displayedOrders = filteredOrders;
 
   /*  function parseDanishDateTime(dateTimeStr: string): Date {
  
@@ -207,7 +231,7 @@ const AdminOrders: React.FC = () => {
     return `${get("day")}-${get("month")}-${get("year")} ${get("hour")}:${get("minute")}`;
   }
 
-    function formatDateToDanishDateOnly(date: Date): string {
+  function formatDateToDanishDateOnly(date: Date): string {
     const options: Intl.DateTimeFormatOptions = {
       timeZone: "Europe/Copenhagen",
       day: "2-digit",
@@ -319,36 +343,99 @@ const AdminOrders: React.FC = () => {
 
     setSelectedLocationId(locationId);
 
-    if (locationId) {
-      let filteredByLocation = filterOrdersByLocation(allOrdersSorted, locationId)
-      setOrders(filteredByLocation);
-    }
-    else {
-      setOrders(allOrdersSorted);
-    }
+    /*
+        if (locationId) {
+          let filteredByLocation = filterOrdersByLocation(allOrdersSorted, locationId)
+          setOrders(filteredByLocation);
+        }
+        else {
+          setOrders(allOrdersSorted);
+        } */
 
     let location = locations.find(tmpLocation => tmpLocation.id === Number(locationId));
     if (location) {
       setSelectedLocation(location);
     }
+
+    setOrders(allOrdersSorted);
+
+    let filteredFishShopsArray: Order[] = [];
+
+    if (selectedFishShopId === '') {
+      if (locationId === '') {
+
+        return
+      }
+      else {
+        let filteredOrdersByLocationArray = filterOrdersByLocationSelection(allOrdersSorted, locationId);
+        setOrders(filteredOrdersByLocationArray)
+        return
+      }
+    }
+    else {
+
+      filteredFishShopsArray = filterOrdersByFishShopSelection(allOrdersSorted, selectedFishShopId);
+      if (locationId === '') {
+        setOrders(filteredFishShopsArray);
+        return;
+      }
+
+      let resultBothCriterias = filterOrdersByLocationSelection(filteredFishShopsArray, locationId);
+
+      setOrders(resultBothCriterias);
+      return;
+
+    }
+
   };
 
   const handleFishShopChanged = (fishShopId: string) => {
 
     setSelectedFishShopId(fishShopId);
 
-    if (fishShopId) {
-      let filteredByFishShop = filterOrdersByFishShop(allOrdersSorted, fishShopId)
-      setOrders(filteredByFishShop);
-    }
-    else {
-      setOrders(allOrdersSorted);
-    }
+    /*   if (fishShopId) {
+        let filteredByFishShop = filterOrdersByFishShop(allOrdersSorted, fishShopId)
+        setOrders(filteredByFishShop);
+      }
+      else {
+        setOrders(allOrdersSorted);
+      } */
 
     let fishShop = fishShops.find(tmpFishShop => tmpFishShop.id === Number(fishShopId));
     if (fishShop) {
       setSelectedFishShop(fishShop);
     }
+
+    let filteredFishShopsArray: Order[] = [];
+
+    setOrders(allOrdersSorted);
+
+    if (fishShopId === '') {
+      if (selectedLocationId === '') {
+        return
+      }
+      else {
+        let filteredOrdersByLocationArray = filterOrdersByLocationSelection(allOrdersSorted, selectedLocationId);
+        setOrders(filteredOrdersByLocationArray)
+        return
+      }
+    }
+    else {
+
+      filteredFishShopsArray = filterOrdersByFishShopSelection(allOrdersSorted, fishShopId);
+      if (selectedLocationId === '' && filteredFishShopsArray.length > 0) {
+        setOrders(filteredFishShopsArray);
+        return;
+      }
+
+      let resultBothCriterias = filterOrdersByLocationSelection(filteredFishShopsArray, selectedLocationId);
+
+      setOrders(resultBothCriterias);
+      return;
+
+    }
+
+
   };
 
 
@@ -358,7 +445,7 @@ const AdminOrders: React.FC = () => {
     let filteredOrdersByComment: Order[] = []
 
     if (!truckLocationId) {
-      return filteredOrdersByComment 
+      return filteredOrdersByComment
     }
 
     let copyOfSelectedLocationId = Number(truckLocationId);
@@ -374,12 +461,12 @@ const AdminOrders: React.FC = () => {
     return filteredOrdersByComment
   })
 
-   const filterOrdersByFishShop = ((sorders: Order[], fishShopId: string) => {
+  const filterOrdersByFishShop = ((sorders: Order[], fishShopId: string) => {
 
     let filteredOrdersByFishShop: Order[] = []
 
     if (!fishShopId) {
-      return filteredOrdersByFishShop 
+      return filteredOrdersByFishShop
     }
 
     let copyOfSelectedFishShopId = Number(fishShopId);
@@ -395,7 +482,7 @@ const AdminOrders: React.FC = () => {
     return filteredOrdersByFishShop
   })
 
-  function isOrderPaid(orderId : string) {
+  function isOrderPaid(orderId: string) {
     return payments.some(payment => payment.orderid === orderId && payment.flatratestatusorerror === null);
   }
 
@@ -447,7 +534,7 @@ const AdminOrders: React.FC = () => {
       padding: '10px',
       textAlign: 'left' as const,
       fontSize: '22px',
-      backgroundColor: '#5470a9', 
+      backgroundColor: '#5470a9',
       color: 'white',
       borderRadius: '4px',
       wordBreak: 'break-word' as const,
@@ -493,17 +580,17 @@ const AdminOrders: React.FC = () => {
       height: 24,
       marginRight: '10px',
     },
-    orderlineGrid: {
+    orderlinesContainer: {
       border: '1px solid #ccc',
       padding: '10px',
       marginBottom: '10px',
-      fontSize: '16px',
+      fontSize: '18px',
       textAlign: 'left' as const,
-      display: 'grid',
+      
       // gridTemplateColumns: 'auto 1fr auto auto',
-      gridTemplateColumns: '1fr',
+      
       alignItems: 'center',
-      gap: '8px',
+     
       borderRadius: '4px',
     },
     subtotalGrid: {
@@ -553,49 +640,77 @@ const AdminOrders: React.FC = () => {
         <div style={styles.title}>Ordrer</div>
 
         <TestRealTimeUpdate doNotify={handleNewOrderArrived} />
+
+
         <div style={styles.headerGrid}>
-          <input
-            type="text"
-            placeholder="Søg"
-            style={styles.searchInput}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <div>
-            <select
-              id="locationSelect"
-              value={selectedLocationId}
-              onChange={(e) => handleLocationChanged(e.target.value)}
-              onBlur={() => setLocationTouched(true)}
-              className="select"
-              disabled={submitting}
-            >
-              <option value="" >-- Alle --</option>
-              {locations.map(loc => (
-                <option key={loc.id} value={loc.id}>
-                  {loc.locationname} 
-                </option>
-              ))}
-            </select>
+
+          <div className="flex gap-4">
+            {/* Fish shop select */}
+            <div className="flex flex-col w-1/3">
+              <label htmlFor="fishshopSelect" className="mb-1 text-sm font-medium text-gray-700">
+                Bil
+              </label>
+              <select
+                id="fishshopSelect"
+                value={selectedFishShopId}
+                onChange={(e) => handleFishShopChanged(e.target.value)}
+                onBlur={() => setFishShopTouched(true)}
+                disabled={submitting}
+                className="appearance-none rounded-2xl border border-customBlue p-2 text-gray-700 shadow-sm 
+                 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+                 disabled:bg-gray-100 disabled:text-gray-400"
+              >
+                <option value="">-- Alle --</option>
+                {fishShops.map((fishShop) => (
+                  <option key={fishShop.id} value={fishShop.id}>
+                    {fishShop.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Location select */}
+            <div className="flex flex-col w-1/3">
+              <label htmlFor="locationSelect" className="mb-1 text-sm font-medium text-gray-700">
+                Lokation
+              </label>
+              <select
+                id="locationSelect"
+                value={selectedLocationId}
+                onChange={(e) => handleLocationChanged(e.target.value)}
+                onBlur={() => setLocationTouched(true)}
+                disabled={submitting}
+                className="appearance-none rounded-2xl border border-customBlue p-2 text-gray-700 shadow-sm 
+                 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+                 disabled:bg-gray-100 disabled:text-gray-400"
+              >
+                <option value="">-- Alle --</option>
+                {locations.map((loc) => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.locationname}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Search input */}
+            <div className="flex flex-col w-1/3">
+              <label htmlFor="searchInput" className="mb-1 text-sm font-medium text-gray-700">
+                Søg
+              </label>
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Søg"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="rounded-2xl border border-customBlue p-2 text-gray-700 shadow-sm 
+                 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 
+                 disabled:bg-gray-100 disabled:text-gray-400"
+              />
+            </div>
           </div>
 
-          <div>
-            <select
-              id="fishshopSelect"
-              value={selectedFishShopId}
-              onChange={(e) => handleFishShopChanged(e.target.value)}
-              onBlur={() => setFishShopTouched(true)}
-              className="select"
-              disabled={submitting}
-            >
-              <option value="" >-- Alle --</option>
-              {fishShops.map(fishShop => (
-                <option key={fishShop.id} value={fishShop.id}>
-                  {fishShop.name} 
-                </option>
-              ))}
-            </select>
-          </div>
 
         </div>
 
@@ -621,38 +736,30 @@ const AdminOrders: React.FC = () => {
             return (
               <div key={curOrder.id} style={styles.orderCard}>
                 <div style={styles.orderHeader}>
-                 {curOrder?.fishShop?.name && curOrder?.fishShop.name }  {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate + "Z"))} {curOrder.templateSchedule?.location.locationname} 
+                  {curOrder?.fishShop?.name && curOrder?.fishShop.name}  {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate + "Z"))} {curOrder.templateSchedule?.location.locationname}
                 </div>
 
-                <div className="ordersGridHeader" style={styles.ordersGridHeader}>
-
-                  <div>Best nr.:  {highlightText(curOrder.customerorderCode, searchQuery)}</div>
-                  <div>Kunde: {highlightText(curOrder.customerName, searchQuery)}</div>
-                  <div>Telefon: {curOrder.phone}</div>
-                  <div>Email: {curOrder.email}</div>
-                  <div>Oprettet: {formatDateToDanish(new Date(curOrder.createddatetime + "Z"))}</div>
-                  <div>Ændret: {formatDateToDanish(new Date(curOrder.modifieddatetime + "Z"))}</div>
-                   <div>Leveringsdato: {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate + "Z"))}</div>
-                 
-                  {/* <div>Ændret: {new Date(curOrder.deliveryDate ).toLocaleDateString("da-DK")}</div> */}
-                  {/* <div>Leveringsdato: {formatDateToDanish(new Date(curOrder.deliveryDate + "Z"))}</div> */}
-                   {/* <div>Leveringsdato: {curOrder.deliveryDate}</div> */}
-                  <div>{curOrder.payeddatetime ? "Betalt: " + formatDateToDanish(new Date(curOrder.payeddatetime + "Z")) : ''}</div>
-                  {/* <div> <img
-                    src="/images/edit-icon.png"
-                    alt="Edit"
-                    onClick={() => handleEditOrder(curOrder)}
-                    style={styles.icon}
-                  /></div> */}
-
-                  <div style={{ fontSize : 30 }}> { isOrderPaid(curOrder.customerorderCode ) ? "Betalt" : "ikke betalt"}</div>
+                <div className="grid grid-cols-4" >
+                  <div >Best nr.:  {highlightText(curOrder.customerorderCode, searchQuery)}</div>
+                  <div >Leveringsdato: {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate + "Z"))}</div>
+                  <div >Kunde: {highlightText(curOrder.customerName, searchQuery)}</div>
+                  <div >Oprettet: {formatDateToDanish(new Date(curOrder.createddatetime + "Z"))}</div>
                   
-                  <div> <img
+                  <div> Slet ordre <img
                     src="/images/delete-icon.png"
                     alt="Delete"
                     onClick={() => handleDeleteOrder(curOrder)}
                     style={styles.icon}
                   /></div>
+                  <div></div>
+                  <div >Telefon: {curOrder.phone}</div>
+                  <div >Ændret: {formatDateToDanish(new Date(curOrder.modifieddatetime + "Z"))}</div>
+                  <div></div>
+                  <div></div>
+                  <div >Email: {curOrder.email}</div>
+
+                  <div></div>
+                  <div></div>                  
                 </div>
 
 
@@ -668,9 +775,9 @@ const AdminOrders: React.FC = () => {
                   </div>
                 )}
 
-                <div>
+                <div style={styles.orderlinesContainer}>
                   {curOrder.orderlines.map((curOrderLine, lineIndex) => (
-                    <div key={lineIndex} style={styles.orderlineGrid}>
+                    <div key={lineIndex}  className="grid grid-cols-4" >
                       <div>{curOrderLine.quantity} stk.</div>
                       <div>
                         {curOrderLine.productnumber} {highlightText(curOrderLine.productname, searchQuery)}
@@ -685,8 +792,7 @@ const AdminOrders: React.FC = () => {
                   ))}
 
                   <div style={styles.subtotalGrid}>
-                    <div>Antal pizzaer: {subtotalPizzas}</div>
-                    <div>Antal tilbehør: {subtotalToppings}</div>
+                    <div>Antal varer: {subtotalPizzas}</div>
                     <div></div>
                     <div style={{ textAlign: 'right' }}>Ialt: {subtotal.toFixed(2).replace('.', ',')}</div>
                   </div>
