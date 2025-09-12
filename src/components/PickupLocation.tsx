@@ -24,7 +24,7 @@ const PickupLocation: React.FC<PickupLocationProps> = ({ templateScedule }) => {
             </h2>
 
             <div className="text-xl" >
-                {dateToDisplay}
+                {dateToDisplay} mellem {templateScedule.starttime} - {templateScedule.endtime}
             </div>
 
               <div className="text-xl" >
@@ -33,7 +33,7 @@ const PickupLocation: React.FC<PickupLocationProps> = ({ templateScedule }) => {
 
 
               <div className="text-xl" >
-                mellem {templateScedule.starttime} - {templateScedule.endtime}
+                {templateScedule.location.address}
             </div>
 
 

@@ -149,7 +149,7 @@ const AdminPlaceCreateEdit: React.FC<LocationModalProps> = ({ isOpen, onClose, l
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             onBlur={() => setAddressTouched(true)}
-            placeholder="Indtast pladsnavn"
+            placeholder="Indtast adresse"
             style={{
               width: '100%',
               padding: '0.5rem',              
@@ -169,7 +169,7 @@ const AdminPlaceCreateEdit: React.FC<LocationModalProps> = ({ isOpen, onClose, l
             value={latitude}
             onChange={(e) => setLatitude(e.target.value)}
             onBlur={() => setLatitudeTouched(true)}
-            placeholder="Indtast pladsnavn"
+            placeholder="Indtast breddegrad"
             style={{
               width: '100%',
               padding: '0.5rem',              
@@ -189,7 +189,7 @@ const AdminPlaceCreateEdit: React.FC<LocationModalProps> = ({ isOpen, onClose, l
             value={longitude}
             onChange={(e) => setLongitude(e.target.value)}
             onBlur={() => setLongitudeTouched(true)}
-            placeholder="Indtast pladsnavn"
+            placeholder="Indtast længdegrad"
             style={{
               width: '100%',
               padding: '0.5rem',              
