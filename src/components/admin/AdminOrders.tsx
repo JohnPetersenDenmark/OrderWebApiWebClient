@@ -61,6 +61,8 @@ const AdminOrders: React.FC = () => {
 
         // const ordersFromTodayAndForward = filterOrderByTodaysDate(ordersResponse);
 
+var tmpDate = new Date(ordersResponse[0].deliveryDate).getTime();
+
         const sortedOrders = ordersResponse.sort(
           (a, b) => new Date(a.deliveryDate).getTime() - new Date(b.deliveryDate).getTime()
         );
@@ -736,12 +738,12 @@ const AdminOrders: React.FC = () => {
             return (
               <div key={curOrder.id} style={styles.orderCard}>
                 <div style={styles.orderHeader}>
-                  {curOrder?.fishShop?.name && curOrder?.fishShop.name}  {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate + "Z"))} {curOrder.templateSchedule?.location.locationname}
+                  {curOrder?.fishShop?.name && curOrder?.fishShop.name}  {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate ))} {curOrder.templateSchedule?.location.locationname}
                 </div>
 
                 <div className="grid grid-cols-4" >
                   <div >Best nr.:  {highlightText(curOrder.customerorderCode, searchQuery)}</div>
-                  <div >Leveringsdato: {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate + "Z"))}</div>
+                  <div >Leveringsdato: {formatDateToDanishDateOnly(new Date(curOrder.deliveryDate ))}</div>
                   <div >Kunde: {highlightText(curOrder.customerName, searchQuery)}</div>
                   <div >Oprettet: {formatDateToDanish(new Date(curOrder.createddatetime + "Z"))}</div>
                   
