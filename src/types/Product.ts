@@ -1,5 +1,6 @@
 
 import { ProductCategory } from "./ProducCategory";
+import { ProductType } from "./ProductType";
 
 export interface Product {
   id: number;
@@ -14,6 +15,7 @@ export interface Product {
   producttype: number;
 
   productcategories : ProductCategory[]
+   producttypes : ProductType[]
 
   badge: string,
   weight: string,

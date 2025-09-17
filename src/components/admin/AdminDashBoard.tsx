@@ -8,8 +8,8 @@ import AdminMenues from './AdminMenues'
 import AdminFishShops from './AdminFishshops'
 import AdminEmployee from './AdminEmployee';
 import AdminOperatingArea from './AdminOperatingArea';
-import AdminTemplateSchedule from './AdminTemplateSchedule';
 import AdminProductCategories from './AdminProductCategories';
+import AdminProductTypes from './AdminProductTypes';
 import { useNavigate } from "react-router-dom";
 
 import RevenuePerTimePeriod from '../Statistic/RevenuePerTimePeriod'
@@ -100,6 +100,16 @@ const AdminDashBoard: React.FC = () => {
                 newMenuPoint = {
         clickableText: "Produktkategorier",
         component: AdminProductCategories
+    }
+    menuArray.push(newMenuPoint)
+
+   
+
+     menuArray.push(newMenuPoint)
+
+                newMenuPoint = {
+        clickableText: "Produkttyper",
+        component:  AdminProductTypes
     }
     menuArray.push(newMenuPoint)
 

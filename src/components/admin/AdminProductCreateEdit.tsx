@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Product } from '../../types/Product';
 import { ProductCategory } from '../../types/ProducCategory';
+import { ProductType } from '../../types/ProductType';
 import FileInput from "../FileInput"
 import config from '../../config';
 import RichtextEditorQuill from "../RichtextEditorQuill"
@@ -45,6 +46,9 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
     // const [selectedProductCategories, setSelectedProductCategories] = useState<ProductCategory[]>([]);
 
     const [selectedProductCategories, setSelectedProductCategories] = React.useState<ProductCategory[]>([]);
+
+     const [selectedProductTypes, setSelectedProductTypes] = React.useState<ProductType[]>([]);
+     const [allProductTypes, setAllProductTypes] = useState<ProductType[]>([]);
 
     const [allProductCategories, setAllProductCategories] = useState<ProductCategory[]>([]);
 
@@ -111,6 +115,20 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                 const categoryResponse: any = await AxiosClientGet('/Home/productcategorylist', false);
 
                 setAllProductCategories(categoryResponse);
+                setLoading(false);
+
+            } catch (err) {
+                setError('Failed to load locations');
+                setLoading(false);
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+
+             try {
+                const typesResponse: any = await AxiosClientGet('/Home/producttypelist', false);
+
+                setAllProductTypes(typesResponse);
                 setLoading(false);
 
             } catch (err) {
@@ -187,6 +205,17 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     };
 
+    const handleChangeProductType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedIds = Array.from(e.target.selectedOptions, opt => opt.value);
+        if (selectedProductCategories) {
+
+        }
+
+        const selectedObjects = allProductTypes.filter(c => selectedIds.includes(c.id.toString()));
+        setSelectedProductTypes(selectedObjects);
+
+    };
+
     const handleSubmit = async () => {
 
         if (!isFormValid) {
@@ -209,7 +238,8 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             weight: weight,
             shelfLife: shelflife,
             priceperkilo: pricePerKilo,
-            productcategoryIds: selectedProductCategories.map(cat => cat.id)
+            productcategoryIds: selectedProductCategories.map(cat => cat.id),
+           producttypeids: selectedProductTypes.map(productType => productType.id)
         }
 
         if (selectedFile) {
@@ -564,6 +594,25 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                             {allProductCategories.map((cat) => (
                                 <option key={cat.id} value={cat.id}>
                                     {cat.categoryname}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                     {/* Product category - spans full width */}
+                    <div >
+                        <label htmlFor="producttype" style={{ fontWeight: "bold" , color : 'white'}}>
+                            Vælg produkttype:
+                        </label>
+                        <select
+                            multiple
+                            value={selectedProductTypes?.map((productType) => productType.id.toString())}
+                            onChange={handleChangeProductType}
+                            style={{ width: "100%", padding: "0.5rem", marginTop: "0.25rem" }}
+                        >
+                            {allProductTypes.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.name}
                                 </option>
                             ))}
                         </select>

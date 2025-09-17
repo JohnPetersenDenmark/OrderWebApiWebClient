@@ -4,6 +4,7 @@ import { TemplateSchedule } from '../types/TemplateSchedule';
 import { OrderItem } from '../types/OrderItem';
 import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
+import { ProductType } from '../types/ProductType';
 import { Product } from '../types/Product';
 import { ProductCategory } from '../types/ProducCategory';
 import { AxiosClientGet, AxiosClientPost } from '../types/AxiosClient';
@@ -28,6 +29,9 @@ export default function CreateOrder() {
 
     const [productCategories, setProductCategories] = useState<ProductCategory[]>([]);
     const [selectedSearchProductCategory, setSelectedSearchProductCategory] = useState<ProductCategory>();
+    const [selectedSearchProductType, setSelectedSearchProductType] = useState<ProductType>();
+
+    const [productTypes, setProductTypes] = useState<ProductType[]>([]);
 
     //  const [allOrderItems, setAllOrderItems] = useState<OrderItem[]>([]);
     const [enteredQuantity, setEnteredQuantity] = useState<string[]>([]);
@@ -74,6 +78,16 @@ export default function CreateOrder() {
             }
 
             try {
+
+                const productTypeResponse: any = await AxiosClientGet('/Home/producttypelist', false);
+
+                setProductTypes(productTypeResponse)
+
+            } catch (err) {
+
+            }
+
+            try {
                 const productsResponse: any = await AxiosClientGet('/Home/productlist', true);
 
                 setProducts(productsResponse);
@@ -103,23 +117,40 @@ export default function CreateOrder() {
                          categoryname : category.categoryname
                       })) */
 
-                    productcategories: product.productcategories
+                    productcategories: product.productcategories,
+
+                    producttypes: product.producttypes
 
                 }
                 ));
 
 
+                let filteredByCategory;
                 if (!selectedSearchProductCategory) {
-                    setOrderItemsProduct(tmpOrderItemsProduct);
+                    filteredByCategory = tmpOrderItemsProduct;
                 } else {
-                    const filteredOrderItemProducts = tmpOrderItemsProduct.filter((p) =>
+                    filteredByCategory = tmpOrderItemsProduct.filter((p) =>
                         p.productcategories?.some(
                             (cat) => cat.id === selectedSearchProductCategory.id
                         )
                     );
-
-                    setOrderItemsProduct(filteredOrderItemProducts);
                 }
+
+                let filteredOrderItemProducts;
+                if (!selectedSearchProductType) {
+
+                    filteredOrderItemProducts = filteredByCategory
+                } else {
+                     filteredOrderItemProducts = filteredByCategory.filter((p) =>
+                        p.producttypes?.some(
+                            (type) => type.id === selectedSearchProductType.id
+                        )
+                    );
+
+                    
+                }
+
+                setOrderItemsProduct(filteredOrderItemProducts);
 
                 setLoading(false);
 
@@ -143,7 +174,7 @@ export default function CreateOrder() {
         setSubmitError(null);
         setSubmitSuccess(null);
         setSubmitting(false);
-    }, [selectedSearchProductCategory]);
+    }, [selectedSearchProductCategory , selectedSearchProductType]);
 
     /*   const toggleSelection = (index: number) => {
           const updated = [...allOrderItems];
@@ -187,6 +218,10 @@ export default function CreateOrder() {
         setSelectedSearchProductCategory(category);
     }
 
+    function productTypeSelected(productType: ProductType) {
+        setSelectedSearchProductType(productType);
+    }
+
     const SubmitOrder = async () => {
         setSubmitting(true);
 
@@ -214,10 +249,10 @@ export default function CreateOrder() {
             fishShopId: fishShop.id,
             comment: comment.trim(),
             orderlines: Object.values(cart),
-              templateSchedule : templateScedule,
-              fishShop : undefined
+            templateSchedule: templateScedule,
+            fishShop: undefined
 
-        }; 
+        };
 
         try {
             let response: any;
@@ -267,6 +302,19 @@ export default function CreateOrder() {
                             className="font-normal cursor-pointer hover:underline text-xl mt-5"
                         >
                             {productCategory.categoryname}
+                        </p>
+                    ))}
+                </div>
+
+                <div className="flex-[1] ml-10 font-bold">
+                    Vælg produkttype
+                    {productTypes.map((productType, index) => (
+                        <p
+                            key={index}
+                            onClick={() => productTypeSelected(productType)}
+                            className="font-normal cursor-pointer hover:underline text-xl mt-5"
+                        >
+                            {productType.name}
                         </p>
                     ))}
                 </div>

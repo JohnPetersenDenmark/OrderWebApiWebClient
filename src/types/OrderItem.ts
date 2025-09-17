@@ -1,5 +1,6 @@
 
 import { ProductCategory } from './ProducCategory';
+import { ProductType } from './ProductType';
 
 export interface OrderItem {
   orderid: number,
@@ -16,7 +17,8 @@ export interface OrderItem {
   discountedunitprice: number,
   producttype: number;
 
-  productcategories : ProductCategory[]
+  productcategories : ProductCategory[];
+  producttypes : ProductType[];
 
   badge: string;
   weight: string;
