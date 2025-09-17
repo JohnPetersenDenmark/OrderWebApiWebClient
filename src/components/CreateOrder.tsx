@@ -28,8 +28,8 @@ export default function CreateOrder() {
     const [nameTouched, setNameTouched] = useState(false);
 
     const [productCategories, setProductCategories] = useState<ProductCategory[]>([]);
-    const [selectedSearchProductCategory, setSelectedSearchProductCategory] = useState<ProductCategory>();
-    const [selectedSearchProductType, setSelectedSearchProductType] = useState<ProductType>();
+    const [selectedSearchProductCategories, setSelectedSearchProductCategories] = useState<ProductCategory[]>();
+    const [selectedSearchProductTypes, setSelectedSearchProductType] = useState<ProductType[]>();
 
     const [productTypes, setProductTypes] = useState<ProductType[]>([]);
 
@@ -126,28 +126,30 @@ export default function CreateOrder() {
 
 
                 let filteredByCategory;
-                if (!selectedSearchProductCategory) {
+                if (!selectedSearchProductCategories || selectedSearchProductCategories.length === 0) {
+                    // nothing selected → show all products
                     filteredByCategory = tmpOrderItemsProduct;
                 } else {
+                    // filter products if any of their categories match any selected category
                     filteredByCategory = tmpOrderItemsProduct.filter((p) =>
-                        p.productcategories?.some(
-                            (cat) => cat.id === selectedSearchProductCategory.id
+                        p.productcategories?.some((cat) =>
+                            selectedSearchProductCategories.some((selectedCat) => selectedCat.id === cat.id)
                         )
                     );
                 }
 
                 let filteredOrderItemProducts;
-                if (!selectedSearchProductType) {
-
+                if (!selectedSearchProductTypes || selectedSearchProductTypes.length === 0) {
                     filteredOrderItemProducts = filteredByCategory
                 } else {
-                     filteredOrderItemProducts = filteredByCategory.filter((p) =>
-                        p.producttypes?.some(
-                            (type) => type.id === selectedSearchProductType.id
+                      // filter products if any of their categories match any selected category
+                    filteredOrderItemProducts = tmpOrderItemsProduct.filter((p) =>
+                        p.producttypes?.some((type) =>
+                            selectedSearchProductTypes.some((selectedCat) => selectedCat.id === type.id)
                         )
                     );
 
-                    
+
                 }
 
                 setOrderItemsProduct(filteredOrderItemProducts);
@@ -174,7 +176,7 @@ export default function CreateOrder() {
         setSubmitError(null);
         setSubmitSuccess(null);
         setSubmitting(false);
-    }, [selectedSearchProductCategory , selectedSearchProductType]);
+    }, [selectedSearchProductCategories, selectedSearchProductTypes]);
 
     /*   const toggleSelection = (index: number) => {
           const updated = [...allOrderItems];
@@ -214,12 +216,42 @@ export default function CreateOrder() {
         }
     }
 
-    function categorySelected(category: ProductCategory) {
-        setSelectedSearchProductCategory(category);
+    function categorySelectedToggle(selectedCategory: ProductCategory, index: number) {
+        setSelectedSearchProductCategories(prevCategories => {
+            // Check if category already exists
+            const exists = prevCategories?.some(category => category.id === selectedCategory.id);
+
+            if (exists) {
+                // Remove it
+                return prevCategories?.filter(category => category.id !== selectedCategory.id);
+            } else {
+                // Add it
+                return [...(prevCategories || []), selectedCategory];
+            }
+        });
     }
 
-    function productTypeSelected(productType: ProductType) {
-        setSelectedSearchProductType(productType);
+    function isCategorySelected(category: ProductCategory) {
+        return selectedSearchProductCategories?.some(c => c.id === category.id);
+    }
+
+    function productTypeSelectedToggle(selectedProductType: ProductType) {
+        setSelectedSearchProductType(prevProductTypes => {
+            // Check if type already exists
+            const exists = prevProductTypes?.some(productType => productType.id === selectedProductType.id);
+
+            if (exists) {
+                // Remove it
+                return prevProductTypes?.filter(productType => productType.id !== selectedProductType.id);
+            } else {
+                // Add it
+                return [...(prevProductTypes || []), selectedProductType];
+            }
+        });
+    }
+
+    function isProductTypeSelected(productType: ProductType) {
+        return selectedSearchProductTypes?.some(type => type.id === productType.id);
     }
 
     const SubmitOrder = async () => {
@@ -293,32 +325,40 @@ export default function CreateOrder() {
             </div>
 
             <div className="flex gap-6 bg-customGreyLight text-left mt-10 text-2xl" >
-                <div className="flex-[1] ml-10 font-bold">
-                    Vælg kategori
-                    {productCategories.map((productCategory, index) => (
-                        <p
-                            key={index}
-                            onClick={() => categorySelected(productCategory)}
-                            className="font-normal cursor-pointer hover:underline text-xl mt-5"
-                        >
-                            {productCategory.categoryname}
-                        </p>
-                    ))}
-                </div>
+                <div className="flex-[1]">
+                    <div className=" ml-10 mb-10 font-bold">
+                        Vælg kategori
+                        {productCategories.map((productCategory, index) => (
+                            <p
+                                key={index}
+                                onClick={() => categorySelectedToggle(productCategory, index)}
+                                className="font-normal cursor-pointer hover:underline text-xl mt-5"
+                                style={{
+                                    backgroundColor: isCategorySelected(productCategory) ? "lightblue" : "white",
+                                }}
+                            >
+                                {productCategory.categoryname}
+                            </p>
+                        ))}
+                    </div>
 
-                <div className="flex-[1] ml-10 font-bold">
-                    Vælg produkttype
-                    {productTypes.map((productType, index) => (
-                        <p
-                            key={index}
-                            onClick={() => productTypeSelected(productType)}
-                            className="font-normal cursor-pointer hover:underline text-xl mt-5"
-                        >
-                            {productType.name}
-                        </p>
-                    ))}
-                </div>
+                    <div className="ml-10 font-bold">
+                        Vælg produkttype
+                        {productTypes.map((productType, index) => (
+                            <p
+                                key={index}
+                                onClick={() => productTypeSelectedToggle(productType)}
+                                className="font-normal cursor-pointer hover:underline text-xl mt-5"
+                                style={{
+                                    backgroundColor: isProductTypeSelected(productType) ? "lightblue" : "white",
+                                }}
+                            >
+                                {productType.name}
+                            </p>
+                        ))}
+                    </div>
 
+                </div>
 
                 <div className="flex-[5] grid grid-cols-4 gap-6  bg-customGreyLight text-xl"
                 >

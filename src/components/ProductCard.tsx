@@ -24,6 +24,35 @@ const ProductCard: React.FC<OrderItemProps> = ({ orderItem }) => {
         alt={orderItem.productname}
       />
 
+      <div className="flex items-center justify-between mt-4 mb-10">
+        <div>
+          <h3 className="font-semibold text-lg">Kategori</h3>
+          <p className="text-gray-500"></p>
+
+          <div className="mt-2 text-sm">
+            {orderItem.productcategories && orderItem.productcategories.map((category) => (
+              <p>
+                {category.categoryname}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <div className="mr-5">
+          <h3 className="font-semibold text-lg">Type</h3>
+          <p className="text-gray-500"></p>
+
+          <div className="mt-2 text-sm">
+            {orderItem.producttypes && orderItem.producttypes.map((type) => (
+              <p>
+                {type.name}
+              </p>
+
+            ))}
+          </div>
+        </div>
+      </div>
+
       <h3 className="font-semibold text-lg">{orderItem.productname}</h3>
       <p className="text-gray-500">{orderItem.weight}</p>
 
@@ -33,6 +62,7 @@ const ProductCard: React.FC<OrderItemProps> = ({ orderItem }) => {
           {orderItem.pricePerKg.toFixed(2)} kr/kg
         </p>
       </div>
+
 
       <div className="flex items-center justify-between mt-4">
         {quantity === 0 ? (
