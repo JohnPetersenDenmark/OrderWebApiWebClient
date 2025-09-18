@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import ProductCard from './ProductCard';
 import Cart from './Cart';
 
+import { X } from "lucide-react";
+
 import PickupLocation from './PickupLocation';
 import { Order } from '../types/Order';
 import { useCart } from './CartContext';
@@ -33,8 +35,12 @@ export default function CreateOrder() {
 
     const [productTypes, setProductTypes] = useState<ProductType[]>([]);
 
+    const [numberOfSelectedFilters, setNumberOfSelectedFilters] = useState(0);
+
     //  const [allOrderItems, setAllOrderItems] = useState<OrderItem[]>([]);
-    const [enteredQuantity, setEnteredQuantity] = useState<string[]>([]);
+    // const [enteredQuantity, setEnteredQuantity] = useState<string[]>([]);
+
+    const [showFilters, setShowCFilters] = useState(true);
 
     const [phone, setPhone] = useState<string>('');
     const [phoneTouched, setPhoneTouched] = useState(false);
@@ -125,6 +131,7 @@ export default function CreateOrder() {
                 ));
 
 
+
                 let filteredByCategory;
                 if (!selectedSearchProductCategories || selectedSearchProductCategories.length === 0) {
                     // nothing selected → show all products
@@ -142,7 +149,7 @@ export default function CreateOrder() {
                 if (!selectedSearchProductTypes || selectedSearchProductTypes.length === 0) {
                     filteredOrderItemProducts = filteredByCategory
                 } else {
-                      // filter products if any of their categories match any selected category
+                    // filter products if any of their categories match any selected category
                     filteredOrderItemProducts = tmpOrderItemsProduct.filter((p) =>
                         p.producttypes?.some((type) =>
                             selectedSearchProductTypes.some((selectedCat) => selectedCat.id === type.id)
@@ -164,7 +171,7 @@ export default function CreateOrder() {
                 setLoading(false);
             }
         }
-
+        calculateNumberOgSelectedFilters();
         fetchProducts();
         setCustomerName('');
         setNameTouched(false);
@@ -209,6 +216,24 @@ export default function CreateOrder() {
   
       }; */
 
+
+    function calculateNumberOgSelectedFilters() {
+        let count = 0;
+        if (selectedSearchProductCategories?.length && selectedSearchProductCategories?.length > 0) {
+            count++;
+        }
+
+        if (selectedSearchProductTypes?.length && selectedSearchProductTypes?.length > 0) {
+            count++;
+        }
+
+        setNumberOfSelectedFilters(count);
+    }
+
+
+
+
+
     function handleMenuSelection(menuItem: number) {
         setSelectedMenuPoint(menuItem);
         if (menuItem === 1) {
@@ -252,6 +277,17 @@ export default function CreateOrder() {
 
     function isProductTypeSelected(productType: ProductType) {
         return selectedSearchProductTypes?.some(type => type.id === productType.id);
+    }
+
+    function handleShowFilters() {
+        if (showFilters) {
+            setShowCFilters(false)
+        }
+        else {
+            setShowCFilters(true)
+        }
+
+
     }
 
     const SubmitOrder = async () => {
@@ -321,47 +357,129 @@ export default function CreateOrder() {
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
-            <div className="flex gap-6 bg-customGreyLight text-left mt-10 text-2xl" >
-                <div className="flex-[1]">
-                    <div className=" ml-10 mb-10 font-bold">
-                        Vælg kategori
-                        {productCategories.map((productCategory, index) => (
-                            <p
-                                key={index}
-                                onClick={() => categorySelectedToggle(productCategory, index)}
-                                className="font-normal cursor-pointer hover:underline text-xl mt-5"
-                                style={{
-                                    backgroundColor: isCategorySelected(productCategory) ? "lightblue" : "white",
-                                }}
-                            >
-                                {productCategory.categoryname}
-                            </p>
-                        ))}
-                    </div>
 
-                    <div className="ml-10 font-bold">
-                        Vælg produkttype
-                        {productTypes.map((productType, index) => (
-                            <p
-                                key={index}
-                                onClick={() => productTypeSelectedToggle(productType)}
-                                className="font-normal cursor-pointer hover:underline text-xl mt-5"
-                                style={{
-                                    backgroundColor: isProductTypeSelected(productType) ? "lightblue" : "white",
-                                }}
-                            >
-                                {productType.name}
-                            </p>
-                        ))}
-                    </div>
+            <div className="flex text-left mt-10 text-2xl bg-white items-center">
+                <div className="flex-1"></div>
+
+                <div className="flex-[5] flex items-center gap-6">
+                    {/* Filter button */}
+                    <button
+                        className="flex items-center gap-2 bg-hoverYellowLight px-4 py-2 rounded hover:bg-white"
+                        onClick={() => handleShowFilters()}
+                    >
+                        <span>
+                            filtre {numberOfSelectedFilters > 0 ? `(${numberOfSelectedFilters})` : ""}
+                        </span>
+                        <img src="images/funnel.svg" width={40} alt="funnel" />
+                    </button>
+
+                    {/* Selected categories */}
+                    {numberOfSelectedFilters > 0 && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            {productCategories
+                                .filter((cat) => isCategorySelected(cat))
+                                .map((cat, idx) => (
+                                    <span
+                                        key={idx}
+                                        className="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-lg"
+                                    >
+                                        {cat.categoryname}
+                                        <button
+                                            onClick={() => categorySelectedToggle(cat, idx)}
+                                            className="ml-1 text-blue-600 hover:text-red-600 font-bold"
+                                        >
+                                            <X size={20} />
+                                        </button>
+                                    </span>
+                                ))}
+                        </div>
+                    )}
+
+
+                    {/* Selected product types */}
+                    {numberOfSelectedFilters > 0 && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            {productTypes
+                                .filter((cat) => isProductTypeSelected(cat))
+                                .map((cat, idx) => (
+                                    <span
+                                        key={idx}
+                                        className="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-lg"
+                                    >
+                                        {cat.name}
+                                        <button
+                                            onClick={() => productTypeSelectedToggle(cat)}
+                                            className="ml-1 text-blue-600 hover:text-red-600 font-bold"
+                                        >
+                                            <X size={20} className="stroke-current" />
+                                        </button>
+                                    </span>
+                                ))}
+                        </div>
+                    )}
+
 
                 </div>
 
+                <div className="flex-1"></div>
+            </div>
+
+            <div className="flex gap-6 bg-customGreyLight text-left mt-10 text-2xl" >
+                {showFilters ?
+                    <div className="flex-[1]">
+
+                        <div className="ml-10 mb-10 font-bold">
+                            Vælg kategori
+                            {productCategories.map((productCategory, index) => (
+                                <label
+                                    key={index}
+                                    className="flex items-center gap-2 text-xl font-normal mt-5 cursor-pointer"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={isCategorySelected(productCategory)}
+                                        onChange={() => categorySelectedToggle(productCategory, index)}
+                                        className="w-5 h-5 bg-hoverYellowLight border-gray-300 rounded-2xl"
+                                    />
+                                    {productCategory.categoryname}
+                                </label>
+                            ))}
+                        </div>
+
+                        <div className="ml-10 font-bold">
+                            Vælg produkttype
+                            {productTypes.map((productType, index) => (
+
+
+                                <label
+                                    key={index}
+                                    className="flex items-center gap-2 text-xl font-normal mt-5 cursor-pointer"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={isProductTypeSelected(productType)}
+                                        onChange={() => productTypeSelectedToggle(productType)}
+                                        className="w-5 h-5 text-blue-600 border-gray-300 rounded"
+                                    />
+                                    {productType.name}
+                                </label>
+
+
+
+                            ))}
+                        </div>
+
+                    </div>
+                    : <div className="flex-[1]"></div>}
+
+
                 <div className="flex-[5] grid grid-cols-4 gap-6  bg-customGreyLight text-xl"
                 >
+
                     {orderItemsProduct.map((orderItem, index) => (
                         <ProductCard orderItem={orderItem} />
                     ))}
