@@ -9,7 +9,7 @@ export interface ProductLightDto {
   imageurl: string;
   price: number;
   discountpercentage: number;
-  discountprice: number;
+  discountprice: number; 
   producttype: number;
 
   productcategoryIds : number[]
@@ -17,5 +17,5 @@ export interface ProductLightDto {
   badge: string,
   weight: string,
   shelflife: string,
-  priceperkilo: number
+  priceperkilo: string
 }

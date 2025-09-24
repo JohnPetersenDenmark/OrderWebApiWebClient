@@ -20,7 +20,7 @@ export interface Product {
   badge: string,
   weight: string,
   shelflife: string,
-  priceperkilo: number
+  pricePerKg: string
 
   
 

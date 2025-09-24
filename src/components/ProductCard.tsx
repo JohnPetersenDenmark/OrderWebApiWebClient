@@ -59,7 +59,7 @@ const ProductCard: React.FC<OrderItemProps> = ({ orderItem }) => {
       <div className="mt-2">
         <p className="text-2xl font-bold">{orderItem.unitprice.toFixed(2)} kr</p>
         <p className="text-sm text-gray-500">
-          {orderItem.pricePerKg.toFixed(2)} kr/kg
+          {orderItem.pricePerKg} kr/kg
         </p>
       </div>
 

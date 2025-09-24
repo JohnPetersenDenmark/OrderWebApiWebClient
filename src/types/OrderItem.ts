@@ -23,5 +23,5 @@ export interface OrderItem {
   badge: string;
   weight: string;
   shelfLife: string;
-  pricePerKg: number
+  pricePerKg: string
 }

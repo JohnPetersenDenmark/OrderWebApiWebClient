@@ -148,7 +148,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             setBadge(productToEdit.badge)
             setWeight(productToEdit.weight)
             setShelflife(productToEdit.shelflife)
-            setPricePerKilo(productToEdit.priceperkilo.toString())
+            setPricePerKilo(productToEdit.pricePerKg)
             setProductDescription(productToEdit.description)
             setProductDetails(productToEdit.details)
             setProductPriceBeforeDiscount(productToEdit.discountprice.toFixed(2))
@@ -237,7 +237,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             badge: badge,
             weight: weight,
             shelfLife: shelflife,
-            priceperkilo: pricePerKilo,
+            priceperkg: pricePerKilo,
             productcategoryIds: selectedProductCategories.map(cat => cat.id),
            producttypeids: selectedProductTypes.map(productType => productType.id)
         }
@@ -719,7 +719,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         <input
                             id="priceperkilo"
                             type="text"
-                            value={pricePerKilo.replaceAll(".", ",")}
+                            value={pricePerKilo}
                             onChange={(e) => setPricePerKilo(e.target.value)}
                             onBlur={() => setPricePerKiloTouched(true)}
                             placeholder="Kilopris"
