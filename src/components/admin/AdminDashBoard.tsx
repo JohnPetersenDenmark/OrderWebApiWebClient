@@ -10,6 +10,7 @@ import AdminEmployee from './AdminEmployee';
 import AdminOperatingArea from './AdminOperatingArea';
 import AdminProductCategories from './AdminProductCategories';
 import AdminProductTypes from './AdminProductTypes';
+import AdminProductLabels from './AdminProductLabels';
 import { useNavigate } from "react-router-dom";
 
 import RevenuePerTimePeriod from '../Statistic/RevenuePerTimePeriod'
@@ -110,6 +111,12 @@ const AdminDashBoard: React.FC = () => {
                 newMenuPoint = {
         clickableText: "Produkttyper",
         component:  AdminProductTypes
+    }
+    menuArray.push(newMenuPoint)
+
+            newMenuPoint = {
+        clickableText: "Produktmærkninger",
+        component:  AdminProductLabels
     }
     menuArray.push(newMenuPoint)
 
