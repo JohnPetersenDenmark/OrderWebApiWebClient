@@ -146,7 +146,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                 setLoading(false);
             }
 
-              try {
+            try {
                 const labelsResponse: any = await AxiosClientGet('/Home/productlabellist', false);
 
                 setAllProductLabels(labelsResponse);
@@ -177,7 +177,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             setProductPriceAfterDiscount(productToEdit.price.toFixed(2))
             setProductImageurl(productToEdit.imageurl)
             setSelectedProductCategories(productToEdit.productcategories)
-             setSelectedProductLabels(productToEdit.productLabels)
+            setSelectedProductLabels(productToEdit.productLabels)
 
         }
         else {
@@ -228,27 +228,36 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     };
 
-    const handleChangeProductLabel = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedIds = Array.from(e.target.selectedOptions, opt => opt.value);
-        if (selectedProductLabels) {
-
-        }
-
-        const selectedObjects = allProductLabels.filter(label => selectedIds.includes(label.id.toString()));
-        setSelectedProductLabels(selectedObjects);
-
-    };
-
-
     const handleChangeProductType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedIds = Array.from(e.target.selectedOptions, opt => opt.value);
         if (selectedProductCategories) {
 
         }
 
-        const selectedObjects = allProductTypes.filter(c => selectedIds.includes(c.id.toString()));
+        const selectedObjects = allProductTypes.filter(productType => selectedIds.includes(productType.id.toString()));
         setSelectedProductTypes(selectedObjects);
 
+    };
+
+
+
+    const handleToggleProductLabel = async (selectedLabel: ProductLabel) => {
+        // check if this label is already selected
+        const isAlreadySelected = selectedProductLabels && selectedProductLabels.some(
+            (productLabel) => productLabel.id === selectedLabel.id
+        );
+
+        if (isAlreadySelected) {
+            // remove it
+            setSelectedProductLabels((prev) =>
+                prev.filter((pl) => pl.id !== selectedLabel.id)
+            );
+        } else {
+            // add it
+            setSelectedProductLabels((prev) => prev ? [...prev, selectedLabel] : [selectedLabel]
+            );
+
+        }
     };
 
     const handleSubmit = async () => {
@@ -275,7 +284,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             priceperkg: pricePerKilo,
             productcategoryIds: selectedProductCategories.map(cat => cat.id),
             producttypeids: selectedProductTypes.map(productType => productType.id),
-            productlabelids: selectedProductLabels.map(productLabel => productLabel.id)
+            productlabelids: selectedProductLabels && selectedProductLabels.map(productLabel => productLabel.id)
         }
 
         if (selectedFile) {
@@ -657,7 +666,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
 
 
-                    <div >
+                    {/* <div >
                         <label htmlFor="productlabel" style={{ fontWeight: "bold", color: 'white' }}>
                             Vælg mærkning:
                         </label>
@@ -685,9 +694,37 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         </select>
 
 
+                    </div> */}
+
+
+                    <div className="bg-customBlue">
+                        <label htmlFor="productlabel" style={{ fontWeight: "bold", color: 'white' }}>
+                            Vælg mærkning:
+                        </label>
+                        {allProductLabels.map((label) => {
+                            const isSelected = selectedProductLabels && selectedProductLabels.some(
+                                (productLabel) => productLabel.id === label.id
+                            );
+
+                            return (
+                                <div
+                                    key={label.id}
+                                    className={`flex cursor-pointer p-2 ${isSelected ? "bg-blue-200" : "bg-white"
+                                        }`}
+                                    onClick={() => handleToggleProductLabel(label)}
+                                >
+                                    <div className="flex-1">{label.labelname}</div>
+                                    <div className="flex-1">
+                                        <img
+                                            src={config.API_BASE_URL + label.imageurl}
+                                            alt={label.labelname}
+                                            className="w-5 max-w-[100px] h-auto mt-1"
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
-
-
 
 
                     {/* Product description */}
