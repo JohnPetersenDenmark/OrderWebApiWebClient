@@ -9,6 +9,7 @@ import RichtextEditorQuill from "../RichtextEditorQuill"
 
 
 import { AxiosClientGet, AxiosClientPost } from '../../types/AxiosClient';
+import { ProductLabel } from '../../types/ProductLabel';
 
 
 interface ProductModalProps {
@@ -47,10 +48,16 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     const [selectedProductCategories, setSelectedProductCategories] = React.useState<ProductCategory[]>([]);
 
-     const [selectedProductTypes, setSelectedProductTypes] = React.useState<ProductType[]>([]);
-     const [allProductTypes, setAllProductTypes] = useState<ProductType[]>([]);
+    const [selectedProductLabels, setSelectedProductLabels] = React.useState<ProductLabel[]>([]);
+
+    const [selectedProductTypes, setSelectedProductTypes] = React.useState<ProductType[]>([]);
+    const [allProductTypes, setAllProductTypes] = useState<ProductType[]>([]);
+
+
 
     const [allProductCategories, setAllProductCategories] = useState<ProductCategory[]>([]);
+
+    const [allProductLabels, setAllProductLabels] = useState<ProductLabel[]>([]);
 
     const [productDescriptionTouched, setProductDescriptionTouched] = useState(false);
 
@@ -125,10 +132,24 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                 setLoading(false);
             }
 
-             try {
+            try {
                 const typesResponse: any = await AxiosClientGet('/Home/producttypelist', false);
 
                 setAllProductTypes(typesResponse);
+                setLoading(false);
+
+            } catch (err) {
+                setError('Failed to load locations');
+                setLoading(false);
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+
+              try {
+                const labelsResponse: any = await AxiosClientGet('/Home/productlabellist', false);
+
+                setAllProductLabels(labelsResponse);
                 setLoading(false);
 
             } catch (err) {
@@ -156,6 +177,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             setProductPriceAfterDiscount(productToEdit.price.toFixed(2))
             setProductImageurl(productToEdit.imageurl)
             setSelectedProductCategories(productToEdit.productcategories)
+             setSelectedProductLabels(productToEdit.productLabels)
 
         }
         else {
@@ -173,6 +195,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             setProductImageurl('')
             setSelectedFile(null)
             setSelectedProductCategories([])
+            setSelectedProductLabels([])
 
 
         }
@@ -204,6 +227,18 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         setSelectedProductCategories(selectedObjects);
 
     };
+
+    const handleChangeProductLabel = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedIds = Array.from(e.target.selectedOptions, opt => opt.value);
+        if (selectedProductLabels) {
+
+        }
+
+        const selectedObjects = allProductLabels.filter(label => selectedIds.includes(label.id.toString()));
+        setSelectedProductLabels(selectedObjects);
+
+    };
+
 
     const handleChangeProductType = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedIds = Array.from(e.target.selectedOptions, opt => opt.value);
@@ -239,7 +274,8 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             shelfLife: shelflife,
             priceperkg: pricePerKilo,
             productcategoryIds: selectedProductCategories.map(cat => cat.id),
-           producttypeids: selectedProductTypes.map(productType => productType.id)
+            producttypeids: selectedProductTypes.map(productType => productType.id),
+            productlabelids: selectedProductLabels.map(productLabel => productLabel.id)
         }
 
         if (selectedFile) {
@@ -582,7 +618,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
                     {/* Product category - spans full width */}
                     <div >
-                        <label htmlFor="productcategory" style={{ fontWeight: "bold" , color : 'white'}}>
+                        <label htmlFor="productcategory" style={{ fontWeight: "bold", color: 'white' }}>
                             Vælg produktkategori:
                         </label>
                         <select
@@ -599,9 +635,9 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         </select>
                     </div>
 
-                     {/* Product category - spans full width */}
+                    {/* Product category - spans full width */}
                     <div >
-                        <label htmlFor="producttype" style={{ fontWeight: "bold" , color : 'white'}}>
+                        <label htmlFor="producttype" style={{ fontWeight: "bold", color: 'white' }}>
                             Vælg produkttype:
                         </label>
                         <select
@@ -618,7 +654,43 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         </select>
                     </div>
 
-                     {/* Product description */}
+
+
+
+                    <div >
+                        <label htmlFor="productlabel" style={{ fontWeight: "bold", color: 'white' }}>
+                            Vælg mærkning:
+                        </label>
+                        <select
+                            multiple
+                            value={selectedProductLabels?.map((productLabel) => productLabel.id.toString())}
+                            onChange={handleChangeProductLabel}
+                            style={{ width: "100%", padding: "0.5rem", marginTop: "0.25rem" }}
+                        >
+                            {allProductLabels.map((label) => (
+                                <option key={label.id} value={label.id}>
+                                    {label.labelname}
+                                    <img
+                                        src={config.API_BASE_URL + label.imageurl}
+                                        style={{
+                                            width: "200px",
+                                            maxWidth: "200px",
+                                            height: "auto",
+                                            marginTop: "5px",
+                                        }}
+                                    />
+                                </option>
+
+                            ))}
+                        </select>
+
+
+                    </div>
+
+
+
+
+                    {/* Product description */}
                     <div>
                         <label htmlFor="productdescription">Beskrivelse:</label>
                         <input
@@ -825,7 +897,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                     />
                 </div>
 
-              
+
 
                 {/* Buttons */}
                 <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>

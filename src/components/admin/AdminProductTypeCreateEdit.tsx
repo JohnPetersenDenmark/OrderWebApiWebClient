@@ -104,7 +104,7 @@ const AdminProductTypeCreateEdit: React.FC<ProductTypeModalProps> = ({ isOpen, o
             marginBottom: '1rem',
           }}
         >
-          Produktkategori
+          Produkttype
         </h2>
 
         <div style={{ marginBottom: '1rem' }}>

@@ -106,7 +106,7 @@ const AdminDashBoard: React.FC = () => {
 
    
 
-     menuArray.push(newMenuPoint)
+   
 
                 newMenuPoint = {
         clickableText: "Produkttyper",
