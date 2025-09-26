@@ -48,7 +48,7 @@ const AdminProductLabelCreateEdit: React.FC<ProductLabelModalProps> = ({ isOpen,
 
     const handleUpload = async () => {
         if (!selectedFile) {
-            return;
+            return ('');
         }
 
         const formData = new FormData();
@@ -63,12 +63,13 @@ const AdminProductLabelCreateEdit: React.FC<ProductLabelModalProps> = ({ isOpen,
             });
 
             if (typeof response.data.imageUrl === 'string') {
-                setLabelImageurl(response.data.imageUrl)
+                //setLabelImageurl(response.data.imageUrl)
                 setProductLabelNameTouched(true);
+                return(response.data.imageUrl);
             }
 
             else {
-                setLabelImageurl('/Uploads/dummy.png')
+                //setLabelImageurl('/Uploads/dummy.png')
                 setProductLabelNameTouched(true);
             }
 
@@ -76,13 +77,15 @@ const AdminProductLabelCreateEdit: React.FC<ProductLabelModalProps> = ({ isOpen,
         } catch (error) {
             console.error('Error uploading file:', error);
         }
+
+        return ('');
     };
 
 
     const handleFileSelect = (file: File) => {
         console.log("Parent got file:", file);
         setSelectedFile(file);
-        setLabelImageurl('/Uploads/' + file.name)
+      //  setLabelImageurl('/Uploads/' + file.name)
     };
 
     const handleSubmit = async () => {
@@ -90,11 +93,12 @@ const AdminProductLabelCreateEdit: React.FC<ProductLabelModalProps> = ({ isOpen,
         const productLabelData = {
             id: productLabelToEdit !== null ? productLabelToEdit.id : 0,
             labelname: productLabelName.trim(),
-            imageurl: labelImageurl
+            imageurl: ''
         }
 
         if (selectedFile) {
-            await handleUpload();
+         productLabelData.imageurl =   await handleUpload();
+            setLabelImageurl( productLabelData.imageurl);
         }
         try {
             const response = await AxiosClientPost('/Admin/addorupdateproductlabel', productLabelData, false);

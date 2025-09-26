@@ -5,7 +5,7 @@ import { ProductCategory } from '../../types/ProducCategory';
 import { ProductType } from '../../types/ProductType';
 import FileInput from "../FileInput"
 import config from '../../config';
-import RichtextEditorQuill from "../RichtextEditorQuill"
+import RichtextEditorQuill from "../RichtextEditorQuill" 
 
 
 import { AxiosClientGet, AxiosClientPost } from '../../types/AxiosClient';
@@ -273,7 +273,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             productnumber: productNumber,
             description: productDescription,
             details: productDetails,
-            imageurl: productImageurl,
+            imageurl: '',
             price: productPriceAfterDiscount.replaceAll(',', '.'),
             discountpercentage: productDiscountPercentage.replaceAll(',', '.'),
             discountprice: productPriceBeforeDiscount.replaceAll(',', '.'),
@@ -288,7 +288,8 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         }
 
         if (selectedFile) {
-            await handleUpload();
+           productData.imageurl = await handleUpload();
+           setProductImageurl( productData.imageurl)
         }
 
         try {
@@ -469,7 +470,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     const handleUpload = async () => {
         if (!selectedFile) {
-            return;
+            return('');
         }
 
         const formData = new FormData();
@@ -483,13 +484,13 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                 }
             });
 
-            if (typeof response.data.imageUrl === 'string') {
-                setProductImageurl(response.data.imageUrl)
+            if (typeof response.data.imageUrl === 'string') {              
                 setProductImageurlTouched(true);
+                  return(response.data.imageUrl)
             }
 
             else {
-                setProductImageurl('/Uploads/dummy.png')
+              //  setProductImageurl('/Uploads/dummy.png')
                 setProductImageurlTouched(true);
             }
 
@@ -497,12 +498,14 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         } catch (error) {
             console.error('Error uploading file:', error);
         }
+
+          return('');
     };
 
     const handleFileSelect = (file: File) => {
         console.log("Parent got file:", file);
         setSelectedFile(file);
-        setProductImageurl('/Uploads/' + file.name)
+       // setProductImageurl('/Uploads/' + file.name)
     };
 
     if (!isOpen) return null;
