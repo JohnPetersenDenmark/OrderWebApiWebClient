@@ -53,6 +53,26 @@ const ProductCard: React.FC<OrderItemProps> = ({ orderItem }) => {
         </div>
       </div>
 
+      <div className="items-center justify-between mt-4 mb-10">
+        <div className="mr-5">
+          <h3 className="font-semibold text-lg">Mærkning</h3>
+          <p className="flex-1 text-gray-500"></p>
+
+          <div className="flex mt-2 text-sm">
+            {orderItem.productlabels && orderItem.productlabels.map((label) => (
+              <div className="flex-1">               
+                <img
+                  className="w-5 h-5 object-cover rounded-xl my-3"
+                  src={config.API_BASE_URL + label.imageurl}
+                  alt={label.labelname}
+                />
+              </div>
+
+            ))}
+          </div>
+        </div>
+      </div>
+
       <h3 className="font-semibold text-lg">{orderItem.productname}</h3>
       <p className="text-gray-500">{orderItem.weight}</p>
 

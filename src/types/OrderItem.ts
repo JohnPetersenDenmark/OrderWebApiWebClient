@@ -1,5 +1,6 @@
 
 import { ProductCategory } from './ProducCategory';
+import { ProductLabel } from './ProductLabel';
 import { ProductType } from './ProductType';
 
 export interface OrderItem {
@@ -19,6 +20,7 @@ export interface OrderItem {
 
   productcategories : ProductCategory[];
   producttypes : ProductType[];
+  productlabels : ProductLabel[];
 
   badge: string;
   weight: string;

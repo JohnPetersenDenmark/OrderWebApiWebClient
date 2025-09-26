@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { ProductType } from '../types/ProductType';
 import { Product } from '../types/Product';
+import { ProductLabel } from '../types/ProductLabel';
 import { ProductCategory } from '../types/ProducCategory';
 import { AxiosClientGet, AxiosClientPost } from '../types/AxiosClient';
 import { useNavigate } from "react-router-dom";
@@ -115,17 +116,17 @@ export default function CreateOrder() {
                     badge: product.badge,
                     weight: product.weight,
                     shelfLife: product.shelflife,
-                    pricePerKg: product.priceperkilo,
-
-                    /*  productcategories  :  product.productcategories.map((category : ProductCategory) => (
-                      {
-                         id : category.id,
-                         categoryname : category.categoryname
-                      })) */
+                    pricePerKg: product.pricePerKg,
 
                     productcategories: product.productcategories,
 
-                    producttypes: product.producttypes
+                    producttypes: product.producttypes,
+
+                    productlabels: product.productLabels.map((productLabel : any) => ({
+                        id : productLabel.id,
+                        imageurl : productLabel.imageUrl,
+                        labelname: productLabel.labelName
+                    }))
 
                 }
                 ));
