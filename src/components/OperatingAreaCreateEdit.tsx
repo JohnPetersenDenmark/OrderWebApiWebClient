@@ -283,14 +283,14 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({
           <button
             onClick={onClose}
             disabled={submitting}
-            className="px-4 py-2 rounded-md border border-gray-300 bg-hoverYellowLight text-gray-700"
+            className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700"
           >
             Annuller
           </button>
           <button
             onClick={handleSubmit}
             disabled={!isFormValid || submitting}
-            className="px-4 py-2 rounded-md bg-hoverYellowLight text-white hover:bg-[#435a87] disabled:opacity-50"
+            className="px-4 py-2 rounded-md bg-white text-black hover:bg-[gray] disabled:opacity-50"
           >
             Gem
           </button>

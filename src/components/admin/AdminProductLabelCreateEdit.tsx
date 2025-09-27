@@ -199,19 +199,16 @@ const AdminProductLabelCreateEdit: React.FC<ProductLabelModalProps> = ({ isOpen,
                 </div>
 
                 <div style={{ textAlign: 'center' }}>
-                    <button
+                     <button 
                         onClick={handleSubmit}
                         disabled={!isFormValid || submitting}
                         style={{
-                            padding: '0.5rem 1rem',
-                            backgroundColor:
-                                isFormValid && !submitting ? '#ffb84d' : 'grey',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor:
-                                isFormValid && !submitting ? 'pointer' : 'not-allowed',
-                            marginRight: '0.5rem',
+                            padding: "0.5rem 1rem",
+                            backgroundColor: isFormValid && !submitting ? "white" : "grey",
+                            color: "black",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
                         }}
                     >
                         Ok
@@ -222,12 +219,12 @@ const AdminProductLabelCreateEdit: React.FC<ProductLabelModalProps> = ({ isOpen,
                         disabled={submitting}
                         style={{
                             padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? '#ffb84d' : 'grey',
-                            color: 'white',
+                            backgroundColor: !submitting ? 'white' : 'grey',
+                            color: 'black',
                             border: 'none',
                             borderRadius: '4px',
                             cursor: !submitting ? 'pointer' : 'not-allowed',
-                        }}
+                        }} 
                     >
                         Annuler
                     </button>

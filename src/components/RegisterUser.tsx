@@ -228,37 +228,33 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
                 {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
 
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    <button
+                     <button 
                         onClick={handleSubmit}
                         disabled={!isFormValid || submitting}
                         style={{
-                            flex: 1,
-                            padding: '0.5rem 1rem',
-                            backgroundColor: isFormValid && !submitting ? '#ffb84d' : 'grey',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: isFormValid && !submitting ? 'pointer' : 'not-allowed',
-                            minWidth: '100px',
+                            padding: "0.5rem 1rem",
+                            backgroundColor: isFormValid && !submitting ? "white" : "grey",
+                            color: "black",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
                         }}
                     >
                         Ok
                     </button>
-                    <button
+                     <button
                         onClick={onClose}
                         disabled={submitting}
                         style={{
-                            flex: 1,
                             padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? '#ffb84d' : 'grey',
-                            color: 'white',
+                            backgroundColor: !submitting ? 'white' : 'grey',
+                            color: 'black',
                             border: 'none',
                             borderRadius: '4px',
                             cursor: !submitting ? 'pointer' : 'not-allowed',
-                            minWidth: '100px',
-                        }}
+                        }} 
                     >
-                        Annuller
+                        Annuler
                     </button>
                 </div>
             </div>

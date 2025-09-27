@@ -5,7 +5,7 @@ import { ProductCategory } from '../../types/ProducCategory';
 import { ProductType } from '../../types/ProductType';
 import FileInput from "../FileInput"
 import config from '../../config';
-import RichtextEditorQuill from "../RichtextEditorQuill" 
+import RichtextEditorQuill from "../RichtextEditorQuill"
 
 
 import { AxiosClientGet, AxiosClientPost } from '../../types/AxiosClient';
@@ -288,8 +288,8 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
         }
 
         if (selectedFile) {
-           productData.imageurl = await handleUpload();
-           setProductImageurl( productData.imageurl)
+            productData.imageurl = await handleUpload();
+            setProductImageurl(productData.imageurl)
         }
 
         try {
@@ -470,7 +470,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
     const handleUpload = async () => {
         if (!selectedFile) {
-            return('');
+            return ('');
         }
 
         const formData = new FormData();
@@ -484,13 +484,13 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                 }
             });
 
-            if (typeof response.data.imageUrl === 'string') {              
+            if (typeof response.data.imageUrl === 'string') {
                 setProductImageurlTouched(true);
-                  return(response.data.imageUrl)
+                return (response.data.imageUrl)
             }
 
             else {
-              //  setProductImageurl('/Uploads/dummy.png')
+                //  setProductImageurl('/Uploads/dummy.png')
                 setProductImageurlTouched(true);
             }
 
@@ -499,13 +499,13 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
             console.error('Error uploading file:', error);
         }
 
-          return('');
+        return ('');
     };
 
     const handleFileSelect = (file: File) => {
         console.log("Parent got file:", file);
         setSelectedFile(file);
-       // setProductImageurl('/Uploads/' + file.name)
+        // setProductImageurl('/Uploads/' + file.name)
     };
 
     if (!isOpen) return null;
@@ -941,13 +941,13 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
                 {/* Buttons */}
                 <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
-                    <button
+                    <button 
                         onClick={handleSubmit}
                         disabled={!isFormValid || submitting}
                         style={{
                             padding: "0.5rem 1rem",
-                            backgroundColor: isFormValid && !submitting ? "#ffb84d" : "grey",
-                            color: "white",
+                            backgroundColor: isFormValid && !submitting ? "white" : "grey",
+                            color: "black",
                             border: "none",
                             borderRadius: "4px",
                             cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
@@ -959,13 +959,13 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         onClick={onClose}
                         disabled={submitting}
                         style={{
-                            padding: "0.5rem 1rem",
-                            backgroundColor: !submitting ? "#ffb84d" : "grey",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: !submitting ? "pointer" : "not-allowed",
-                        }}
+                            padding: '0.5rem 1rem',
+                            backgroundColor: !submitting ? 'white' : 'grey',
+                            color: 'black',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: !submitting ? 'pointer' : 'not-allowed',
+                        }} 
                     >
                         Annuler
                     </button>

@@ -203,38 +203,35 @@ const AdminPlaceCreateEdit: React.FC<LocationModalProps> = ({ isOpen, onClose, l
         </div>
 
         <div style={{ textAlign: 'center' }}>
-          <button
-            onClick={handleSubmit}
-            disabled={!isFormValid || submitting}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor:
-                isFormValid && !submitting ? '#ffb84d' : 'grey',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor:
-                isFormValid && !submitting ? 'pointer' : 'not-allowed',
-              marginRight: '0.5rem',
-            }}
-          >
-            Ok
-          </button>
+           <button 
+                        onClick={handleSubmit}
+                        disabled={!isFormValid || submitting}
+                        style={{
+                            padding: "0.5rem 1rem",
+                            backgroundColor: isFormValid && !submitting ? "white" : "grey",
+                            color: "black",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
+                        }}
+                    >
+                        Ok
+                    </button>
 
-          <button
-            onClick={onClose}
-            disabled={submitting}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: !submitting ? '#ffb84d' : 'grey',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: !submitting ? 'pointer' : 'not-allowed',
-            }}
-          >
-            Annuler
-          </button>
+         <button
+                        onClick={onClose}
+                        disabled={submitting}
+                        style={{
+                            padding: '0.5rem 1rem',
+                            backgroundColor: !submitting ? 'white' : 'grey',
+                            color: 'black',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: !submitting ? 'pointer' : 'not-allowed',
+                        }} 
+                    >
+                        Annuler
+                    </button>
         </div>
       </div>
     </div>
