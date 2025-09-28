@@ -52,81 +52,76 @@ const AdminDashBoard: React.FC = () => {
 
     const menuArray: MenuPoint[] = [];
 
- let newMenuPoint = {
+    let newMenuPoint = {
         clickableText: "Ordrer",
         component: AdminOrders
     }
-     menuArray.push(newMenuPoint)
+    menuArray.push(newMenuPoint)
 
 
-     newMenuPoint = {
+    newMenuPoint = {
         clickableText: "Produkter",
         component: AdminMenues
     }
-     menuArray.push(newMenuPoint)
+    menuArray.push(newMenuPoint)
+
+    newMenuPoint = {
+        clickableText: "Biler",
+        component: AdminFishShops
+    }
+    menuArray.push(newMenuPoint)
+
+    newMenuPoint = {
+        clickableText: "Stadepladser",
+        component: AdminPlaces
+    }
+    menuArray.push(newMenuPoint)
+
+    newMenuPoint = {
+        clickableText: "Områder",
+        component: AdminOperatingArea
+    }
+    menuArray.push(newMenuPoint)
+
+    newMenuPoint = {
+        clickableText: "Medarbejdere",
+        component: AdminEmployee
+    }
+    menuArray.push(newMenuPoint)
+
+    newMenuPoint = {
+        clickableText: "Produktkategorier",
+        component: AdminProductCategories
+    }
+    menuArray.push(newMenuPoint)
 
 
-     newMenuPoint = {
+    newMenuPoint = {
+        clickableText: "Produkttyper",
+        component: AdminProductTypes
+    }
+    menuArray.push(newMenuPoint)
+
+    newMenuPoint = {
+        clickableText: "Produktmærkninger",
+        component: AdminProductLabels
+    }
+    menuArray.push(newMenuPoint)
+
+      newMenuPoint = {
         clickableText: "Brugere",
         component: AdminUsers
 
     }    
     menuArray.push(newMenuPoint)
 
-    
-      newMenuPoint = {
-        clickableText: "Biler",
-        component: AdminFishShops
-    }
-    menuArray.push(newMenuPoint)
-
-      newMenuPoint = {
-        clickableText: "Stadepladser",
-        component: AdminPlaces
-    }
-    menuArray.push(newMenuPoint)
-
-        newMenuPoint = {
-        clickableText: "Områder",
-        component: AdminOperatingArea
-    }
-    menuArray.push(newMenuPoint)
-
-            newMenuPoint = {
-        clickableText: "Medarbejdere",
-        component: AdminEmployee
-    }
-    menuArray.push(newMenuPoint)
-
-                newMenuPoint = {
-        clickableText: "Produktkategorier",
-        component: AdminProductCategories
-    }
-    menuArray.push(newMenuPoint)
-
-   
-
-   
-
-                newMenuPoint = {
-        clickableText: "Produkttyper",
-        component:  AdminProductTypes
-    }
-    menuArray.push(newMenuPoint)
-
-            newMenuPoint = {
-        clickableText: "Produktmærkninger",
-        component:  AdminProductLabels
-    }
-    menuArray.push(newMenuPoint)
 
 
 
-    
 
     return (
         <>
-              <div className="flex flex-col gap-60  bg-customBlue">
+            <div className="flex flex-col gap-60  bg-customBlue">
                 <div className="flex">
                     {/* Column 1 */}
                     <div className="flex-1  text-white p-4 text-center">
@@ -135,34 +130,34 @@ const AdminDashBoard: React.FC = () => {
 
                     {/* Column 2 with nested row */}
                     <div className="flex-5 text-white p-4">
-                       <div className="grid grid-cols-10 gap-2 text-center">
-                           {menuArray.map((menuPoint, index) => (
-                            <>
-                                <div
-                                    className={`cursor-pointer hover:text-hoverYellow ${selectedMenuPoint == index ? 'text-hoverYellow' : 'text-white'}`}
-                                    onClick={() => handleMenuSelection(index)}
-                                >
-                                    {menuPoint.clickableText}
-                                </div>
-                            </>
-                        ))}
-                          </div>
+                        <div className="grid grid-cols-10 gap-2 text-center">
+                            {menuArray.map((menuPoint, index) => (
+                                <>
+                                    <div
+                                        className={`cursor-pointer hover:text-hoverYellow ${selectedMenuPoint == index ? 'text-hoverYellow' : 'text-white'}`}
+                                        onClick={() => handleMenuSelection(index)}
+                                    >
+                                        {menuPoint.clickableText}
+                                    </div>
+                                </>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Column 3 */}
                     <div className="flex-1 text-white p-4 text-center">
-                        Column 3
+
                     </div>
                 </div>
 
-                </div>
+            </div>
 
-                {menuArray[selectedMenuPoint]?.component
-                    ? React.createElement(menuArray[selectedMenuPoint].component)
-                    : ''}
+            {menuArray[selectedMenuPoint]?.component
+                ? React.createElement(menuArray[selectedMenuPoint].component)
+                : ''}
 
 
-            
+
         </>
 
     )

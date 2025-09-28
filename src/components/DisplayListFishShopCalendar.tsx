@@ -131,20 +131,30 @@ const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect
 
 
                     {locationsVisible[index] ?
-                        <p
-                            className="text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
+                        <div
+                            className="flex text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
                             onClick={() => toggleLocationVisible(index)}
                         >
-                            <ChevronUp /> Se mindre
-                            <hr />
-                        </p>
+                            <div className="flex">
+                                Se mindre
+                            </div>
+                            <div className="flex">
+                                <ChevronUp />
+                            </div>
+                        </div>
                         :
-                        <p className="text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
+                        <div
+                            className="flex text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
                             onClick={() => toggleLocationVisible(index)}
                         >
-                            <ChevronDown />  Se hvornår at vi er hos dig:
-                            <hr />
-                        </p>
+                            <div className="flex">
+                                Se hvornår at vi er hos dig:
+                            </div>
+                            <div className="flex">
+                                <ChevronDown />
+                            </div>
+                        </div>
+
                     }
 
                     {locationsVisible[index] ?
@@ -160,7 +170,7 @@ const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect
                                         </div>
                                         <div>
                                             {templateSchedule.starttime} -{" "} {templateSchedule.endtime}
-                                             {" ("}  {ConvertDate(templateSchedule.date)} {")"}
+                                            {" ("}  {ConvertDate(templateSchedule.date)} {")"}
                                         </div>
 
                                     </div>
