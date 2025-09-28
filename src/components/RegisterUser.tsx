@@ -179,7 +179,7 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
                         onBlur={() => setPasswordTouched(true)}
                         placeholder="Indtast kodeord"
                         style={{
-                            backgroundColor : 'white',
+                            backgroundColor: 'white',
                             width: '100%',
                             padding: '0.5rem',
                             marginTop: '0.25rem',
@@ -227,35 +227,25 @@ const RegisterUser: React.FC<RegisterModalProps> = ({ isOpen, userToEdit, onClos
 
                 {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
 
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                     <button 
-                        onClick={handleSubmit}
-                        disabled={!isFormValid || submitting}
-                        style={{
-                            padding: "0.5rem 1rem",
-                            backgroundColor: isFormValid && !submitting ? "white" : "grey",
-                            color: "black",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
-                        }}
-                    >
-                        Ok
-                    </button>
-                     <button
-                        onClick={onClose}
-                        disabled={submitting}
-                        style={{
-                            padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? 'white' : 'grey',
-                            color: 'black',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: !submitting ? 'pointer' : 'not-allowed',
-                        }} 
-                    >
-                        Annuler
-                    </button>
+                <div className="flex gap-4">
+                    <div className="flex-1">
+                        <button
+                            onClick={handleSubmit}
+                            disabled={!isFormValid || submitting}
+                            className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Ok
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <button
+                            onClick={onClose}
+                            disabled={submitting}
+                            className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Annuler
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@ const FileInput: React.FC<FileInputProps> = ({ onFileSelect }) => {
             {/* Button to trigger the file input */}
             <button
                 className="file-btn"
-                 style={{ backgroundColor : '#ccd4e5'}}
+                 style={{ backgroundColor : 'white'}}
                 onClick={triggerFileInput}
             >
                 <span className="material-symbols-rounded">upload</span>

@@ -25,7 +25,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
     const [employeeEmail, setEmployeeEmail] = useState<string>('');
     const [employeeEmailTouched, setEmployeeEmailTouched] = useState(false);
 
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isEmployeeNameValid = employeeName.length > 0;
     const isEmployeePhoneValid = employeePhone.length > 0;
@@ -40,17 +40,17 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
 
         if (employeeToEdit !== null) {
             setEmployeeId(employeeToEdit.id.toString())
-            setEmployeeName(employeeToEdit.name);   
-            setEmployeePhone(employeeToEdit.phone)     
+            setEmployeeName(employeeToEdit.name);
+            setEmployeePhone(employeeToEdit.phone)
         }
 
         else {
             setEmployeeId("0")
-            setEmployeeName('');    
-            setEmployeePhone('') ;     
+            setEmployeeName('');
+            setEmployeePhone('');
         }
-       
-        setEmployeeNameTouched(false);       
+
+        setEmployeeNameTouched(false);
         setSubmitting(false);
 
     }, [isOpen]);
@@ -58,14 +58,14 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
     const handleSubmit = async () => {
         const userData = {
             id: employeeId,
-            name : employeeName,
-            phone : employeePhone,
+            name: employeeName,
+            phone: employeePhone,
             email: employeeEmail.trim(),
-           
+
         };
         try {
             setSubmitting(true);
-            let url =  "/Admin/addorupdateemployee";           
+            let url = "/Admin/addorupdateemployee";
             const response = await AxiosClientPost(url, userData, true);
             onClose();
 
@@ -118,7 +118,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                     Medarbejder
                 </h2>
 
-             
+
                 <div style={{ marginBottom: '1rem' }}>
                     <label htmlFor="employeename"><strong>Navn:</strong></label><br />
                     <input
@@ -128,7 +128,7 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                         onChange={(e) => setEmployeeName(e.target.value)}
                         onBlur={() => setEmployeeNameTouched(true)}
                         placeholder="Indtast navn"
-                        style={{                           
+                        style={{
                             width: '100%',
                             padding: '0.5rem',
                             marginTop: '0.25rem',
@@ -139,10 +139,10 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                             boxSizing: 'border-box',
                             fontSize: '1rem',
                         }}
-                        
+
                     />
                 </div>
-               
+
                 <div style={{ marginBottom: '1rem' }}>
                     <label htmlFor="phone"><strong>Telefonnummer:</strong></label><br />
                     <input
@@ -163,14 +163,14 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
                             boxSizing: 'border-box',
                             fontSize: '1rem',
                         }}
-                      
+
                     />
                     {!isEmployeePhoneValid && employeePhoneTouched && (
                         <p style={{ color: 'red', marginTop: '0.25rem' }}>Telefonnummer skal angives</p>
                     )}
                 </div>
 
-               
+
                 <div style={{ marginBottom: '1rem' }}>
                     <label htmlFor="email"><strong>Email:</strong></label><br />
                     <input
@@ -200,35 +200,25 @@ const EmployeeCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, employeeToEd
 
                 {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
 
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                     <button 
-                        onClick={handleSubmit}
-                        disabled={!isFormValid || submitting}
-                        style={{
-                            padding: "0.5rem 1rem",
-                            backgroundColor: isFormValid && !submitting ? "white" : "grey",
-                            color: "black",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
-                        }}
-                    >
-                        Ok
-                    </button>
-                    <button
-                        onClick={onClose}
-                        disabled={submitting}
-                        style={{
-                            padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? 'white' : 'grey',
-                            color: 'black',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: !submitting ? 'pointer' : 'not-allowed',
-                        }} 
-                    >
-                        Annuler
-                    </button>
+                <div className="flex gap-4">
+                    <div className="flex-1">
+                        <button
+                            onClick={handleSubmit}
+                            disabled={!isFormValid || submitting}
+                            className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Ok
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <button
+                            onClick={onClose}
+                            disabled={submitting}
+                            className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Annuler
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

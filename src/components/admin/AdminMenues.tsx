@@ -93,7 +93,7 @@ const AdminMenues: React.FC = () => {
       fontWeight: 600,
       color: '#22191b',
       margin: '20px',
-      textAlign: 'center' as const,}}>Menuer</div>
+      textAlign: 'center' as const,}}>Produkter</div>
 
       {/* Pizzas Section */}
       <SectionWrapper bgColor='#ffffff' >

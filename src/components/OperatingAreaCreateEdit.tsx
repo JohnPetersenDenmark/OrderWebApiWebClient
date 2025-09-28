@@ -161,11 +161,10 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({
             onChange={(e) => setOperatingAreaName(e.target.value)}
             onBlur={() => setOperatingAreaNameTouched(true)}
             placeholder="Indtast navn"
-            className={`mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-[#5470a9] focus:border-[#5470a9] ${
-              !isOperatingAreaNameValid && operatingAreaNameTouched
+            className={`mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-2 focus:ring-[#5470a9] focus:border-[#5470a9] ${!isOperatingAreaNameValid && operatingAreaNameTouched
                 ? "border-red-500"
                 : "border-gray-300"
-            }`}
+              }`}
           />
         </div>
 
@@ -181,11 +180,10 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({
                   <li key={location.id}>
                     <button
                       onClick={() => addLocation(location)}
-                      className={`w-full px-3 py-2 rounded-md text-left transition ${
-                        selectedSaleLocations.find((l) => l.id === location.id)
-                          ? "bg-[#ffd199] text-white"
+                      className={`w-full px-3 py-2 rounded-md text-left transition ${selectedSaleLocations.find((l) => l.id === location.id)
+                          ? "bg-[LightGray] text-white"
                           : "bg-gray-100 hover:bg-gray-200"
-                      }`}
+                        }`}
                     >
                       {location.locationname}
                     </button>
@@ -207,7 +205,7 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({
                 return (
                   <li
                     key={loc.id}
-                    className="border rounded-lg p-3 bg-[#ffd199] shadow-sm"
+                    className="border rounded-lg p-3 bg-[LightGray] shadow-sm"
                   >
                     <div className="flex justify-between items-center mb-2">
                       <span className="font-medium">{loc.locationname}</span>
@@ -278,22 +276,25 @@ const OperatingAreaCreateEdit: React.FC<RegisterModalProps> = ({
 
         {submitError && <p className="text-red-600 mt-4">{submitError}</p>}
 
-        {/* Action buttons */}
-        <div className="flex justify-end gap-3 mt-6">
-          <button
-            onClick={onClose}
-            disabled={submitting}
-            className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700"
-          >
-            Annuller
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={!isFormValid || submitting}
-            className="px-4 py-2 rounded-md bg-white text-black hover:bg-[gray] disabled:opacity-50"
-          >
-            Gem
-          </button>
+        <div className="flex gap-4 mt-10">
+          <div className="flex-1">
+            <button
+              onClick={handleSubmit}
+              disabled={!isFormValid || submitting}
+              className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              Ok
+            </button>
+          </div>
+          <div className="flex-1">
+            <button
+              onClick={onClose}
+              disabled={submitting}
+              className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              Annuler
+            </button>
+          </div>
         </div>
       </div>
     </div>

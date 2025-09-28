@@ -219,19 +219,22 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
                     />
                 </div>
 
-                <div className="flex space-x-4">
-                    <div className="flex-1" style={{ marginBottom: '1rem' }}>
-                        <h2 className="text-xl font-bold mb-2">Vælg medarbejder</h2>
-                        <ul className="mb-4 bg-white">
+                <div className="flex gap-6">
+                    {/* Employee list */}
+                    <div className="flex-1 mb-6">
+                        <h2 className="text-xl font-semibold mb-3 text-gray-800">
+                            Vælg medarbejder
+                        </h2>
+                        <ul className="bg-white rounded-lg shadow p-4 space-y-2">
                             {employeeList.map((employee) => (
-                                <li key={employee.id} className="mb-1 text-left">
+                                <li key={employee.id}>
                                     <button
                                         onClick={() => toggleEmployee(employee)}
-                                    /*  className={`px-3 py-1 rounded ${
-                                       selected.includes(location)
-                                         ? "bg-blue-500 text-white"
-                                         : "bg-gray-200"
-                                     }`} */
+                                        className={`w-full text-left px-4 py-2 rounded-md transition-colors duration-200
+              ${selectedEmployee?.id === employee.id
+                                                ? "bg-blue-600 text-white hover:bg-blue-700"
+                                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                            }`}
                                     >
                                         {employee.name}
                                     </button>
@@ -240,78 +243,81 @@ const FishShopCreateEdit: React.FC<RegisterModalProps> = ({ isOpen, fishShopToEd
                         </ul>
                     </div>
 
-
-
-
-                    <div className="flex-1" style={{ marginBottom: '1rem' }}>
-                        <h3 className="text-lg font-semibold mb-2">Valgt:</h3>
-                        <ul className="mb-4 bg-white">
-                            <li>{selectedEmployee?.name}</li>
+                    {/* Selected employee */}
+                    <div className="flex-1 mb-6">
+                        <h3 className="text-lg font-semibold mb-3 text-gray-800">Valgt:</h3>
+                        <ul className="bg-white rounded-lg shadow p-4">
+                            {selectedEmployee ? (
+                                <li className="text-gray-700 font-medium">{selectedEmployee.name}</li>
+                            ) : (
+                                <li className="text-gray-400 italic">Ingen valgt</li>
+                            )}
                         </ul>
                     </div>
                 </div>
 
-                <div className="flex space-x-4">
-                    <div className="flex-1" style={{ marginBottom: '1rem' }}>
-                        <h2 className="text-xl font-bold mb-2">Vælg område</h2>
-                        <ul className="mb-4 bg-white">
-                            {operatingAreaList.map((operationgArea) => (
-                                <li key={operationgArea.id} className="mb-1 bg-white ml-3">
+
+                <div className="flex gap-6">
+                    {/* Operating area list */}
+                    <div className="flex-1 mb-6">
+                        <h2 className="text-xl font-semibold mb-3 text-gray-800">
+                            Vælg område
+                        </h2>
+                        <ul className="bg-white rounded-lg shadow p-4 space-y-2">
+                            {operatingAreaList.map((operatingArea) => (
+                                <li key={operatingArea.id}>
                                     <button
-                                        onClick={() => toggleOperatingArea(operationgArea)}                                      
-                                    /*  className={`px-3 py-1 rounded ${
-                                       selected.includes(location)
-                                         ? "bg-blue-500 text-white"
-                                         : "bg-gray-200"
-                                     }`} */
+                                        onClick={() => toggleOperatingArea(operatingArea)}
+                                        className={`w-full text-left px-4 py-2 rounded-md transition-colors duration-200
+              ${selectedOperatingArea?.id === operatingArea.id
+                                                ? "bg-blue-600 text-white hover:bg-blue-700"
+                                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                            }`}
                                     >
-                                        {operationgArea.name}
+                                        {operatingArea.name}
                                     </button>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
-                    <div className="flex-1" style={{ marginBottom: '1rem' }}>
-                        <h3 className="text-lg font-semibold mb-2">Valgt:</h3>
-                        <ul className="mb-4 bg-white">
-                            <li>{selectedOperatingArea?.name}</li>
+                    {/* Selected operating area */}
+                    <div className="flex-1 mb-6">
+                        <h3 className="text-lg font-semibold mb-3 text-gray-800">Valgt:</h3>
+                        <ul className="bg-white rounded-lg shadow p-4">
+                            {selectedOperatingArea ? (
+                                <li className="text-gray-700 font-medium">{selectedOperatingArea.name}</li>
+                            ) : (
+                                <li className="text-gray-400 italic">Ingen valgt</li>
+                            )}
                         </ul>
                     </div>
                 </div>
 
+
                 {submitError && <p style={{ color: 'red' }}>{submitError}</p>}
 
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                     <button 
-                        onClick={handleSubmit}
-                        disabled={!isFormValid || submitting}
-                        style={{
-                            padding: "0.5rem 1rem",
-                            backgroundColor: isFormValid && !submitting ? "white" : "grey",
-                            color: "black",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
-                        }}
-                    >
-                        Ok
-                    </button>
-                    <button
-                        onClick={onClose}
-                        disabled={submitting}
-                        style={{
-                            padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? 'white' : 'grey',
-                            color: 'black',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: !submitting ? 'pointer' : 'not-allowed',
-                        }} 
-                    >
-                        Annuler
-                    </button>
+                <div className="flex gap-4">
+                    <div className="flex-1">
+                        <button
+                            onClick={handleSubmit}
+                            disabled={!isFormValid || submitting}
+                            className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Ok
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <button
+                            onClick={onClose}
+                            disabled={submitting}
+                            className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Annuler
+                        </button>
+                    </div>
                 </div>
+
             </div>
         </div>
     );

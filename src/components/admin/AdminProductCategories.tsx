@@ -109,7 +109,7 @@ const AdminProductCategories: React.FC = () => {
         color: '#22191b',
         margin: '20px',
         textAlign: 'center' as const,
-      }}>Produktkategori</div>
+      }}>Produktkategorier</div>
 
       <div style={{ margin: 'auto', padding: '1rem' }}>
         {productCategories && productCategories.map((productCategory) => (

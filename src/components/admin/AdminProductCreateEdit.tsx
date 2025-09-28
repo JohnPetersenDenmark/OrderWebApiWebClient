@@ -546,7 +546,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         fontSize: "1.5rem",
                     }}
                 >
-                    Product
+                    Produkt
                 </h2>
 
                 {/* === 2-COLUMN GRID FOR INPUTS === */}
@@ -560,7 +560,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                 >
                     {/* Product number */}
                     <div>
-                        <label htmlFor="productnumber">Productnummer:</label>
+                        <label htmlFor="productnumber">Produktnummer:</label>
                         <input
                             id="productnumber"
                             type="text"
@@ -628,24 +628,35 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                         <FileInput onFileSelect={handleFileSelect} />
                     </div>
 
-                    {/* Product category - spans full width */}
-                    <div >
-                        <label htmlFor="productcategory" style={{ fontWeight: "bold", color: 'white' }}>
-                            Vælg produktkategori:
+                    <div className="bg-customBlue">
+                        <label htmlFor="productlabel" style={{ fontWeight: "bold", color: 'white' }}>
+                            Vælg mærkning:
                         </label>
-                        <select
-                            multiple
-                            value={selectedProductCategories?.map((c) => c.id.toString())}
-                            onChange={handleChangeProductCategory}
-                            style={{ width: "100%", padding: "0.5rem", marginTop: "0.25rem" }}
-                        >
-                            {allProductCategories.map((cat) => (
-                                <option key={cat.id} value={cat.id}>
-                                    {cat.categoryname}
-                                </option>
-                            ))}
-                        </select>
+                        {allProductLabels.map((label) => {
+                            const isSelected = selectedProductLabels && selectedProductLabels.some(
+                                (productLabel) => productLabel.id === label.id
+                            );
+
+                            return (
+                                <div
+                                    key={label.id}
+                                    className={`flex cursor-pointer p-2 ${isSelected ? "bg-blue-200" : "bg-white"
+                                        }`}
+                                    onClick={() => handleToggleProductLabel(label)}
+                                >
+                                    <div className="flex-1">{label.labelname}</div>
+                                    <div className="flex-1">
+                                        <img
+                                            src={config.API_BASE_URL + label.imageurl}
+                                            alt={label.labelname}
+                                            className="w-5 max-w-[100px] h-auto mt-1"
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
+
 
                     {/* Product category - spans full width */}
                     <div >
@@ -667,7 +678,24 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                     </div>
 
 
-
+                    {/* Product category - spans full width */}
+                    <div >
+                        <label htmlFor="productcategory" style={{ fontWeight: "bold", color: 'white' }}>
+                            Vælg produktkategori:
+                        </label>
+                        <select
+                            multiple
+                            value={selectedProductCategories?.map((c) => c.id.toString())}
+                            onChange={handleChangeProductCategory}
+                            style={{ width: "100%", padding: "0.5rem", marginTop: "0.25rem" }}
+                        >
+                            {allProductCategories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.categoryname}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
                     {/* <div >
                         <label htmlFor="productlabel" style={{ fontWeight: "bold", color: 'white' }}>
@@ -700,34 +728,7 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
                     </div> */}
 
 
-                    <div className="bg-customBlue">
-                        <label htmlFor="productlabel" style={{ fontWeight: "bold", color: 'white' }}>
-                            Vælg mærkning:
-                        </label>
-                        {allProductLabels.map((label) => {
-                            const isSelected = selectedProductLabels && selectedProductLabels.some(
-                                (productLabel) => productLabel.id === label.id
-                            );
 
-                            return (
-                                <div
-                                    key={label.id}
-                                    className={`flex cursor-pointer p-2 ${isSelected ? "bg-blue-200" : "bg-white"
-                                        }`}
-                                    onClick={() => handleToggleProductLabel(label)}
-                                >
-                                    <div className="flex-1">{label.labelname}</div>
-                                    <div className="flex-1">
-                                        <img
-                                            src={config.API_BASE_URL + label.imageurl}
-                                            alt={label.labelname}
-                                            className="w-5 max-w-[100px] h-auto mt-1"
-                                        />
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
 
 
                     {/* Product description */}
@@ -939,36 +940,25 @@ const AdminProductCreateEdit: React.FC<ProductModalProps> = ({ isOpen, onClose, 
 
 
 
-                {/* Buttons */}
-                <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
-                    <button 
-                        onClick={handleSubmit}
-                        disabled={!isFormValid || submitting}
-                        style={{
-                            padding: "0.5rem 1rem",
-                            backgroundColor: isFormValid && !submitting ? "white" : "grey",
-                            color: "black",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: isFormValid && !submitting ? "pointer" : "not-allowed",
-                        }}
-                    >
-                        Ok
-                    </button>
-                    <button
-                        onClick={onClose}
-                        disabled={submitting}
-                        style={{
-                            padding: '0.5rem 1rem',
-                            backgroundColor: !submitting ? 'white' : 'grey',
-                            color: 'black',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: !submitting ? 'pointer' : 'not-allowed',
-                        }} 
-                    >
-                        Annuler
-                    </button>
+                <div className="flex gap-4 mt-10">
+                    <div className="flex-1">
+                        <button
+                            onClick={handleSubmit}
+                            disabled={!isFormValid || submitting}
+                            className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Ok
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <button
+                            onClick={onClose}
+                            disabled={submitting}
+                            className="w-full px-4 py-2 rounded bg-white text-black hover:bg-gray-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            Annuler
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
