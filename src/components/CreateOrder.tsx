@@ -122,9 +122,9 @@ export default function CreateOrder() {
 
                     producttypes: product.producttypes,
 
-                    productlabels: product.productLabels.map((productLabel : any) => ({
-                        id : productLabel.id,
-                        imageurl : productLabel.imageUrl,
+                    productlabels: product.productLabels.map((productLabel: any) => ({
+                        id: productLabel.id,
+                        imageurl: productLabel.imageUrl,
                         labelname: productLabel.labelName
                     }))
 
@@ -498,22 +498,24 @@ export default function CreateOrder() {
                             Kontaktinfo:
                         </h2>
                         {/* Customer name */}
-                        <label htmlFor="customerName" className="text-xl"></label>
-                        <input
-                            id="customerName"
-                            type="text"
-                            value={customerName}
-                            onChange={(e) => setCustomerName(e.target.value)}
-                            onBlur={() => setNameTouched(true)}
-                            placeholder="Indtast dit navn"
-                            className="text-xl"
-                            disabled={submitting}
-                        />
-                        {!isNameValid && nameTouched && (
-                            <p className="text-xl" style={{ color: 'red', marginTop: '0.25rem' }}>Navn må ikke være tomt.</p>
-                        )}
-
-                        <label htmlFor="phone" className="text-xl">Telefonnummer:</label>
+                        <div className="mb-5">
+                            <label htmlFor="customerName" className="block text-xl">Navn</label>
+                            <input
+                                id="customerName"
+                                type="text"
+                                value={customerName}
+                                onChange={(e) => setCustomerName(e.target.value)}
+                                onBlur={() => setNameTouched(true)}
+                                placeholder="Indtast dit navn"
+                                className="text-xl"
+                                disabled={submitting}
+                            />
+                            {!isNameValid && nameTouched && (
+                                <p className="text-xl" style={{ color: 'red', marginTop: '0.25rem' }}>Navn må ikke være tomt.</p>
+                            )}
+                        </div>
+                        <div className="mb-5">
+                        <label htmlFor="phone" className="text-xl block">Telefonnummer:</label>
                         <input
                             id="phone"
                             type="tel"
@@ -530,9 +532,10 @@ export default function CreateOrder() {
                                 Telefonnummer skal være enten 8 cifre eller '+' efterfulgt af 10 cifre.
                             </p>
                         )}
+                        </div>
 
                         {/* Email */}
-                        <label htmlFor="email" className="text-xl">Email:</label>
+                        <label htmlFor="email" className="text-xl block">Email:</label>
                         <input
                             id="email"
                             type="email"

@@ -10,11 +10,11 @@ import { TemplateSchedule } from '../types/TemplateSchedule';
 
 import { AxiosClientGet, AxiosClientPost, AxiosClientDelete } from '../types/AxiosClient';
 
-interface FishShopToSelectProps {        
+interface FishShopToSelectProps {
     onSelect: (shop: FishShopFullDto, schedule: TemplateSchedule) => void;
 }
 
-const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect}) => {
+const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect }) => {
 
     const [fishShops, setFishshops] = useState<FishShopFullDto[]>([]);
 
@@ -92,6 +92,18 @@ const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect
         );
     };
 
+    const ConvertDate = (dateToConvert: any) => {
+        const date = new Date(dateToConvert);
+
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // months are 0-based
+        const year = date.getFullYear();
+
+        return (`${day}-${month}-${year}`);
+    };
+
+
+
     const handleSubmit = (fishShop: FishShopFullDto, templateSchedule: TemplateSchedule) => {
         onSelect(fishShop, templateSchedule);
     };
@@ -123,14 +135,14 @@ const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect
                             className="text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
                             onClick={() => toggleLocationVisible(index)}
                         >
-                            <ChevronUp /> Se mindre                           
+                            <ChevronUp /> Se mindre
                             <hr />
                         </p>
                         :
                         <p className="text-black  mt-5 mb-5 font-bold text-1xl cursor-pointer"
                             onClick={() => toggleLocationVisible(index)}
                         >
-                           <ChevronDown />  Se hvornår at vi er hos dig:                              
+                            <ChevronDown />  Se hvornår at vi er hos dig:
                             <hr />
                         </p>
                     }
@@ -148,6 +160,7 @@ const DisplayListFishShopCalendar: React.FC<FishShopToSelectProps> = ({ onSelect
                                         </div>
                                         <div>
                                             {templateSchedule.starttime} -{" "} {templateSchedule.endtime}
+                                             {" ("}  {ConvertDate(templateSchedule.date)} {")"}
                                         </div>
 
                                     </div>
